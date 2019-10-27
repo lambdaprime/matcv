@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
+import org.opencv.core.Point;
 import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.core.Size;
@@ -65,4 +66,10 @@ public class OpencvKit {
         return ret;
     }
 
+    /**
+     * Returns middle point
+     */
+    public static Point middlePoint(Point p1, Point p2) {
+        return new Point((p1.x + p2.x) / 2, (p1.y + p2.y) / 2);
+    }
 }
