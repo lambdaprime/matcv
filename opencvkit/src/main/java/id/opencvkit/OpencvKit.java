@@ -1,6 +1,7 @@
 package id.opencvkit;
 
 import java.util.LinkedList;
+import java.util.List;
 
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
@@ -35,7 +36,6 @@ public class OpencvKit {
     /**
      * Resize preserving ratio
      * @param size final size of the longest side
-     * @return
      */
     public static Mat resize(Mat img, Size size) {
         Size s;
@@ -71,5 +71,28 @@ public class OpencvKit {
      */
     public static Point middlePoint(Point p1, Point p2) {
         return new Point((p1.x + p2.x) / 2, (p1.y + p2.y) / 2);
+    }
+    
+    /**
+     * Flattens scalars into one dimensional array.
+     * 
+     * Example:
+     * 
+     * Input: Scalar(1.0, 2.0, 3.0), Scalar(3.0, 4.0, 5.0), Scalar(6.0, 7.0, 8.0)
+     * Output: [1, 2, 3, 0, 3, 4, 5, 0, 6, 7, 8, 0]
+     * 
+     * Scalar sizes aligned which means Scalar(1.0, 2.0, 3.0) in memory
+     * will take size 4 not 3 => the output array has additional zeros.
+     */
+    public static Mat toFlatMatrix(List<Scalar> scalars) {
+        int scalarLen = scalars.get(0).val.length;
+        var mat = new Mat(1, scalars.size() * scalarLen , CvType.CV_32F);
+        for (int i = 0; i < scalars.size(); i++) {
+            var scalar = scalars.get(i).val;
+            for (int j = 0; j < scalarLen; j++) {
+                mat.put(0, i * scalarLen + j, scalar[j]);
+            }
+        }
+        return mat;
     }
 }

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" output="bin/test" path="src/test/java">
+		<attributes>
+			<attribute name="test" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="src" path="src/test/resources"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/opencvKit"/>
+	<classpathentry kind="lib" path="/opencvKit/libs/xfunction-12.0.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/5"/>
+	<classpathentry kind="lib" path="/usr/share/java/opencv.jar"/>
+	<classpathentry kind="output" path="bin/default"/>
+</classpath>
