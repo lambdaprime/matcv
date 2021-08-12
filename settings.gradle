@@ -1,0 +1,2 @@
+include 'opencvkit'
+include 'opencvkit.tests'
