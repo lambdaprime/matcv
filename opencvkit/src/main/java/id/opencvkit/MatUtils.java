@@ -3,6 +3,7 @@ package id.opencvkit;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
@@ -27,5 +28,9 @@ public class MatUtils {
         Path out = Files.createTempFile("resource", "");
         resourceUtils.extractResource(absoluteResourcePath, out);
         return Imgcodecs.imread(out.toAbsolutePath().toString());
+    }
+    
+    public List<Mat> toListOfMat(List<? extends Mat> list) {
+        return (List<Mat>) list;
     }
 }
