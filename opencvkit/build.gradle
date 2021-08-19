@@ -7,7 +7,7 @@ plugins {
 repositories {
     mavenCentral()
 }
- 
+
 dependencies {
     implementation files('/usr/share/java/opencv.jar')
     compile fileTree(include: ['*.jar'], dir: 'libs')
@@ -19,6 +19,12 @@ targetCompatibility = '11'
 def packageDir = "$buildDir/package/${projectName}"
 
 ext.artifacts = fileTree(include: ['*'], dir: "$packageDir/libs")
+
+jar {
+    manifest { 
+        attributes 'Automatic-Module-Name': 'id.opencvkit' 
+    }
+}
 
 task createRelease(type: Zip) {
     archiveFileName = "$releaseFileName"
