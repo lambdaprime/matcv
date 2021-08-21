@@ -64,13 +64,12 @@ public class Matchers {
 //        System.out.println(matches);
 
         return matches.stream().map(MatOfDMatch::toList).flatMap(List::stream)
-                //.filter(match -> match.distance < THRESHOLD)
-                .sorted(new DMatchComparator())
                 .map(m -> new MatchResult<>(
                         queryDescriptors.get(m.queryIdx).getFile(),
                         trainDescriptors.get(m.trainIdx).getFile(),
                         m.distance))
+                .collect(Collectors.toSet()).stream()
+                .sorted(MatchResult.compareByDistance())
                 .collect(Collectors.toList());
-
     }
 }
