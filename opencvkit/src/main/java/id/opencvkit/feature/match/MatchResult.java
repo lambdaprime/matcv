@@ -23,6 +23,10 @@ public class MatchResult<T> {
         return b;
     }
     
+    public boolean isIdentical() {
+        return a.equals(b);
+    }
+    
     @Override
     public String toString() {
         return String.format("distance=%s, a='%s', b='%s'", distance,
