@@ -34,8 +34,15 @@ public class OpencvKit {
     }
 
     /**
-     * Resize preserving ratio
-     * @param size final size of the longest side
+     * Resize the image.
+     * 
+     * If the image cannot be resized preserving the ratio (ratio between width/height of original
+     * image is not the same as in the requested rectangle) then image is resized based on its longest
+     * side and will be positioned in the middle of the requested rectangle so that its longest side
+     * will match the same side in the requested rectangle and empty areas around its shortest sides
+     * will be filled black.
+     *
+     * @param size requested final size of the image 
      */
     public static Mat resize(Mat img, Size size) {
         Size s;
