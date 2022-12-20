@@ -1,2 +1,2 @@
-include 'opencvkit'
-include 'opencvkit.tests'
+include 'matcv'
+include 'matcv.tests'
