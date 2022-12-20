@@ -10,7 +10,8 @@ repositories {
 
 dependencies {
     implementation files('/usr/share/java/opencv.jar')
-    compile fileTree(include: ['*.jar'], dir: 'libs')
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    apiElements fileTree(include: ['*.jar'], dir: 'libs')
 }
 
 sourceCompatibility = '11'
