@@ -17,7 +17,7 @@
  */
 package id.matcv.apps.slider;
 
-import id.matcv.OpencvKit;
+import id.matcv.MatUtils;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -30,6 +30,7 @@ public class SlidingWindow {
     private final Mat window;
     private final Path outputDir;
     private final String windowName;
+    private MatUtils utils = new MatUtils();
 
     public SlidingWindow(Mat window, Path outputDir, String windowName) throws IOException {
         this.window = window;
@@ -44,7 +45,7 @@ public class SlidingWindow {
         for (int y = 0; y < background.rows() - window.height(); y += window.height()) {
             for (int x = 0; x < background.cols() - window.width(); x += window.width()) {
                 var b = background.clone();
-                OpencvKit.overlay(window, b, x, y);
+                utils.overlay(window, b, x, y);
                 var fileName =
                         String.format(
                                 "%s-%s-%d.%d-%d.%d.png",

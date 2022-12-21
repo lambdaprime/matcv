@@ -17,7 +17,7 @@
  */
 package id.matcv.apps.slider;
 
-import id.matcv.OpencvKit;
+import id.matcv.MatUtils;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -32,6 +32,7 @@ public class SliderApp {
     private static final int CROP_START = 425;
     private static final int CROP_END = 1520;
     private static final Size SIZE = new Size(200, 200);
+    private static final MatUtils utils = new MatUtils();
 
     static {
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
@@ -42,7 +43,7 @@ public class SliderApp {
         System.out.println("Processing " + path);
         Mat mat = Imgcodecs.imread(path);
         mat = mat.submat(0, mat.rows(), CROP_START, CROP_END);
-        mat = OpencvKit.resize(mat, SIZE);
+        mat = utils.resize(mat, SIZE);
         String name = img.getFileName().toString().replaceAll("\\.\\w*", "");
         return new Object[] {name, mat};
     }
@@ -50,11 +51,10 @@ public class SliderApp {
     public static void main(String[] args) throws IOException {
         var slidingWindow =
                 new SlidingWindow(
-                        Imgcodecs.imread(
-                                "/media/x/pinorobotics/misc/cross/overwatch1555806128372.png"),
-                        Paths.get("/tmp/lol1"),
+                        Imgcodecs.imread("overwatch1555806128372.png"),
+                        Paths.get("/tmp/out"),
                         "overwatch1555806128372");
-        Files.walk(Paths.get("/media/x/pinorobotics/misc/background/"))
+        Files.walk(Paths.get("background/"))
                 .parallel()
                 .filter(Files::isRegularFile)
                 .map(SliderApp::preproc)
