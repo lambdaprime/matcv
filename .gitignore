@@ -1,4 +1,11 @@
-/bin/
+**/bin/
 **/build/
-/.gradle/
-/.settings/
+**/target/
+**/.gradle/
+**/.settings/
+**/bld/
+**/.project
+**/.classpath
+/**/release/*-SNAPSHOT.zip
+/**/release/*-SNAPSHOT.jar
+/**/dependency-reduced-pom.xml

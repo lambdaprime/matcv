@@ -1,25 +1,26 @@
-// gradle clean build publishToMavenLocal
+// include xfunction for updateVersion
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "io.github.lambdaprime:id.xfunction:14.0"
+    }
+}
 
 plugins {
-    id 'java'
+    id 'com.diffplug.spotless'
 }
 
-repositories {
-    mavenCentral()
-}
+apply plugin : 'eclipse'
 
 dependencies {
     implementation files('/usr/share/java/opencv.jar')
-    implementation fileTree(include: ['*.jar'], dir: 'libs')
-    apiElements fileTree(include: ['*.jar'], dir: 'libs')
+    implementation "io.github.lambdaprime:id.xfunction:20.0-SNAPSHOT"
+
+    apiElements files('/usr/share/java/opencv.jar')
+    apiElements "io.github.lambdaprime:id.xfunction:20.0-SNAPSHOT"
 }
-
-sourceCompatibility = '11'
-targetCompatibility = '11'
-
-def packageDir = "$buildDir/package/${projectName}"
-
-ext.artifacts = fileTree(include: ['*'], dir: "$packageDir/libs")
 
 jar {
     manifest { 
@@ -27,29 +28,18 @@ jar {
     }
 }
 
-task createRelease(type: Zip) {
-    archiveFileName = "$releaseFileName"
-    destinationDirectory = file("$projectDir/release")
-    from file("$packageDir/..")
-}
-
-task copyLibs(type: Copy) {
-    from "$projectDir/libs"
+task createRelease(type: Copy) {
+    def out = 'release'
     from jar.archiveFile
-    into "${packageDir}/libs"
-}
-
-task createPackage(type: Copy, dependsOn: copyLibs) {
-    from "${project.rootDir}/README.md"
-    from "${project.rootDir}/LICENSE-2.0.txt"
-    into packageDir
+    into out
 }
 
 task cleanRelease(type: Delete) {
-    delete "$packageDir"
     delete "$projectDir/release"
 }
 
-createRelease.dependsOn createPackage
 assemble.dependsOn createRelease
 clean.dependsOn cleanRelease
+
+// run spotless and format code before the build
+classes.dependsOn spotlessApply
