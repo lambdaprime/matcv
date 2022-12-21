@@ -32,6 +32,7 @@ public class Matchers {
 
     private MatUtils matUtils = new MatUtils();
 
+    @FunctionalInterface
     public interface MatchFunc {
         List<MatOfDMatch> match(Mat querySet, Mat trainSet);
     }
