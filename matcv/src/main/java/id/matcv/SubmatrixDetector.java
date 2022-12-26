@@ -42,7 +42,6 @@ public class SubmatrixDetector implements Consumer<Mat> {
         var size = new Size();
         var point = new Point();
         submatrix.locateROI(size, point);
-        //        System.out.println(size);
-        Imgproc.rectangle(matrix, new Rect(point, submatrix.size()), RGBColors.GREEN);
+        Imgproc.rectangle(matrix, new Rect(point, submatrix.size()), RgbColors.GREEN);
     }
 }

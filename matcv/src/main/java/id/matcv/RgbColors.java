@@ -19,7 +19,9 @@ package id.matcv;
 
 import org.opencv.core.Scalar;
 
-public class RGBColors {
+public class RgbColors {
 
     public static final Scalar GREEN = new Scalar(0, 255, 0);
+    public static final Scalar BLUE = new Scalar(255, 0, 0);
+    public static final Scalar RED = new Scalar(0, 0, 255);
 }
