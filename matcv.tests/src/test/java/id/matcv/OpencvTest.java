@@ -19,6 +19,9 @@ package id.matcv;
 
 import org.opencv.core.Core;
 
+/**
+ * @author lambdaprime intid@protonmail.com
+ */
 public class OpencvTest {
     static {
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);

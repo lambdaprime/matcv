@@ -18,12 +18,17 @@
 package id.matcv;
 
 import id.xfunction.XByte;
+import java.io.IOException;
 import java.util.Arrays;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.opencv.core.MatOfFloat;
 import org.opencv.core.MatOfInt;
+import org.opencv.core.Size;
 
+/**
+ * @author lambdaprime intid@protonmail.com
+ */
 public class MatUtilsTest extends OpencvTest {
 
     private MatUtils utils = new MatUtils();
@@ -57,5 +62,12 @@ public class MatUtilsTest extends OpencvTest {
         Assertions.assertEquals(
                 "[{4.0, 1.0}, {1.0, 2.0}, {4.0, 2.0}, {4.0, 3.0}]",
                 utils.findPeaks(mat, 5).toString());
+    }
+
+    @Test
+    public void test_resize() throws IOException {
+        var utils = new MatUtils();
+        var img = utils.readImageFromResource("alita.jpg");
+        img = utils.resize(img, new Size(140, 60));
     }
 }

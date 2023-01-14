@@ -27,6 +27,8 @@ import org.opencv.imgproc.Imgproc;
 /**
  * Every time we detect that given submatrix belongs to original matrix we highlight its location on
  * original matrix itself.
+ *
+ * @author lambdaprime intid@protonmail.com
  */
 public class SubmatrixDetector implements Consumer<Mat> {
 

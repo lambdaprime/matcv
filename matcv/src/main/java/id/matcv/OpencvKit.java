@@ -17,6 +17,7 @@
  */
 package id.matcv;
 
+import id.mathcalc.Vector2f;
 import id.xfunction.Preconditions;
 import java.util.LinkedList;
 import java.util.List;
@@ -28,11 +29,10 @@ import org.opencv.core.Point;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 
+/**
+ * @author lambdaprime intid@protonmail.com
+ */
 public class OpencvKit {
-
-    static {
-        System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-    }
 
     /** Add an alpha 255 channel to the RGB image */
     public static Mat addAlpha(Mat mat) {
@@ -110,12 +110,30 @@ public class OpencvKit {
             Scalar color,
             BiFunction<Integer, Integer, Float> shadowX,
             BiFunction<Integer, Integer, Float> shadowY) {
+        drawVectorField(
+                image,
+                stepX,
+                stepY,
+                color,
+                (x, y) -> new Vector2f(shadowX.apply(x, y), shadowY.apply(x, y)));
+    }
+
+    /**
+     * @see #drawVectorField(Mat, int, int, Scalar, BiFunction, BiFunction)
+     */
+    public static void drawVectorField(
+            Mat image,
+            int stepX,
+            int stepY,
+            Scalar color,
+            BiFunction<Integer, Integer, Vector2f> vectorCalc) {
         Preconditions.isTrue(stepX < image.cols(), "Step exceeds number of rows in the image");
         Preconditions.isTrue(stepY < image.rows(), "Step exceeds number of cols in the image");
         for (int x = 0; x < image.cols(); x += stepX) {
             for (int y = 0; y < image.rows(); y += stepY) {
                 var from = new Point(x, y);
-                var to = new Point(x + shadowX.apply(x, y), y + shadowY.apply(x, y));
+                var vec = vectorCalc.apply(x, y);
+                var to = new Point(x + vec.n1, y + vec.n2);
                 Imgproc.arrowedLine(image, from, to, color);
             }
         }

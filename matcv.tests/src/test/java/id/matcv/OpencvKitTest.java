@@ -26,6 +26,9 @@ import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.Scalar;
 
+/**
+ * @author lambdaprime intid@protonmail.com
+ */
 public class OpencvKitTest extends OpencvTest {
     private static final ResourceUtils utils = new ResourceUtils();
 

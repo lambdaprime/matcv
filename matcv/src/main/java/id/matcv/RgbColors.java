@@ -19,6 +19,9 @@ package id.matcv;
 
 import org.opencv.core.Scalar;
 
+/**
+ * @author lambdaprime intid@protonmail.com
+ */
 public class RgbColors {
 
     public static final Scalar GREEN = new Scalar(0, 255, 0);

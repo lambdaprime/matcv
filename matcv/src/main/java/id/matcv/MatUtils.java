@@ -37,7 +37,11 @@ import org.opencv.core.Size;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
 
-/** Collections of functions around OpenCV {@link Mat} */
+/**
+ * Collections of functions around OpenCV {@link Mat}
+ *
+ * @author lambdaprime intid@protonmail.com
+ */
 public class MatUtils {
 
     private static final Logger LOGGER = XLogger.getLogger(MatUtils.class);
