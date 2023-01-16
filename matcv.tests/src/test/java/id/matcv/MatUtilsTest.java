@@ -17,9 +17,7 @@
  */
 package id.matcv;
 
-import id.xfunction.XByte;
 import java.io.IOException;
-import java.util.Arrays;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.opencv.core.MatOfFloat;
@@ -32,18 +30,6 @@ import org.opencv.core.Size;
 public class MatUtilsTest extends OpencvTest {
 
     private MatUtils utils = new MatUtils();
-
-    @Test
-    public void test_asMat() {
-        var out = utils.newMat(XByte.castToByteArray(1, 2, 3));
-        Assertions.assertEquals("[  1,   2,   3]", out.dump());
-    }
-
-    @Test
-    public void test_toIntArray() {
-        Assertions.assertEquals(
-                "[1, 2, 3, 4, 5]", Arrays.toString(utils.toIntArray(new MatOfInt(1, 2, 3, 4, 5))));
-    }
 
     @Test
     public void test_findNonZeroPoints() {

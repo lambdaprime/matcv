@@ -17,7 +17,7 @@
  */
 package id.matcv.feature.match;
 
-import id.matcv.MatUtils;
+import id.matcv.MatConverters;
 import id.matcv.feature.descriptor.FileDescriptor;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -30,7 +30,7 @@ import org.opencv.features2d.FlannBasedMatcher;
 
 public class Matchers {
 
-    private MatUtils matUtils = new MatUtils();
+    private MatConverters converters = new MatConverters();
 
     @FunctionalInterface
     public interface MatchFunc {
@@ -76,16 +76,12 @@ public class Matchers {
             List<FileDescriptor> trainDescriptors,
             MatchFunc func) {
         var querySet = new Mat();
-        Core.vconcat(matUtils.toListOfMat(queryDescriptors), querySet);
+        Core.vconcat(converters.toListOfMat(queryDescriptors), querySet);
 
         var trainSet = new Mat();
-        Core.vconcat(matUtils.toListOfMat(trainDescriptors), trainSet);
-
-        //        System.out.format("querySet %s\n", querySet);
-        //        System.out.format("trainSet %s\n", trainSet);
+        Core.vconcat(converters.toListOfMat(trainDescriptors), trainSet);
 
         var matches = func.match(querySet, trainSet);
-        //        System.out.println(matches);
 
         return matches.stream()
                 .map(MatOfDMatch::toList)

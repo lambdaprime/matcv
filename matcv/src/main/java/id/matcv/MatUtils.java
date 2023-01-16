@@ -25,9 +25,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.opencv.core.Core;
-import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.Point;
@@ -44,45 +42,13 @@ import org.opencv.imgproc.Imgproc;
  */
 public class MatUtils {
 
-    private static final Logger LOGGER = XLogger.getLogger(MatUtils.class);
+    private static final XLogger LOGGER = XLogger.getLogger(MatUtils.class);
     private ResourceUtils resourceUtils = new ResourceUtils();
-
-    /** Create new CV_8U matrix */
-    public Mat newMat(byte... values) {
-        var mat = new Mat(1, values.length, CvType.CV_8U);
-        mat.put(0, 0, values);
-        return mat;
-    }
 
     public Mat readImageFromResource(String absoluteResourcePath) throws IOException {
         Path out = Files.createTempFile("resource", "");
         resourceUtils.extractResource(absoluteResourcePath, out);
         return Imgcodecs.imread(out.toAbsolutePath().toString());
-    }
-
-    /**
-     * Certain methos in OpenCV accept List&ltMat> instead of List&lt? extends ;Mat> (example is
-     * {@link Core#vconcat(List, Mat)}) This cause a compile time error if you have list of some
-     * other types which extend {@link Mat}. To deal with this you may need to use either cast
-     * operation or this method.
-     */
-    public List<Mat> toListOfMat(List<? extends Mat> list) {
-        return (List<Mat>) list;
-    }
-
-    /**
-     * Input matrix should be continuous vector with 1 or 2 channels ({@link CvType#CV_32S}, {@link
-     * CvType#CV_32SC2})
-     */
-    public int[] toIntArray(Mat matrix) {
-        Preconditions.isTrue(matrix.isContinuous(), "Non continous matrix");
-        var type = matrix.type();
-        Preconditions.isTrue(
-                type == CvType.CV_32S || type == CvType.CV_32SC2, "Incompatible matrix type");
-        Preconditions.equals(2, matrix.dims(), "Incompatible matrix dimension");
-        var buf = new int[matrix.channels() * matrix.size(0)];
-        matrix.get(0, 0, buf);
-        return buf;
     }
 
     /** Extension of {@link Core#findNonZero(Mat, Mat)} which returns list of {@link Point} */
@@ -128,8 +94,32 @@ public class MatUtils {
      */
     public void debugMat(String description, Mat matrix, Rect slice) {
         if (!LOGGER.isLoggable(Level.FINER)) return;
-        LOGGER.fine(description + " shape " + matrix.toString());
+        debugShape(description, matrix);
         LOGGER.fine(description + " slice " + slice + ":\n" + matrix.submat(slice).dump());
+    }
+
+    /**
+     * Log given matrix including its description and shape.
+     *
+     * <p>It works only when DEBUG ({@link Level.FINER} logging level is enabled, otherwise it does
+     * nothing.
+     */
+    public void debugMat(String description, Mat matrix) {
+        if (!LOGGER.isLoggable(Level.FINER)) return;
+        debugMat(description, matrix, new Rect(0, 0, matrix.cols(), matrix.rows()));
+    }
+
+    /**
+     * Log given matrix shape.
+     *
+     * <p>It works only when DEBUG ({@link Level.FINER} logging level is enabled, otherwise it does
+     * nothing.
+     */
+    public void debugShape(String description, Mat matrix) {
+        if (!LOGGER.isLoggable(Level.FINER)) return;
+        LOGGER.fine(
+                "{0} shape {1}, rows {2} cols {3}",
+                description, matrix.toString(), matrix.rows(), matrix.cols());
     }
 
     /**
