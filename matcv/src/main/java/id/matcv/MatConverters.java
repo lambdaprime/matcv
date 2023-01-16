@@ -17,6 +17,7 @@
  */
 package id.matcv;
 
+import id.mathcalc.Vector3d;
 import id.xfunction.Preconditions;
 import java.util.List;
 import org.opencv.core.Core;
@@ -72,5 +73,13 @@ public class MatConverters {
         var buf = new int[matrix.channels() * matrix.size(0)];
         matrix.get(0, 0, buf);
         return buf;
+    }
+
+    public Vector3d copyToVector3d(Mat matrix) {
+        Preconditions.equals(3, matrix.rows(), "Vector matrix has wrong number of rows");
+        Preconditions.equals(1, matrix.cols(), "Vector matrix has wrong number of cols");
+        var data = new double[3];
+        matrix.get(0, 0, data);
+        return new Vector3d(data[0], data[1], data[2]);
     }
 }
