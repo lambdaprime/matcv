@@ -17,11 +17,13 @@
  */
 package id.matcv;
 
+import id.matcv.accessors.Float2DAccessor;
+import id.matcv.accessors.Vector2f2DAccessor;
 import id.mathcalc.Vector2f;
 import id.xfunction.Preconditions;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.function.BiFunction;
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
@@ -32,10 +34,10 @@ import org.opencv.imgproc.Imgproc;
 /**
  * @author lambdaprime intid@protonmail.com
  */
-public class OpencvKit {
+public class OpenCvKit {
 
     /** Add an alpha 255 channel to the RGB image */
-    public static Mat addAlpha(Mat mat) {
+    public Mat addAlpha(Mat mat) {
         var mv = new LinkedList<Mat>();
         var alpha = new Mat(mat.size(), CvType.CV_8UC1, new Scalar(255));
         Core.split(mat, mv);
@@ -61,7 +63,7 @@ public class OpencvKit {
      * <p>Scalar sizes aligned which means Scalar(1.0, 2.0, 3.0) in memory will take size 4 not 3 =>
      * the output array has additional zeros.
      */
-    public static Mat toFlatMatrix(List<Scalar> scalars) {
+    public Mat toFlatMatrix(List<Scalar> scalars) {
         int scalarLen = scalars.get(0).val.length;
         var mat = new Mat(1, scalars.size() * scalarLen, CvType.CV_32F);
         for (int i = 0; i < scalars.size(); i++) {
@@ -103,39 +105,71 @@ public class OpencvKit {
      *
      * @param image 2D matrix
      */
-    public static void drawVectorField(
+    public void drawVectorField(
             Mat image,
             int stepX,
             int stepY,
             Scalar color,
-            BiFunction<Integer, Integer, Float> shadowX,
-            BiFunction<Integer, Integer, Float> shadowY) {
+            Float2DAccessor shadowX,
+            Float2DAccessor shadowY) {
         drawVectorField(
                 image,
                 stepX,
                 stepY,
                 color,
-                (x, y) -> new Vector2f(shadowX.apply(x, y), shadowY.apply(x, y)));
+                Vector2f2DAccessor.fromGetter(
+                        shadowX.rows(),
+                        shadowX.cols(),
+                        (x, y) -> new Vector2f(shadowX.get(x, y), shadowY.get(x, y))));
     }
 
     /**
-     * @see #drawVectorField(Mat, int, int, Scalar, BiFunction, BiFunction)
+     * @see #drawVectorField(Mat, int, int, Scalar, Float2DAccessor, Float2DAccessor)
      */
-    public static void drawVectorField(
-            Mat image,
-            int stepX,
-            int stepY,
-            Scalar color,
-            BiFunction<Integer, Integer, Vector2f> vectorCalc) {
+    public void drawVectorField(
+            Mat image, int stepX, int stepY, Scalar color, Vector2f2DAccessor vectorCalc) {
         Preconditions.isTrue(stepX < image.cols(), "Step exceeds number of rows in the image");
         Preconditions.isTrue(stepY < image.rows(), "Step exceeds number of cols in the image");
         for (int x = 0; x < image.cols(); x += stepX) {
             for (int y = 0; y < image.rows(); y += stepY) {
                 var from = new Point(x, y);
-                var vec = vectorCalc.apply(x, y);
+                var vec = vectorCalc.get(x, y);
                 var to = new Point(x + vec.n1, y + vec.n2);
                 Imgproc.arrowedLine(image, from, to, color);
             }
         }
+    }
+
+    /**
+     * Calculate new points with respect to weighted average for them.
+     *
+     * @param windowSize size of the window around the points which will define what surrounding
+     *     points will take part in calculation of the average
+     * @return list of same number of points as in original list where each point calculated based
+     *     on its weighted average
+     */
+    public List<Point> applyWeightedAverage(
+            Float2DAccessor weights, int windowSize, List<Point> points) {
+        var len = windowSize / 2;
+        var out = new ArrayList<Point>(points.size());
+        for (var p : points) {
+            float sumWeights = 0;
+            float sumCols = 0;
+            float sumRows = 0;
+            for (int row = Math.max(0, (int) p.y - len);
+                    row < Math.min(weights.rows(), p.y + len + 1);
+                    row++) {
+                for (int col = Math.max(0, (int) p.x - len);
+                        col < Math.min(weights.cols(), p.x + len + 1);
+                        col++) {
+                    var w = weights.get(row, col);
+                    sumWeights += w;
+                    sumCols += col * w;
+                    sumRows += row * w;
+                }
+            }
+            out.add(new Point(sumCols / sumWeights, sumRows / sumWeights));
+        }
+        return out;
     }
 }

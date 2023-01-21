@@ -17,6 +17,7 @@
  */
 package id.matcv;
 
+import id.matcv.accessors.Float2DAccessor;
 import id.xfunction.ResourceUtils;
 import java.io.IOException;
 import java.util.List;
@@ -24,18 +25,20 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
+import org.opencv.core.Point;
 import org.opencv.core.Scalar;
 
 /**
  * @author lambdaprime intid@protonmail.com
  */
-public class OpencvKitTest extends OpencvTest {
+public class OpenCvKitTest extends OpencvTest {
     private static final ResourceUtils utils = new ResourceUtils();
+    private OpenCvKit openCvKit = new OpenCvKit();
 
     @Test
     public void test_toFlatMatrix() {
         Mat out =
-                OpencvKit.toFlatMatrix(
+                openCvKit.toFlatMatrix(
                         List.of(
                                 new Scalar(1.0, 2.0, 3.0),
                                 new Scalar(3.0, 4.0, 5.0),
@@ -64,13 +67,39 @@ public class OpencvKitTest extends OpencvTest {
                     {0, 0, 0, 0, 0, 0},
                     {0, 0, 0, 0, 0, 0}
                 };
-        OpencvKit.drawVectorField(
+        openCvKit.drawVectorField(
                 image,
                 10,
                 10,
                 RgbColors.RED,
-                (x, y) -> 6 * shadowY[x / 10][y / 10],
-                (x, y) -> 6 * shadowX[x / 10][y / 10]);
+                Float2DAccessor.fromGetter(60, 60, (x, y) -> 6 * shadowY[x / 10][y / 10]),
+                Float2DAccessor.fromGetter(60, 60, (x, y) -> 6 * shadowX[x / 10][y / 10]));
         Assertions.assertEquals(utils.readResource("drawVectorField"), image.dump());
+    }
+
+    @Test
+    public void test_applyWeightedAverage() throws IOException {
+        var weights =
+                new float[][] {
+                    {0, 3, 0, 0, 0, 0},
+                    {1, 2, 0, 0, 1, 0},
+                    {0, 1, 1, 1, 2, 0},
+                    {0, 1, 1, 1, 1, 2},
+                };
+        // x = (3 + 2 + 1 + 2) / 8 = 1
+        // y = (1 + 2 + 2 + 2) / 8 = 7 / 8 = 0.875
+        Assertions.assertEquals(
+                "[{1.0, 0.875}]",
+                openCvKit
+                        .applyWeightedAverage(
+                                Float2DAccessor.fromArray(weights), 3, List.of(new Point(1, 1)))
+                        .toString());
+        // x = (4 + 3 + 8 + 3 + 4 + 10) / 8 = 4.0
+        Assertions.assertEquals(
+                "[{4.0, 2.375}]",
+                openCvKit
+                        .applyWeightedAverage(
+                                Float2DAccessor.fromArray(weights), 3, List.of(new Point(4, 2)))
+                        .toString());
     }
 }

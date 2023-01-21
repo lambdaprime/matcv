@@ -19,7 +19,7 @@ package id.matcv.feature.match;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import id.matcv.OpencvKit;
+import id.matcv.OpenCvKit;
 import id.matcv.feature.descriptor.FileDescriptor;
 import java.io.IOException;
 import java.nio.file.Paths;
@@ -31,15 +31,16 @@ import org.opencv.core.Scalar;
 public class MatchersTest {
 
     private Matchers matchers = new Matchers();
+    private OpenCvKit openCvKit = new OpenCvKit();
 
     @Test
     public void test_matchKnn() throws IOException {
         // sqrt((1-5)^2 + (2-6)^2 + (3-7)^2 + (4-8)^2) = 8
         Mat out1 =
-                OpencvKit.toFlatMatrix(
+                openCvKit.toFlatMatrix(
                         List.of(new Scalar(1), new Scalar(2), new Scalar(3), new Scalar(4)));
         Mat out2 =
-                OpencvKit.toFlatMatrix(
+                openCvKit.toFlatMatrix(
                         List.of(new Scalar(5), new Scalar(6), new Scalar(7), new Scalar(8)));
         FileDescriptor desc1 = new FileDescriptor(out1, Paths.get("1"));
         FileDescriptor desc2 = new FileDescriptor(out2, Paths.get("2"));
@@ -51,10 +52,10 @@ public class MatchersTest {
     @Test
     public void test_matchRadius() throws IOException {
         Mat out1 =
-                OpencvKit.toFlatMatrix(
+                openCvKit.toFlatMatrix(
                         List.of(new Scalar(1), new Scalar(2), new Scalar(3), new Scalar(4)));
         Mat out2 =
-                OpencvKit.toFlatMatrix(
+                openCvKit.toFlatMatrix(
                         List.of(new Scalar(5), new Scalar(6), new Scalar(7), new Scalar(8)));
         FileDescriptor desc1 = new FileDescriptor(out1, Paths.get("1"));
         FileDescriptor desc2 = new FileDescriptor(out2, Paths.get("2"));

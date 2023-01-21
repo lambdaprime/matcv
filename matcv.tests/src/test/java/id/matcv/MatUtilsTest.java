@@ -18,6 +18,7 @@
 package id.matcv;
 
 import java.io.IOException;
+import java.util.Arrays;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.opencv.core.MatOfFloat;
@@ -44,7 +45,8 @@ public class MatUtilsTest extends OpencvTest {
                 new MatOfFloat(1, 0, 3, 0, 1, 1, 0, 3, 4, 5, 1, 7, 3, 0, 5, 1, 0, 3, 0, 5)
                         .reshape(1, 4);
         System.out.println(mat);
-        System.out.println(mat.dump());
+        System.out.println("dump " + mat.dump());
+        System.out.println(Arrays.toString(mat.get(2, 1)));
         Assertions.assertEquals(
                 "[{4.0, 1.0}, {1.0, 2.0}, {4.0, 2.0}, {4.0, 3.0}]",
                 utils.findPeaks(mat, 5).toString());
