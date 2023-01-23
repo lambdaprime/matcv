@@ -17,11 +17,22 @@
  */
 package id.mathcalc;
 
-import id.xfunction.XJsonStringBuilder;
+import id.xfunction.XJson;
 import java.util.Objects;
+import java.util.Optional;
 
+/**
+ * Vector which contains three doubles.
+ *
+ * <p>Vector itself is immutable all public fields are final.
+ *
+ * <p>All operations are immutable and return new copy of the vector.
+ *
+ * @author lambdaprime intid@protonmail.com
+ */
 public class Vector3d {
 
+    private Optional<String> cachedToString = Optional.empty();
     public final double n1, n2, n3;
 
     public Vector3d(Vector3d vec) {
@@ -73,10 +84,9 @@ public class Vector3d {
 
     @Override
     public String toString() {
-        var builder = new XJsonStringBuilder();
-        builder.append("n1", n1);
-        builder.append("n2", n2);
-        builder.append("n3", n3);
-        return builder.toString();
+        if (cachedToString.isEmpty()) {
+            cachedToString = Optional.of(XJson.asString("values", new double[] {n1, n2, n3}));
+        }
+        return cachedToString.get();
     }
 }

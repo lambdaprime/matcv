@@ -17,11 +17,22 @@
  */
 package id.mathcalc;
 
-import id.xfunction.XJsonStringBuilder;
+import id.xfunction.XJson;
 import java.util.Objects;
+import java.util.Optional;
 
+/**
+ * Vector which contains two floats.
+ *
+ * <p>Vector itself is immutable all public fields are final.
+ *
+ * <p>All operations are immutable and return new copy of the vector.
+ *
+ * @author lambdaprime intid@protonmail.com
+ */
 public class Vector2f {
 
+    private Optional<String> cachedToString = Optional.empty();
     public final float n1, n2;
 
     public Vector2f(Vector2f vec) {
@@ -71,9 +82,9 @@ public class Vector2f {
 
     @Override
     public String toString() {
-        var builder = new XJsonStringBuilder();
-        builder.append("n1", n1);
-        builder.append("n2", n2);
-        return builder.toString();
+        if (cachedToString.isEmpty()) {
+            cachedToString = Optional.of(XJson.asString("values", new float[] {n1, n2}));
+        }
+        return cachedToString.get();
     }
 }
