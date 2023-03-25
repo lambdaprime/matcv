@@ -51,10 +51,10 @@ public class MatConverters {
     }
 
     /**
-     * Certain methods in OpenCV accept List&ltMat> instead of List&lt? extends ;Mat> (example is
-     * {@link Core#vconcat(List, Mat)}) This cause a compile time error if you have list of some
-     * other types which extend {@link Mat}. To deal with this you may need to use either cast
-     * operation or this method.
+     * Certain methods in OpenCV accept {@link List<Mat>} instead of {@link List<? extends Mat>}
+     * (example is {@link Core#vconcat(List, Mat)}) This cause a compile time error if you have list
+     * of some other types which extend {@link Mat}. To deal with this you may need to use either
+     * cast operation or this method.
      */
     public List<Mat> toListOfMat(List<? extends Mat> list) {
         return (List<Mat>) list;

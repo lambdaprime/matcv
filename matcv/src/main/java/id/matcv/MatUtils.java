@@ -89,7 +89,7 @@ public class MatUtils {
     /**
      * Log given slice of the matrix (ROI) including its description and shape.
      *
-     * <p>It works only when DEBUG ({@link Level.FINER} logging level is enabled, otherwise it does
+     * <p>It works only when DEBUG ({@link Level#FINER} logging level is enabled, otherwise it does
      * nothing.
      */
     public void debugMat(String description, Mat matrix, Rect slice) {
@@ -101,7 +101,7 @@ public class MatUtils {
     /**
      * Log given matrix including its description and shape.
      *
-     * <p>It works only when DEBUG ({@link Level.FINER} logging level is enabled, otherwise it does
+     * <p>It works only when DEBUG ({@link Level#FINER} logging level is enabled, otherwise it does
      * nothing.
      */
     public void debugMat(String description, Mat matrix) {
@@ -112,7 +112,7 @@ public class MatUtils {
     /**
      * Log given matrix shape.
      *
-     * <p>It works only when DEBUG ({@link Level.FINER} logging level is enabled, otherwise it does
+     * <p>It works only when DEBUG ({@link Level#FINER} logging level is enabled, otherwise it does
      * nothing.
      */
     public void debugShape(String description, Mat matrix) {

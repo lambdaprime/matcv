@@ -1,6 +1,6 @@
 plugins {
-    id 'com.diffplug.spotless'
-    id 'jacoco'
+  id 'com.diffplug.spotless'
+  id 'jacoco'
 }
 
 dependencies {
@@ -14,42 +14,42 @@ dependencies {
 }
 
 jacoco {
-    // Java 17 support
-    toolVersion = "0.8.7"
+  // Java 17 support
+  toolVersion = "0.8.7"
 }
 
 test {
-    useJUnitPlatform()
-    systemProperty "java.library.path", "/usr/lib/jni"
+  useJUnitPlatform()
+  systemProperty "java.library.path", "/usr/lib/jni"
 
-    finalizedBy jacocoTestReport, jacocoTestCoverageVerification
+  finalizedBy jacocoTestReport, jacocoTestCoverageVerification
 
-    testLogging {
-        events "started", "failed"
-    }
+  testLogging {
+    events "started", "failed"
+  }
 }
 
 jacocoTestReport {
-    // generate only HTML report
-    reports {
-        xml.enabled = false
-        csv.enabled = false
-        html.enabled = true
-    }
-    sourceDirectories.from = project(':matcv').sourceSets.main.java.srcDirs
-    classDirectories.from = project(':matcv').sourceSets.main.java.classesDirectory
+  // generate only HTML report
+  reports {
+    xml.required = false
+    csv.required = false
+    html.required = true
+  }
+  sourceDirectories.from = project(':matcv').sourceSets.main.java.srcDirs
+  classDirectories.from = project(':matcv').sourceSets.main.java.classesDirectory
 }
 
 jacocoTestCoverageVerification {
-    sourceDirectories.from = project(':matcv').sourceSets.main.java.srcDirs
-    classDirectories.from = project(':matcv').sourceSets.main.java.classesDirectory
-    afterEvaluate {
-        classDirectories.setFrom(files(classDirectories.files.collect {
-            fileTree(dir: it, exclude:  [
-                // none
-            ])
-        }))
-    }
+  sourceDirectories.from = project(':matcv').sourceSets.main.java.srcDirs
+  classDirectories.from = project(':matcv').sourceSets.main.java.classesDirectory
+  afterEvaluate {
+    classDirectories.setFrom(files(classDirectories.files.collect {
+      fileTree(dir: it, exclude:  [
+        // none
+      ])
+    }))
+  }
 }
 
 // run spotless and format code before the build
