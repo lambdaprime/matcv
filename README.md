@@ -1,4 +1,4 @@
-**matcv** - Java library for Computer Vision. It is based on [OpenCV](https://github.com/opencv).
+**matcv** - Java module which provides different functionality for Computer Vision and extensions to [OpenCV](https://github.com/opencv).
 
 # Requirements
 

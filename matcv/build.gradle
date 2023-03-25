@@ -16,17 +16,36 @@ plugins {
 apply plugin : 'eclipse'
 
 dependencies {
-    api files('/usr/share/java/opencv.jar')
-    api "io.github.lambdaprime:id.xfunction:20.0"
+  api "org.openpnp:opencv:4.6.0-0"
+  api "io.github.lambdaprime:id.xfunction:20.0"
 }
 
 jar {
-    manifest { 
-        attributes 'Automatic-Module-Name': 'id.matcv' 
-    }
+  manifest { 
+    attributes 'Automatic-Module-Name': 'id.matcv' 
+  }
+}
+
+java {
+  // disable Gradle modularity support since it is not working properly
+  // for non modules like OpenPnP OpenCV and setup module path manually later:
+  // https://github.com/gradle/gradle/issues/17609
+  // https://github.com/gradle/gradle/issues/12630
+  modularity.inferModulePath = false
+}
+
+compileJava {
+  doFirst {
+    options.compilerArgs = [
+      '--module-path', classpath.asPath
+    ]
+    classpath = files()
+  }
 }
 
 javadoc {
+  options.modulePath = classpath.getFiles().stream()
+    .collect(java.util.stream.Collectors.toList())
   options.noTimestamp = true
   options.noQualifiers = ["all"]
   options.noTree = true
