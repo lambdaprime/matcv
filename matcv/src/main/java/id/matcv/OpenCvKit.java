@@ -153,9 +153,9 @@ public class OpenCvKit {
         var len = windowSize / 2;
         var out = new ArrayList<Point>(points.size());
         for (var p : points) {
-            float sumWeights = 0;
-            float sumCols = 0;
-            float sumRows = 0;
+            double sumWeights = 0;
+            double sumCols = 0;
+            double sumRows = 0;
             for (int row = Math.max(0, (int) p.y - len);
                     row < Math.min(weights.rows(), p.y + len + 1);
                     row++) {

@@ -110,6 +110,20 @@ public class MatUtils {
     }
 
     /**
+     * @see #debugMat(String, Mat)
+     */
+    public void debugMat(String description, List<Mat> matrices) {
+        if (!LOGGER.isLoggable(Level.FINER)) return;
+        if (matrices.isEmpty()) {
+            LOGGER.fine(description + " is empty");
+            return;
+        }
+        for (int i = 0; i < matrices.size(); i++) {
+            debugMat(description + " index " + i, matrices.get(i));
+        }
+    }
+
+    /**
      * Log given matrix shape.
      *
      * <p>It works only when DEBUG ({@link Level#FINER} logging level is enabled, otherwise it does

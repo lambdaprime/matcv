@@ -17,6 +17,8 @@
  */
 package id.matcv.accessors;
 
+import id.xfunction.Preconditions;
+
 /**
  * Provides abstract access to the 2D data without exposing the details where and how it is stored.
  *
@@ -26,6 +28,8 @@ package id.matcv.accessors;
  */
 public interface Float2DAccessor {
     float get(int row, int col);
+
+    float get(double row, double col);
 
     int rows();
 
@@ -49,6 +53,13 @@ public interface Float2DAccessor {
             public int rows() {
                 return rows;
             }
+
+            @Override
+            public float get(double row, double col) {
+                Preconditions.isTrue(row - (long) row == 0, "Row index is not a whole number");
+                Preconditions.isTrue(col - (long) col == 0, "Col index is not a whole number");
+                return get((int) row, (int) col);
+            }
         };
     }
 
@@ -64,6 +75,13 @@ public interface Float2DAccessor {
             @Override
             public float get(int row, int col) {
                 return a[row][col];
+            }
+
+            @Override
+            public float get(double row, double col) {
+                Preconditions.isTrue(row - (long) row == 0, "Row index is not a whole number");
+                Preconditions.isTrue(col - (long) col == 0, "Col index is not a whole number");
+                return get((int) row, (int) col);
             }
 
             @Override
@@ -88,6 +106,13 @@ public interface Float2DAccessor {
             @Override
             public float get(int row, int col) {
                 return getter.get(row, col);
+            }
+
+            @Override
+            public float get(double row, double col) {
+                Preconditions.isTrue(row - (long) row == 0, "Row index is not a whole number");
+                Preconditions.isTrue(col - (long) col == 0, "Col index is not a whole number");
+                return get((int) row, (int) col);
             }
 
             @Override

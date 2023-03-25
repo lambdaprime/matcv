@@ -35,6 +35,12 @@ public class Vector3d {
     private Optional<String> cachedToString = Optional.empty();
     public final double n1, n2, n3;
 
+    public Vector3d() {
+        this.n1 = 0;
+        this.n2 = 0;
+        this.n3 = 0;
+    }
+
     public Vector3d(Vector3d vec) {
         this.n1 = vec.n1;
         this.n2 = vec.n2;
