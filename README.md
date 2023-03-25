@@ -6,7 +6,7 @@ Java 17+
 
 # Download
 
-Download [release versions](https://github.com/lambdaprime/matcv/releases)
+Download [release versions](/matcv/release/CHANGELOG.md)
 
 Or you can add dependency to it as follows:
 
@@ -14,7 +14,7 @@ Gradle:
 
 ```
 dependencies {
-    implementation 'io.github.lambdaprime:matcv:1.0'
+  implementation 'io.github.lambdaprime:matcv:3.0'
 }
 ```
 
