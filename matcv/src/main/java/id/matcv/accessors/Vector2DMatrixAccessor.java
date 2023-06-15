@@ -17,17 +17,18 @@
  */
 package id.matcv.accessors;
 
-import id.mathcalc.Vector2f;
+import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 
 /**
- * Provides abstract access to the 2D data without exposing the details where and how it is stored.
+ * Provides abstract access to the 2D matrix of {@link Vector2D} values without exposing the details
+ * where and how it is stored.
  *
  * <p>It helps to write generic algorithms which can process data from different sources.
  *
  * @author lambdaprime intid@protonmail.com
  */
-public interface Vector2f2DAccessor {
-    Vector2f get(int row, int col);
+public interface Vector2DMatrixAccessor {
+    Vector2D get(int row, int col);
 
     int rows();
 
@@ -35,13 +36,13 @@ public interface Vector2f2DAccessor {
 
     @FunctionalInterface
     public interface Getter {
-        Vector2f get(int row, int col);
+        Vector2D get(int row, int col);
     }
 
-    public static Vector2f2DAccessor fromGetter(int rows, int cols, Getter getter) {
-        return new Vector2f2DAccessor() {
+    public static Vector2DMatrixAccessor fromGetter(int rows, int cols, Getter getter) {
+        return new Vector2DMatrixAccessor() {
             @Override
-            public Vector2f get(int row, int col) {
+            public Vector2D get(int row, int col) {
                 return getter.get(row, col);
             }
 

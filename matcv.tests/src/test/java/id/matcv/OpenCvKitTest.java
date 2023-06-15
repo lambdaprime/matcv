@@ -17,7 +17,7 @@
  */
 package id.matcv;
 
-import id.matcv.accessors.Float2DAccessor;
+import id.matcv.accessors.FloatMatrixAccessor;
 import id.xfunction.ResourceUtils;
 import java.io.IOException;
 import java.util.List;
@@ -72,8 +72,8 @@ public class OpenCvKitTest extends OpencvTest {
                 10,
                 10,
                 RgbColors.RED,
-                Float2DAccessor.fromGetter(60, 60, (x, y) -> 6 * shadowY[x / 10][y / 10]),
-                Float2DAccessor.fromGetter(60, 60, (x, y) -> 6 * shadowX[x / 10][y / 10]));
+                FloatMatrixAccessor.fromGetter(60, 60, (x, y) -> 6 * shadowY[x / 10][y / 10]),
+                FloatMatrixAccessor.fromGetter(60, 60, (x, y) -> 6 * shadowX[x / 10][y / 10]));
         Assertions.assertEquals(utils.readResource("drawVectorField"), image.dump());
     }
 
@@ -92,14 +92,14 @@ public class OpenCvKitTest extends OpencvTest {
                 "[{1.0, 0.875}]",
                 openCvKit
                         .applyWeightedAverage(
-                                Float2DAccessor.fromArray(weights), 3, List.of(new Point(1, 1)))
+                                FloatMatrixAccessor.fromArray(weights), 3, List.of(new Point(1, 1)))
                         .toString());
         // x = (4 + 3 + 8 + 3 + 4 + 10) / 8 = 4.0
         Assertions.assertEquals(
                 "[{4.0, 2.375}]",
                 openCvKit
                         .applyWeightedAverage(
-                                Float2DAccessor.fromArray(weights), 3, List.of(new Point(4, 2)))
+                                FloatMatrixAccessor.fromArray(weights), 3, List.of(new Point(4, 2)))
                         .toString());
     }
 }

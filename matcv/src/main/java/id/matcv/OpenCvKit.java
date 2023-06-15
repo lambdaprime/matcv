@@ -17,13 +17,13 @@
  */
 package id.matcv;
 
-import id.matcv.accessors.Float2DAccessor;
-import id.matcv.accessors.Vector2f2DAccessor;
-import id.mathcalc.Vector2f;
+import id.matcv.accessors.FloatMatrixAccessor;
+import id.matcv.accessors.Vector2DMatrixAccessor;
 import id.xfunction.Preconditions;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
@@ -110,31 +110,31 @@ public class OpenCvKit {
             int stepX,
             int stepY,
             Scalar color,
-            Float2DAccessor shadowX,
-            Float2DAccessor shadowY) {
+            FloatMatrixAccessor shadowX,
+            FloatMatrixAccessor shadowY) {
         drawVectorField(
                 image,
                 stepX,
                 stepY,
                 color,
-                Vector2f2DAccessor.fromGetter(
+                Vector2DMatrixAccessor.fromGetter(
                         shadowX.rows(),
                         shadowX.cols(),
-                        (x, y) -> new Vector2f(shadowX.get(x, y), shadowY.get(x, y))));
+                        (x, y) -> new Vector2D(shadowX.get(x, y), shadowY.get(x, y))));
     }
 
     /**
-     * @see #drawVectorField(Mat, int, int, Scalar, Float2DAccessor, Float2DAccessor)
+     * @see #drawVectorField(Mat, int, int, Scalar, FloatMatrixAccessor, FloatMatrixAccessor)
      */
     public void drawVectorField(
-            Mat image, int stepX, int stepY, Scalar color, Vector2f2DAccessor vectorCalc) {
+            Mat image, int stepX, int stepY, Scalar color, Vector2DMatrixAccessor vectorCalc) {
         Preconditions.isTrue(stepX < image.cols(), "Step exceeds number of rows in the image");
         Preconditions.isTrue(stepY < image.rows(), "Step exceeds number of cols in the image");
         for (int x = 0; x < image.cols(); x += stepX) {
             for (int y = 0; y < image.rows(); y += stepY) {
                 var from = new Point(x, y);
                 var vec = vectorCalc.get(x, y);
-                var to = new Point(x + vec.n1, y + vec.n2);
+                var to = new Point(x + vec.getX(), y + vec.getY());
                 Imgproc.arrowedLine(image, from, to, color);
             }
         }
@@ -149,7 +149,7 @@ public class OpenCvKit {
      *     on its weighted average
      */
     public List<Point> applyWeightedAverage(
-            Float2DAccessor weights, int windowSize, List<Point> points) {
+            FloatMatrixAccessor weights, int windowSize, List<Point> points) {
         var len = windowSize / 2;
         var out = new ArrayList<Point>(points.size());
         for (var p : points) {

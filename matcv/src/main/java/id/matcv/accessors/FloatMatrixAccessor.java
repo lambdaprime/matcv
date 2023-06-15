@@ -20,13 +20,14 @@ package id.matcv.accessors;
 import id.xfunction.Preconditions;
 
 /**
- * Provides abstract access to the 2D data without exposing the details where and how it is stored.
+ * Provides abstract access to the 2D matrix of float values without exposing the details where and
+ * how it is stored.
  *
  * <p>It helps to write generic algorithms which can process data from different sources.
  *
  * @author lambdaprime intid@protonmail.com
  */
-public interface Float2DAccessor {
+public interface FloatMatrixAccessor {
     float get(int row, int col);
 
     float get(double row, double col);
@@ -35,10 +36,10 @@ public interface Float2DAccessor {
 
     int cols();
 
-    public static Float2DAccessor fromArray(float[] a, int rows, int cols) {
+    public static FloatMatrixAccessor fromArray(float[] a, int rows, int cols) {
         if (cols * rows < a.length)
             throw new IllegalArgumentException("Number of rows and cols exceeds array length");
-        return new Float2DAccessor() {
+        return new FloatMatrixAccessor() {
             @Override
             public float get(int row, int col) {
                 return a[row * cols + col];
@@ -66,12 +67,12 @@ public interface Float2DAccessor {
     /**
      * @param shape shape[0] = number of rows, shape[1] = number of columns
      */
-    public static Float2DAccessor fromArray(float[] a, int[] shape) {
+    public static FloatMatrixAccessor fromArray(float[] a, int[] shape) {
         return fromArray(a, shape[0], shape[1]);
     }
 
-    public static Float2DAccessor fromArray(float[][] a) {
-        return new Float2DAccessor() {
+    public static FloatMatrixAccessor fromArray(float[][] a) {
+        return new FloatMatrixAccessor() {
             @Override
             public float get(int row, int col) {
                 return a[row][col];
@@ -101,8 +102,8 @@ public interface Float2DAccessor {
         float get(int row, int col);
     }
 
-    public static Float2DAccessor fromGetter(int rows, int cols, Getter getter) {
-        return new Float2DAccessor() {
+    public static FloatMatrixAccessor fromGetter(int rows, int cols, Getter getter) {
+        return new FloatMatrixAccessor() {
             @Override
             public float get(int row, int col) {
                 return getter.get(row, col);

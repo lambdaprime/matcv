@@ -9,9 +9,9 @@
 module id.matcv {
     requires id.xfunction;
     requires java.logging;
-    requires opencv;
+    requires transitive opencv;
+    requires transitive commons.math3;
 
-    exports id.mathcalc;
     exports id.matcv;
     exports id.matcv.accessors;
     exports id.matcv.grid;
