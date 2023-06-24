@@ -35,6 +35,21 @@ public record CameraInfo(
         Matrix rectificationMatrix,
         Matrix projectionMatrix) {
 
+    public static final Matrix DEFAULT_DISTORTION = new Matrix(1, 5, new double[] {0, 0, 0, 0, 0});
+    public static final Matrix DEFAULT_RECTIFICATION =
+            new Matrix(
+                    3,
+                    3,
+                    new double[] {
+                        1, 0, 0,
+                        0, 1, 0,
+                        0, 0, 1
+                    });
+
+    public CameraInfo(Matrix cameraMatrix) {
+        this(cameraMatrix, DEFAULT_DISTORTION, DEFAULT_RECTIFICATION, null);
+    }
+
     public record Matrix(int rows, int cols, double[] data) {
 
         private static final MatConverters converters = new MatConverters();
@@ -62,4 +77,30 @@ public record CameraInfo(
             return new MatOfDouble(data);
         }
     }
+
+    public static final CameraInfo REALSENSE_D435i =
+            new CameraInfo(
+                    new Matrix(
+                            3,
+                            3,
+                            new double[] {
+                                909.96856689453125, 0.0, 635.51580810546875,
+                                0.0, 909.84716796875, 353.34024047851562,
+                                0.0, 0.0, 1.0
+                            }));
+
+    /**
+     * Camera focal Length setting set to 50mm. Center point specified for render resolution
+     * 1280px/720px
+     */
+    public static final CameraInfo BLENDER_DEFAULT =
+            new CameraInfo(
+                    new Matrix(
+                            3,
+                            3,
+                            new double[] {
+                                50.0, 0.0, 640.0,
+                                0.0, 50.0, 360.0,
+                                0.0, 0.0, 1.0
+                            }));
 }
