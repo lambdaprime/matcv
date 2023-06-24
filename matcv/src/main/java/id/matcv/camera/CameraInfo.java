@@ -17,7 +17,7 @@
  */
 package id.matcv.camera;
 
-import id.matcv.MatConverters;
+import id.matcv.converters.MatConverters;
 import java.util.Arrays;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
