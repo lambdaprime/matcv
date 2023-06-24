@@ -16,7 +16,7 @@ plugins {
 apply plugin : 'eclipse'
 
 dependencies {
-  api "org.openpnp:opencv:4.6.0-0"
+  api files('/usr/share/java/opencv.jar')
   api 'org.apache.commons:commons-math3:3.6.1'
   api "io.github.lambdaprime:id.xfunction:20.0"
 }
