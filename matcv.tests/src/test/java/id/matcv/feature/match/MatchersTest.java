@@ -19,8 +19,8 @@ package id.matcv.feature.match;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import id.matcv.FileMat;
 import id.matcv.OpenCvKit;
-import id.matcv.feature.descriptor.FileDescriptor;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.List;
@@ -42,8 +42,8 @@ public class MatchersTest {
         Mat out2 =
                 openCvKit.toFlatMatrix(
                         List.of(new Scalar(5), new Scalar(6), new Scalar(7), new Scalar(8)));
-        FileDescriptor desc1 = new FileDescriptor(out1, Paths.get("1"));
-        FileDescriptor desc2 = new FileDescriptor(out2, Paths.get("2"));
+        FileMat desc1 = new FileMat(out1, Paths.get("1"));
+        FileMat desc2 = new FileMat(out2, Paths.get("2"));
         var matches = matchers.matchKnn(List.of(desc1), List.of(desc2), 1);
         assertEquals(8, matches.get(0).getDistance());
         assertEquals(1, matches.size());
@@ -57,9 +57,9 @@ public class MatchersTest {
         Mat out2 =
                 openCvKit.toFlatMatrix(
                         List.of(new Scalar(5), new Scalar(6), new Scalar(7), new Scalar(8)));
-        FileDescriptor desc1 = new FileDescriptor(out1, Paths.get("1"));
-        FileDescriptor desc2 = new FileDescriptor(out2, Paths.get("2"));
-        List<FileDescriptor> set = List.of(desc1, desc2);
+        FileMat desc1 = new FileMat(out1, Paths.get("1"));
+        FileMat desc2 = new FileMat(out2, Paths.get("2"));
+        List<FileMat> set = List.of(desc1, desc2);
 
         var matches = matchers.matchRadius(set, set, 9);
         assertEquals(0, matches.get(0).getDistance());

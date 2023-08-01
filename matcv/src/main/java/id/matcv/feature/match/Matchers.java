@@ -17,8 +17,8 @@
  */
 package id.matcv.feature.match;
 
+import id.matcv.FileMat;
 import id.matcv.converters.MatConverters;
-import id.matcv.feature.descriptor.FileDescriptor;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,9 +39,7 @@ public class Matchers {
 
     /** For every query descriptor it finds all train descriptors with a given distance */
     public List<MatchResult<Path>> matchRadius(
-            List<FileDescriptor> queryDescriptors,
-            List<FileDescriptor> trainDescriptors,
-            int distance) {
+            List<FileMat> queryDescriptors, List<FileMat> trainDescriptors, int distance) {
         return match(
                 queryDescriptors,
                 trainDescriptors,
@@ -56,9 +54,7 @@ public class Matchers {
 
     /** For every query descriptor it finds N best matches from a train descriptors */
     public List<MatchResult<Path>> matchKnn(
-            List<FileDescriptor> queryDescriptors,
-            List<FileDescriptor> trainDescriptors,
-            int count) {
+            List<FileMat> queryDescriptors, List<FileMat> trainDescriptors, int count) {
         return match(
                 queryDescriptors,
                 trainDescriptors,
@@ -72,10 +68,15 @@ public class Matchers {
     }
 
     private List<MatchResult<Path>> match(
-            List<FileDescriptor> queryDescriptors,
-            List<FileDescriptor> trainDescriptors,
-            MatchFunc func) {
+            List<FileMat> queryDescriptors, List<FileMat> trainDescriptors, MatchFunc func) {
         var querySet = new Mat();
+
+        // vconcat takes list of vectors:
+        // [1, 1, 1]
+        // [2, 2, 2]
+        // and concats then to single matrix
+        // [1, 1,
+        //  2, 2]
         Core.vconcat(converters.toListOfMat(queryDescriptors), querySet);
 
         var trainSet = new Mat();
