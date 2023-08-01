@@ -33,7 +33,7 @@ public class Matchers {
     private MatConverters converters = new MatConverters();
 
     @FunctionalInterface
-    public interface MatchFunc {
+    private interface MatchFunc {
         List<MatOfDMatch> match(Mat querySet, Mat trainSet);
     }
 

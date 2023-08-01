@@ -26,7 +26,7 @@ import org.opencv.core.Mat;
 import org.opencv.core.Size;
 
 /**
- * Extract patches from the image.
+ * Extract odd patches from the image.
  *
  * <p>First it applies grid on the image and then extracts all cells from it with odd coordinates.
  *
