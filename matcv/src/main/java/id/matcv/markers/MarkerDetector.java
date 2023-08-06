@@ -31,15 +31,13 @@ import org.opencv.core.Mat;
 
 public class MarkerDetector {
     private static final XLogger LOGGER = XLogger.getLogger(MarkerDetector.class);
-    private Mat img;
-    private LinkedList<MarkerLocation> markers = new LinkedList<>();
-    private Optional<MarkerLocation> origin = Optional.empty();
 
-    public MarkerDetector(Mat img) {
-        this.img = img;
-    }
+    public record Result(
+            Mat img, LinkedList<MarkerLocation> markers, Optional<MarkerLocation> origin) {}
 
-    public List<MarkerLocation> detect() {
+    public Result detect(Mat img) {
+        var origin = Optional.<MarkerLocation>empty();
+        var markers = new LinkedList<MarkerLocation>();
         Dictionary dictionary = Aruco.getPredefinedDictionary(MarkerType.getDict());
         List<Mat> corners = new ArrayList<>();
         Mat ids = new Mat();
@@ -78,14 +76,6 @@ public class MarkerDetector {
             if (mloc.marker().isOrigin()) origin = Optional.of(markers.getLast());
         }
         markers.sort(Comparator.<MarkerLocation, Marker>comparing(ml -> ml.marker()));
-        return markers;
-    }
-
-    public List<MarkerLocation> getMarkers() {
-        return markers;
-    }
-
-    public Optional<MarkerLocation> getOrigin() {
-        return origin;
+        return new Result(img, markers, origin);
     }
 }

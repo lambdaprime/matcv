@@ -17,6 +17,7 @@
  */
 package id.matcv.markers;
 
+import id.xfunction.XJsonStringBuilder;
 import java.nio.file.Path;
 import java.util.Optional;
 import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
@@ -59,5 +60,21 @@ public record MarkerLocation(
                 new MatOfPoint2f(corners.reshape(2, 4)),
                 vector,
                 Optional.empty());
+    }
+
+    @Override
+    public String toString() {
+        XJsonStringBuilder builder = new XJsonStringBuilder(this);
+        builder.append("marker", marker);
+        builder.append("p1", p1);
+        builder.append("p2", p2);
+        builder.append("p3", p3);
+        builder.append("p4", p4);
+        builder.append("center", center);
+        builder.append("heightPixels", heightPixels);
+        builder.append("widthPixels", widthPixels);
+        builder.append("vector", vector);
+        builder.append("imageFile", imageFile);
+        return builder.toString();
     }
 }
