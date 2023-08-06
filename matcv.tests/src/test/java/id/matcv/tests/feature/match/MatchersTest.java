@@ -15,12 +15,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package id.matcv.feature.match;
+package id.matcv.tests.feature.match;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import id.matcv.FileMat;
 import id.matcv.OpenCvKit;
+import id.matcv.feature.match.Matchers;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.List;

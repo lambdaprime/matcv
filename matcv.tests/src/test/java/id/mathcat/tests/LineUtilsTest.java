@@ -15,10 +15,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package id.mathcat;
+package id.mathcat.tests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import id.mathcat.LineUtils;
 import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 import org.junit.jupiter.api.Test;
 

@@ -15,8 +15,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package id.matcv;
+package id.matcv.tests;
 
+import id.matcv.OpenCvKit;
+import id.matcv.RgbColors;
 import id.matcv.accessors.FloatMatrixAccessor;
 import id.xfunction.ResourceUtils;
 import java.io.IOException;

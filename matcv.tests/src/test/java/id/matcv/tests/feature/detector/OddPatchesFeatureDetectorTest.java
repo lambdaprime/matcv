@@ -15,11 +15,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package id.matcv.feature.detector;
+package id.matcv.tests.feature.detector;
 
 import id.matcv.MatUtils;
-import id.matcv.OpencvTest;
 import id.matcv.SubmatrixDetector;
+import id.matcv.feature.detector.OddPatchesFeatureDetector;
+import id.matcv.tests.OpencvTest;
 import java.io.IOException;
 import org.opencv.highgui.HighGui;
 

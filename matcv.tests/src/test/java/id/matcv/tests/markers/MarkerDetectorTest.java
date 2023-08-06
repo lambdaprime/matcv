@@ -15,9 +15,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package id.matcv.markers;
+package id.matcv.tests.markers;
 
-import id.matcv.OpencvTest;
+import id.matcv.markers.MarkerDetector;
+import id.matcv.tests.OpencvTest;
 import id.xfunction.ResourceUtils;
 import java.nio.file.Paths;
 import org.junit.jupiter.api.Assertions;

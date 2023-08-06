@@ -15,8 +15,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package id.matcv;
+package id.matcv.tests;
 
+import id.matcv.MatUtils;
 import java.io.IOException;
 import java.util.Arrays;
 import org.junit.jupiter.api.Assertions;
