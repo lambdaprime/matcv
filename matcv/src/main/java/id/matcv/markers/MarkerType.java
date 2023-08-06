@@ -29,6 +29,7 @@ import org.opencv.aruco.Aruco;
  * @author lambdaprime intid@protonmail.com
  */
 public enum MarkerType {
+    /** Origin marker */
     ONE(1),
     TWO(2),
     THREE(3),

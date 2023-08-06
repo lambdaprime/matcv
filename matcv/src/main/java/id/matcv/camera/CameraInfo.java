@@ -90,8 +90,11 @@ public record CameraInfo(
                             }));
 
     /**
-     * Camera focal Length setting set to 50mm. Center point specified for render resolution
-     * 1280px/720px
+     * Default camera in <a href="https://www.blender.org/">Blender</a>
+     *
+     * <p>Camera focal Length set to 50mm.
+     *
+     * <p>Center point specified for render resolution 1280px/720px
      */
     public static final CameraInfo BLENDER_DEFAULT =
             new CameraInfo(

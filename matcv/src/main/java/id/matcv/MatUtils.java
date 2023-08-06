@@ -95,7 +95,10 @@ public class MatUtils {
     public void debugMat(String description, Mat matrix, Rect slice) {
         if (!LOGGER.isLoggable(Level.FINER)) return;
         debugShape(description, matrix);
-        LOGGER.fine(description + " slice " + slice + ":\n" + matrix.submat(slice).dump());
+        if (slice.equals(new Rect(0, 0, matrix.cols(), matrix.rows())))
+            description += " full dump ";
+        else description += " slice " + slice;
+        LOGGER.fine(description + ":\n" + matrix.submat(slice).dump());
     }
 
     /**

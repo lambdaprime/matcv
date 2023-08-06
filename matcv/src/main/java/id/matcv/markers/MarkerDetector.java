@@ -18,6 +18,7 @@
 package id.matcv.markers;
 
 import id.mathcat.LineUtils;
+import id.xfunction.logging.XLogger;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.LinkedList;
@@ -29,7 +30,7 @@ import org.opencv.aruco.Dictionary;
 import org.opencv.core.Mat;
 
 public class MarkerDetector {
-
+    private static final XLogger LOGGER = XLogger.getLogger(MarkerDetector.class);
     private Mat img;
     private LinkedList<MarkerLocation> markers = new LinkedList<>();
     private Optional<MarkerLocation> origin = Optional.empty();
@@ -47,7 +48,7 @@ public class MarkerDetector {
             Optional<MarkerType> type = MarkerType.findType((int) ids.get(i, 0)[0]);
             //            System.out.println(type);
             if (type.isEmpty()) {
-                System.out.println("Unknown marker type - ignoring");
+                LOGGER.warning("Unknown marker type - ignoring");
                 continue;
             }
             var m = corners.get(i);

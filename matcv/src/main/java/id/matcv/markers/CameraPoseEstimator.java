@@ -49,7 +49,8 @@ public class CameraPoseEstimator {
         Preconditions.equals(
                 MarkerType.getDict(),
                 Aruco.DICT_7X7_50,
-                "SOLVEPNP_IPPE_SQUARE requires square markers");
+                "SOLVEPNP_IPPE_SQUARE requires square markers. Currently supported are"
+                        + " DICT_7X7_50.");
         for (int i = 0; i < markers.size(); i++) {
             var rvec = new Mat();
             var tvec = new Mat();
