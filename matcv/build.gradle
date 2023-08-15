@@ -18,12 +18,17 @@ apply plugin : 'eclipse'
 dependencies {
   api files('/usr/share/java/opencv.jar')
   api 'org.apache.commons:commons-math3:3.6.1'
-  api "io.github.lambdaprime:id.xfunction:20.0"
+  api "io.github.lambdaprime:id.xfunction:23.0-SNAPSHOT"
+}
+
+configurations {
+  customConfig.extendsFrom implementation
 }
 
 jar {
   manifest { 
-    attributes 'Automatic-Module-Name': 'id.matcv' 
+    attributes 'Automatic-Module-Name': 'id.matcv',
+      'Main-Class': 'id.matcv.apps.MainApp'
   }
 }
 
@@ -56,18 +61,21 @@ javadoc {
   options.addBooleanOption('Xdoclint:all,-missing', true)
 }
 
-task createRelease(type: Copy) {
-  def out = 'release'
+def packageDir = "$buildDir/package/${projectName}"
+
+ext.artifacts = fileTree(include: ['*'], dir: "$packageDir/libs")
+
+task createRelease(type: Zip) {
+  archiveFileName = "$releaseFileName"
+  destinationDirectory = file("$projectDir/release")
+  from file("$packageDir/..")
+}
+
+task copyLibs(type: Copy) {
+  from configurations.customConfig 
   from jar.archiveFile
-  into out
+  into "${packageDir}/libs"
 }
-
-task cleanRelease(type: Delete) {
-  delete "$projectDir/release/*-SNAPSHOT.jar"
-}
-
-assemble.dependsOn createRelease
-clean.dependsOn cleanRelease
 
 task copyReadme(type: Copy) {
   from("../README.md")
@@ -77,7 +85,23 @@ task copyReadme(type: Copy) {
 
 // overwrite template README which comes from resources folder
 jar.dependsOn copyReadme
-javadoc.dependsOn copyReadme
+
+task createPackage(type: Copy, dependsOn: [copyLibs]) {
+  from "${project.rootDir}/README.md"
+  from "${project.rootDir}/LICENSE-2.0.txt"
+  from file("$projectDir/src/matcv-app")
+  into packageDir
+}
+
+task cleanRelease(type: Delete) {
+  delete "$packageDir"
+  delete "$projectDir/release/*-SNAPSHOT.zip"
+}
+
+createRelease.dependsOn createPackage
+assemble.dependsOn createRelease
+clean.dependsOn cleanRelease
+
 
 // run spotless and format code before the build
 classes.dependsOn spotlessApply

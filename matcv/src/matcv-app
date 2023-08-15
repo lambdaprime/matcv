@@ -1,0 +1,54 @@
+#!/usr/bin/env -S java --source 17
+
+import java.util.*;
+import java.util.stream.*;
+import java.io.*;
+import java.nio.file.*;
+
+/**
+ * Cross-platform launcher script for matcv.
+ *
+ * Website: https://github.com/lambdaprime/matcv
+ *
+ * @author lambdaprime intid@protonmail.com
+ */
+ class Launcher {
+
+    /**
+     * Parent folder of this script
+     */
+    static Path BASE_DIR;
+
+    static void fail(String msg) {
+        System.err.println(msg);
+        System.exit(1);
+    }
+
+    public static void main(String... args) throws Exception {
+        if (Runtime.version().feature() < 17)
+            fail("Java 17 is required");
+        
+        BASE_DIR = Paths.get(Launcher.class.getProtectionDomain().getCodeSource().getLocation().toURI())
+            .getParent().toAbsolutePath();
+        var libsDir = BASE_DIR.resolve("libs");
+        var classpath = Files.list(libsDir)
+            .map(Path::toString)
+            .collect(Collectors.joining(File.pathSeparator));
+        var jar = Files.list(libsDir)
+            .filter(p -> p.getFileName().toString().matches("matcv-.*\\.jar"))
+            .map(Path::toString)
+            .findFirst()
+            .orElseThrow(() -> new RuntimeException("matcv jar not found"));
+        var argsList = new ArrayList<String>(List.of(
+            "java",
+            "--add-modules=ALL-MODULE-PATH",
+            "-Djava.library.path=/usr/lib/jni",
+            "-p", classpath,
+            "-jar", jar));
+        argsList.addAll(Arrays.asList(args));
+        System.err.println("Run command: " + argsList);
+        // separate further output from application with a newline
+        System.err.println();
+        System.exit(new ProcessBuilder(argsList).inheritIO().start().waitFor());
+    }
+}

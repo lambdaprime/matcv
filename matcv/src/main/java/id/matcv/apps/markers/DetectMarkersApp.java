@@ -18,29 +18,38 @@
 package id.matcv.apps.markers;
 
 import id.matcv.camera.CameraInfo;
+import id.matcv.camera.CameraInfoPredefined;
 import id.matcv.markers.CameraPoseEstimator;
 import id.matcv.markers.MarkerDetector;
 import id.matcv.markers.MarkerUtils;
+import id.xfunction.cli.CommandOptions;
+import id.xfunction.cli.CommandOptions.Config;
 import id.xfunction.nio.file.FilePredicates;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import org.opencv.core.Core;
 import org.opencv.highgui.HighGui;
 import org.opencv.imgcodecs.Imgcodecs;
 
 public class DetectMarkersApp {
 
+    private static CommandOptions options;
+
     private static void usage() {
         System.out.println(
                 """
-                Usage: %s <INPUT_PATH>
-
                 Detects all markers present on the images. Markers are highlighted and their location is printed to console.
-                By default CameraInfo.BLENDER_DEFAULT is used.
+
+                Arguments: <INPUT_PATH> [-cameraInfo=<CAMERA_INFO>]
+
+                Where:
+
+                CAMERA_INFO - one of %s. Default is BLENDER_DEFAULT.
                 """
-                        .formatted(DetectMarkersApp.class.getSimpleName()));
+                        .formatted(Arrays.toString(CameraInfoPredefined.values())));
     }
 
     public static void main(String[] args) throws IOException {
@@ -48,6 +57,7 @@ public class DetectMarkersApp {
             usage();
             return;
         }
+        options = CommandOptions.collectOptions(new Config(true), args);
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
         Files.walk(Paths.get(args[0]), 1)
                 .filter(FilePredicates.match(".*\\.(png|jpg)"))
@@ -69,10 +79,17 @@ public class DetectMarkersApp {
                     new MarkerUtils().drawMarker(img, loc);
                 });
 
-        var poseEstimator = new CameraPoseEstimator(CameraInfo.BLENDER_DEFAULT);
+        var poseEstimator = new CameraPoseEstimator(getCameraInfo());
         poseEstimator.estimate(img, markers);
 
         HighGui.imshow(imageFile.toString(), img);
         HighGui.waitKey();
+    }
+
+    private static CameraInfo getCameraInfo() {
+        return options.getOption("cameraInfo")
+                .map(CameraInfoPredefined::valueOf)
+                .orElse(CameraInfoPredefined.BLENDER_DEFAULT)
+                .getCameraInfo();
     }
 }

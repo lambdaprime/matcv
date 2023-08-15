@@ -77,33 +77,4 @@ public record CameraInfo(
             return new MatOfDouble(data);
         }
     }
-
-    public static final CameraInfo REALSENSE_D435i =
-            new CameraInfo(
-                    new Matrix(
-                            3,
-                            3,
-                            new double[] {
-                                909.96856689453125, 0.0, 635.51580810546875,
-                                0.0, 909.84716796875, 353.34024047851562,
-                                0.0, 0.0, 1.0
-                            }));
-
-    /**
-     * Default camera in <a href="https://www.blender.org/">Blender</a>
-     *
-     * <p>Camera focal Length set to 50mm.
-     *
-     * <p>Center point specified for render resolution 1280px/720px
-     */
-    public static final CameraInfo BLENDER_DEFAULT =
-            new CameraInfo(
-                    new Matrix(
-                            3,
-                            3,
-                            new double[] {
-                                50.0, 0.0, 640.0,
-                                0.0, 50.0, 360.0,
-                                0.0, 0.0, 1.0
-                            }));
 }

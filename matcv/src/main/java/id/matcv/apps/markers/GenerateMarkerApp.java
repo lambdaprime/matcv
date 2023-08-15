@@ -35,8 +35,8 @@ import org.opencv.imgcodecs.Imgcodecs;
 public class GenerateMarkerApp {
 
     private static void usage() {
-        System.out.println("Usage: GenerateMarkerApp <OUTPUT_DIR>");
         System.out.println("Generates markers for pose estimation and stores them to OUTPUT_DIR");
+        System.out.println("Arguments: <OUTPUT_DIR>");
     }
 
     public static void main(String[] args) throws IOException {
