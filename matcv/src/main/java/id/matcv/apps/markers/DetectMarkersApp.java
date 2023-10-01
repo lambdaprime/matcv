@@ -89,7 +89,7 @@ public class DetectMarkersApp {
     private static CameraInfo getCameraInfo() {
         return options.getOption("cameraInfo")
                 .map(CameraInfoPredefined::valueOf)
-                .orElse(CameraInfoPredefined.BLENDER_DEFAULT)
+                .orElse(CameraInfoPredefined.BLENDER_DEFAULT_1280_720)
                 .getCameraInfo();
     }
 }

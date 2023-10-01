@@ -20,10 +20,12 @@ package id.matcv.converters;
 import id.xfunction.Preconditions;
 import java.util.List;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
+import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfDouble;
+import org.opencv.core.MatOfPoint2f;
 import org.opencv.utils.Converters;
 
 /**
@@ -32,6 +34,7 @@ import org.opencv.utils.Converters;
  * @author lambdaprime intid@protonmail.com
  */
 public class MatConverters {
+    private static final PointConverters pointConverters = new PointConverters();
 
     /** Create new CV_8U matrix */
     public Mat copyToMat(byte... values) {
@@ -48,16 +51,6 @@ public class MatConverters {
         var r = new Mat();
         new MatOfDouble(data).convertTo(r, CvType.CV_32F);
         return r.reshape(1, new int[] {rows, cols});
-    }
-
-    /**
-     * Certain methods in OpenCV accept {@link List<Mat>} instead of {@link List<? extends Mat>}
-     * (example is {@link Core#vconcat(List, Mat)}) This cause a compile time error if you have list
-     * of some other types which extend {@link Mat}. To deal with this you may need to use either
-     * cast operation or this method.
-     */
-    public List<Mat> toListOfMat(List<? extends Mat> list) {
-        return (List<Mat>) list;
     }
 
     /**
@@ -81,5 +74,19 @@ public class MatConverters {
         var data = new double[3];
         matrix.get(0, 0, data);
         return new Vector3D(data[0], data[1], data[2]);
+    }
+
+    public Mat copyToMat32F(Vector2D v) {
+        return new MatOfPoint2f(pointConverters.toOpenCv(v));
+    }
+
+    /**
+     * Certain methods in OpenCV accept {@link List<Mat>} instead of {@link List<? extends Mat>}
+     * (example is {@link Core#vconcat(List, Mat)}) This cause a compile time error if you have list
+     * of some other types which extend {@link Mat}. To deal with this you may need to use either
+     * cast operation or this method.
+     */
+    public List<Mat> toListOfMat(List<? extends Mat> list) {
+        return (List<Mat>) list;
     }
 }

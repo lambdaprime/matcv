@@ -17,8 +17,11 @@
  */
 package id.matcv.markers;
 
+import id.matcv.FileMat;
 import id.mathcat.LineUtils;
+import id.xfunction.XJsonStringBuilder;
 import id.xfunction.logging.XLogger;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.LinkedList;
@@ -32,10 +35,26 @@ import org.opencv.core.Mat;
 public class MarkerDetector {
     private static final XLogger LOGGER = XLogger.getLogger(MarkerDetector.class);
 
-    public record Result(
-            Mat img, LinkedList<MarkerLocation> markers, Optional<MarkerLocation> origin) {}
+    public record Result(Mat img, List<MarkerLocation> markers, Optional<MarkerLocation> origin) {
+
+        @Override
+        public String toString() {
+            XJsonStringBuilder builder = new XJsonStringBuilder(this);
+            builder.append("markers", markers);
+            builder.append("origin", origin);
+            return builder.toString();
+        }
+    }
+
+    public Result detect(FileMat img) {
+        return detect(img, Optional.of(img.getFile()));
+    }
 
     public Result detect(Mat img) {
+        return detect(img, Optional.empty());
+    }
+
+    public Result detect(Mat img, Optional<Path> file) {
         var origin = Optional.<MarkerLocation>empty();
         var markers = new LinkedList<MarkerLocation>();
         Dictionary dictionary = Aruco.getPredefinedDictionary(MarkerType.getDict());

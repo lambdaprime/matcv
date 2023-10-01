@@ -55,4 +55,5 @@ module id.matcv {
     exports id.matcv.camera;
     exports id.matcv.feature.detector;
     exports id.matcv.apps.slider;
+    exports id.matcv.markers;
 }

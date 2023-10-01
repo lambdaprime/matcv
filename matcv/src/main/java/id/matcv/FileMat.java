@@ -24,7 +24,7 @@ import org.opencv.core.Mat;
 /**
  * Extends {@link Mat} with file information.
  *
- * <p>This Mat keeps reference to a file which it is assigned to.
+ * <p>This Mat keeps reference to a file which it is associated to.
  *
  * <p>Instead of extending Mat it could just be a record of (Mat mat, Path file). But it would mean
  * that, if you have a List of such objects (List&lt;FileMat>) and want to pass them to a function

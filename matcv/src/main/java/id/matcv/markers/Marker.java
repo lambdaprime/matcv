@@ -24,16 +24,12 @@ import org.opencv.core.Mat;
 import org.opencv.core.MatOfFloat;
 import org.opencv.core.MatOfPoint3f;
 
-public class Marker implements Comparable<Marker> {
+/**
+ * @see MarkerType
+ */
+public record Marker(MarkerType type) implements Comparable<Marker> {
     /** Taken with respect of actual size of the printed markers. */
     private static final int lengthMillimeters = 53;
-
-    private MarkerType type;
-
-    public Marker(MarkerType type) {
-        super();
-        this.type = type;
-    }
 
     public Mat createImage() {
         Mat img = new Mat();

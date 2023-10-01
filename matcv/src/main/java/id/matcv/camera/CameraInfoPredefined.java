@@ -20,7 +20,7 @@ package id.matcv.camera;
 import id.matcv.camera.CameraInfo.Matrix;
 
 public enum CameraInfoPredefined {
-    REALSENSE_D435i(
+    REALSENSE_D435i_1280_720(
             new CameraInfo(
                     new Matrix(
                             3,
@@ -31,6 +31,23 @@ public enum CameraInfoPredefined {
                                 0.0, 0.0, 1.0
                             }))),
 
+    REALSENSE_D435i_640_480(
+            new CameraInfo(
+                    new Matrix(
+                            3,
+                            3,
+                            new double[] {
+                                606.6457519531,
+                                0,
+                                0,
+                                0,
+                                606.5648193359,
+                                0,
+                                317.010559082,
+                                235.5601654053,
+                                1
+                            }))),
+
     /**
      * Default camera in <a href="https://www.blender.org/">Blender</a>
      *
@@ -38,7 +55,7 @@ public enum CameraInfoPredefined {
      *
      * <p>Center point specified for render resolution 1280px/720px
      */
-    BLENDER_DEFAULT(
+    BLENDER_DEFAULT_1280_720(
             new CameraInfo(
                     new Matrix(
                             3,

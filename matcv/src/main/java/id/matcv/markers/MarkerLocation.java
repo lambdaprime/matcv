@@ -17,10 +17,14 @@
  */
 package id.matcv.markers;
 
+import id.matcv.converters.MatConverters;
+import id.xfunction.Preconditions;
 import id.xfunction.XJsonStringBuilder;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.Optional;
 import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
+import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint2f;
 
@@ -36,6 +40,12 @@ public record MarkerLocation(
         MatOfPoint2f corners,
         Vector2D vector,
         Optional<Path> imageFile) {
+
+    private static final MatConverters converters = new MatConverters();
+
+    public MarkerLocation {
+        Preconditions.equals(4, corners.size(0));
+    }
 
     MarkerLocation(
             Vector2D p1,
@@ -62,6 +72,11 @@ public record MarkerLocation(
                 Optional.empty());
     }
 
+    /** Marker corners returned by OpenCV detection algorithm (as-is) */
+    public MatOfPoint2f corners() {
+        return corners;
+    }
+
     @Override
     public String toString() {
         XJsonStringBuilder builder = new XJsonStringBuilder(this);
@@ -76,5 +91,12 @@ public record MarkerLocation(
         builder.append("vector", vector);
         builder.append("imageFile", imageFile);
         return builder.toString();
+    }
+
+    /** Concatenates {@link #corners()} + {@link #center()} */
+    public MatOfPoint2f copyPointsToMatOfPoint2f() {
+        var points = new MatOfPoint2f();
+        Core.vconcat(List.of(corners, converters.copyToMat32F(center)), points);
+        return points;
     }
 }
