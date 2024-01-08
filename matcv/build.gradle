@@ -4,21 +4,29 @@ buildscript {
     mavenCentral()
   }
   dependencies {
-    classpath "io.github.lambdaprime:id.xfunction:14.0"
+    classpath "io.github.lambdaprime:id.xfunction:23.0"
   }
 }
 
 plugins {
   id 'com.diffplug.spotless'
+  // only if you build Java library
   id 'java-library'
 }
 
 apply plugin : 'eclipse'
 
+eclipse.classpath.file {
+  // instruct eclipse plugin to put everything to module path
+  whenMerged {
+    entries.findAll { it.kind == 'lib' }.each { it.entryAttributes['module'] = 'true' }
+  }
+}
+
 dependencies {
   api files('/usr/share/java/opencv.jar')
   api 'org.apache.commons:commons-math3:3.6.1'
-  api "io.github.lambdaprime:id.xfunction:23.0-SNAPSHOT"
+  api "io.github.lambdaprime:id.xfunction:24.0"
 }
 
 configurations {

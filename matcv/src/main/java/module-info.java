@@ -26,7 +26,9 @@
  * apt install libopencv4.2-java
  * }</pre>
  *
- * <p>Before using <b>matcv</b> make sure to load OpenCV native library:
+ * <h1>Usage</h1>
+ *
+ * <p>1. Before using <b>matcv</b> make sure to load OpenCV native library:
  *
  * <pre>{@code
  * static {
@@ -34,8 +36,11 @@
  * }
  * }</pre>
  *
- * <p>And add path to libopencv4.2-java using -Djava.library.path= (for Linux it is usually:
+ * <p>2. Add path to libopencv4.2-java using -Djava.library.path= (for Linux it is usually:
  * -Djava.library.path="/usr/lib/jni")
+ *
+ * <p>3. Add opencv.jar to module-path using -mp (for Linux it is usually: -mp
+ * /usr/share/java/opencv.jar
  *
  * @see <a href="https://github.com/lambdaprime/matcv">Download matcv</a>
  * @see <a href="https://github.com/lambdaprime/matcv">Github</a>

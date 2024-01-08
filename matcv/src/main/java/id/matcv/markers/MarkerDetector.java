@@ -47,7 +47,9 @@ public class MarkerDetector {
     }
 
     public Result detect(FileMat img) {
-        return detect(img, Optional.of(img.getFile()));
+        var file = img.getFile();
+        LOGGER.info("Detecting markers on image: {0}", file);
+        return detect(img, Optional.of(file));
     }
 
     public Result detect(Mat img) {
@@ -63,7 +65,6 @@ public class MarkerDetector {
         Aruco.detectMarkers(img, dictionary, corners, ids);
         for (int i = 0; i < corners.size(); i++) {
             Optional<MarkerType> type = MarkerType.findType((int) ids.get(i, 0)[0]);
-            //            System.out.println(type);
             if (type.isEmpty()) {
                 LOGGER.warning("Unknown marker type - ignoring");
                 continue;
@@ -95,6 +96,8 @@ public class MarkerDetector {
             if (mloc.marker().isOrigin()) origin = Optional.of(markers.getLast());
         }
         markers.sort(Comparator.<MarkerLocation, Marker>comparing(ml -> ml.marker()));
+
+        LOGGER.info("Number of markers detected: {0}", markers.size());
         return new Result(img, markers, origin);
     }
 }

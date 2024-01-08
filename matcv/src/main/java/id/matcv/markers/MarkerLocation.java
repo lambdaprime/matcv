@@ -17,6 +17,7 @@
  */
 package id.matcv.markers;
 
+import id.matcv.ApacheMathUtils;
 import id.matcv.converters.MatConverters;
 import id.xfunction.Preconditions;
 import id.xfunction.XJsonStringBuilder;
@@ -28,6 +29,11 @@ import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint2f;
 
+/**
+ * Points p1, ..., p4 are given in the clockwise order of the marker corners.
+ *
+ * @author lambdaprime intid@protonmail.com
+ */
 public record MarkerLocation(
         Marker marker,
         Vector2D p1,
@@ -41,6 +47,7 @@ public record MarkerLocation(
         Vector2D vector,
         Optional<Path> imageFile) {
 
+    private static final ApacheMathUtils utils = new ApacheMathUtils();
     private static final MatConverters converters = new MatConverters();
 
     public MarkerLocation {
@@ -72,23 +79,38 @@ public record MarkerLocation(
                 Optional.empty());
     }
 
+    /** Height of the marker in pixels */
+    public double heightPixels() {
+        return heightPixels;
+    }
+
+    /** Width of the marker in pixels */
+    public double widthPixels() {
+        return widthPixels;
+    }
+
     /** Marker corners returned by OpenCV detection algorithm (as-is) */
     public MatOfPoint2f corners() {
         return corners;
+    }
+
+    /** Center point (first) + all corners */
+    public List<Vector2D> points() {
+        return List.of(center, p1, p2, p3, p4);
     }
 
     @Override
     public String toString() {
         XJsonStringBuilder builder = new XJsonStringBuilder(this);
         builder.append("marker", marker);
-        builder.append("p1", p1);
-        builder.append("p2", p2);
-        builder.append("p3", p3);
-        builder.append("p4", p4);
-        builder.append("center", center);
+        builder.append("p1", utils.toJsonString(p1));
+        builder.append("p2", utils.toJsonString(p2));
+        builder.append("p3", utils.toJsonString(p3));
+        builder.append("p4", utils.toJsonString(p4));
+        builder.append("center", utils.toJsonString(center));
         builder.append("heightPixels", heightPixels);
         builder.append("widthPixels", widthPixels);
-        builder.append("vector", vector);
+        builder.append("vector", utils.toJsonString(vector));
         builder.append("imageFile", imageFile);
         return builder.toString();
     }

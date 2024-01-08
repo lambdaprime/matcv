@@ -57,7 +57,7 @@ public class DetectMarkersApp {
             usage();
             return;
         }
-        options = CommandOptions.collectOptions(new Config(true), args);
+        options = CommandOptions.collectOptions(new Config().withIgnoreParsingExceptions(), args);
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
         Files.walk(Paths.get(args[0]), 1)
                 .filter(FilePredicates.match(".*\\.(png|jpg)"))
