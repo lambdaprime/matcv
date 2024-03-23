@@ -70,7 +70,7 @@ public class DetectMarkersApp {
 
     private static void detect(Path imageFile) {
         var img = Imgcodecs.imread(imageFile.toString());
-        var markers = new MarkerDetector().detect(img).markers();
+        var markers = new MarkerDetector().detect(img).markersSortedByType();
         System.err.format("%s markers detected on image %s\n", markers.size(), imageFile);
         if (markers.isEmpty()) return;
         markers.forEach(

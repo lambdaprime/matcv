@@ -99,15 +99,55 @@ public record MarkerLocation(
         return List.of(center, p1, p2, p3, p4);
     }
 
+    /**
+     * Uniquely identifies {@link #center()} point of a particular marker. It allows to match points
+     * of same marker across different {@link MarkerLocation}.
+     */
+    public int centerHash() {
+        return marker.getType().getId() * 5 + 0;
+    }
+
+    /**
+     * Uniquely identifies {@link #p1()} point of a particular marker. It allows to match points of
+     * same marker across different {@link MarkerLocation}.
+     */
+    public int p1Hash() {
+        return marker.getType().getId() * 5 + 1;
+    }
+
+    /**
+     * Uniquely identifies {@link #p2()} point of a particular marker. It allows to match points of
+     * same marker across different {@link MarkerLocation}.
+     */
+    public int p2Hash() {
+        return marker.getType().getId() * 5 + 2;
+    }
+
+    /**
+     * Uniquely identifies {@link #p3()} point of a particular marker. It allows to match points of
+     * same marker across different {@link MarkerLocation}.
+     */
+    public int p3Hash() {
+        return marker.getType().getId() * 5 + 3;
+    }
+
+    /**
+     * Uniquely identifies {@link #p4()} point of a particular marker. It allows to match points of
+     * same marker across different {@link MarkerLocation}.
+     */
+    public int p4Hash() {
+        return marker.getType().getId() * 5 + 4;
+    }
+
     @Override
     public String toString() {
         XJsonStringBuilder builder = new XJsonStringBuilder(this);
         builder.append("marker", marker);
+        builder.append("center", utils.toJsonString(center));
         builder.append("p1", utils.toJsonString(p1));
         builder.append("p2", utils.toJsonString(p2));
         builder.append("p3", utils.toJsonString(p3));
         builder.append("p4", utils.toJsonString(p4));
-        builder.append("center", utils.toJsonString(center));
         builder.append("heightPixels", heightPixels);
         builder.append("widthPixels", widthPixels);
         builder.append("vector", utils.toJsonString(vector));

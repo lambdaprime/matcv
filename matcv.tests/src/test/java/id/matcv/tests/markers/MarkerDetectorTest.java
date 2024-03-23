@@ -34,6 +34,7 @@ public class MarkerDetectorTest extends OpencvTest {
     public void test() {
         Mat img = Imgcodecs.imread(Paths.get("samples/1.png").toAbsolutePath().toString());
         var result = new MarkerDetector().detect(img);
-        Assertions.assertEquals(utils.readResource("markers"), result.markers().toString());
+        Assertions.assertEquals(
+                utils.readResource("markers"), result.markersSortedByType().toString());
     }
 }

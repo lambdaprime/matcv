@@ -24,6 +24,7 @@ import id.xfunction.logging.XLogger;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.EnumSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -35,21 +36,26 @@ import org.opencv.core.Mat;
 public class MarkerDetector {
     private static final XLogger LOGGER = XLogger.getLogger(MarkerDetector.class);
 
-    public record Result(Mat img, List<MarkerLocation> markers, Optional<MarkerLocation> origin) {
+    public record Result(
+            Mat img, List<MarkerLocation> markersSortedByType, Optional<MarkerLocation> origin) {
 
         @Override
         public String toString() {
             XJsonStringBuilder builder = new XJsonStringBuilder(this);
-            builder.append("markers", markers);
+            builder.append("markers", markersSortedByType);
             builder.append("origin", origin);
             return builder.toString();
         }
     }
 
     public Result detect(FileMat img) {
+        return detect(img, EnumSet.allOf(MarkerType.class));
+    }
+
+    public Result detect(FileMat img, EnumSet<MarkerType> types) {
         var file = img.getFile();
         LOGGER.info("Detecting markers on image: {0}", file);
-        return detect(img, Optional.of(file));
+        return detect(img, Optional.of(file), types);
     }
 
     public Result detect(Mat img) {
@@ -57,6 +63,10 @@ public class MarkerDetector {
     }
 
     public Result detect(Mat img, Optional<Path> file) {
+        return detect(img, file, EnumSet.allOf(MarkerType.class));
+    }
+
+    public Result detect(Mat img, Optional<Path> file, EnumSet<MarkerType> types) {
         var origin = Optional.<MarkerLocation>empty();
         var markers = new LinkedList<MarkerLocation>();
         Dictionary dictionary = Aruco.getPredefinedDictionary(MarkerType.getDict());
@@ -69,6 +79,7 @@ public class MarkerDetector {
                 LOGGER.warning("Unknown marker type - ignoring");
                 continue;
             }
+            if (!types.contains(type.get())) continue;
             var m = corners.get(i);
             double[] d;
             d = m.get(0, 0);
