@@ -31,14 +31,14 @@ public class MainApp {
     private static void usage() {
         System.out.println(
                 """
-                **matcv** - Java module which provides different functionality for Computer Vision and
-                extensions to [OpenCV](https://github.com/opencv).
+**matcv** - Java module which provides different functionality for Computer Vision and
+extensions to [OpenCV](https://github.com/opencv).
 
-                Website: https://github.com/lambdaprime/matcv
-                Documentation: http://portal2.atwebpages.com/matcv
+Website: https://github.com/lambdaprime/matcv
+Documentation: http://portal2.atwebpages.com/matcv
 
-                Supported commands: %s
-                """
+Supported commands: %s
+"""
                         .formatted(List.of(DETECT_MARKERS, GENERATE_MARKERS)));
     }
 
@@ -51,13 +51,14 @@ public class MainApp {
         switch (args[0]) {
             case DETECT_MARKERS -> DetectMarkersApp.main(cmdArgs);
             case GENERATE_MARKERS -> GenerateMarkerApp.main(cmdArgs);
-            default -> System.err.println(
-                    """
-                Unknown command %s
+            default ->
+                    System.err.println(
+                            """
+                            Unknown command %s
 
-                Run command without arguments to see 'Usage' for more information.
-                """
-                            .formatted(args[0]));
+                            Run command without arguments to see 'Usage' for more information.
+                            """
+                                    .formatted(args[0]));
         }
     }
 }

@@ -41,14 +41,14 @@ public class DetectMarkersApp {
     private static void usage() {
         System.out.println(
                 """
-                Detects all markers present on the images. Markers are highlighted and their location is printed to console.
+Detects all markers present on the images. Markers are highlighted and their location is printed to console.
 
-                Arguments: <INPUT_PATH> [-cameraInfo=<CAMERA_INFO>]
+Arguments: <INPUT_PATH> [-cameraInfo=<CAMERA_INFO>]
 
-                Where:
+Where:
 
-                CAMERA_INFO - one of %s. Default is BLENDER_DEFAULT.
-                """
+CAMERA_INFO - one of %s. Default is BLENDER_DEFAULT.
+"""
                         .formatted(Arrays.toString(CameraInfoPredefined.values())));
     }
 
