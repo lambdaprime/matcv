@@ -48,16 +48,19 @@ public class MarkerDetector {
         }
     }
 
+    /** Detect all {@link MarkerType} markers */
     public Result detect(FileMat img) {
         return detect(img, EnumSet.allOf(MarkerType.class));
     }
 
+    /** Detect specified {@link MarkerType} markers */
     public Result detect(FileMat img, EnumSet<MarkerType> types) {
         var file = img.getFile();
         LOGGER.info("Detecting markers on image: {0}", file);
         return detect(img, Optional.of(file), types);
     }
 
+    /** Detect all {@link MarkerType} markers */
     public Result detect(Mat img) {
         return detect(img, Optional.empty());
     }
@@ -81,15 +84,15 @@ public class MarkerDetector {
             }
             if (!types.contains(type.get())) continue;
             var m = corners.get(i);
-            double[] d;
-            d = m.get(0, 0);
-            var p1 = new Vector2D(d[0], d[1]);
-            d = m.get(0, 1);
-            var p2 = new Vector2D(d[0], d[1]);
-            d = m.get(0, 2);
-            var p3 = new Vector2D(d[0], d[1]);
-            d = m.get(0, 3);
-            var p4 = new Vector2D(d[0], d[1]);
+            double[] buf;
+            buf = m.get(0, 0);
+            var p1 = new Vector2D(buf[0], buf[1]);
+            buf = m.get(0, 1);
+            var p2 = new Vector2D(buf[0], buf[1]);
+            buf = m.get(0, 2);
+            var p3 = new Vector2D(buf[0], buf[1]);
+            buf = m.get(0, 3);
+            var p4 = new Vector2D(buf[0], buf[1]);
             var center = LineUtils.midPoint(LineUtils.midPoint(p1, p2), LineUtils.midPoint(p3, p4));
             var mloc =
                     new MarkerLocation(

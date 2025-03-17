@@ -23,7 +23,7 @@
  * <p>Linux:
  *
  * <pre>{@code
- * apt install libopencv4.2-java
+ * apt install libopencv-java
  * }</pre>
  *
  * <h1>Usage</h1>
@@ -36,11 +36,13 @@
  * }
  * }</pre>
  *
- * <p>2. Add path to libopencv4.2-java using -Djava.library.path= (for Linux it is usually:
+ * <p>2. Add path to libopencv-java using -Djava.library.path= (for Linux it is usually:
  * -Djava.library.path="/usr/lib/jni")
  *
  * <p>3. Add opencv.jar to module-path using -mp (for Linux it is usually: -mp
  * /usr/share/java/opencv.jar
+ *
+ * <p>Tested with OpenCV version is 4.6.0
  *
  * @see <a href="https://github.com/lambdaprime/matcv">Download matcv</a>
  * @see <a href="https://github.com/lambdaprime/matcv">Github</a>
