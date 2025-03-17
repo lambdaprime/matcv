@@ -17,7 +17,7 @@
  */
 package id.matcv.apps;
 
-import id.matcv.apps.markers.DetectMarkersApp;
+import id.matcv.apps.markers.DetectMarkers2dApp;
 import id.matcv.apps.markers.GenerateMarkerApp;
 import java.io.IOException;
 import java.util.Arrays;
@@ -49,7 +49,7 @@ Supported commands: %s
         }
         var cmdArgs = Arrays.stream(args).skip(1).toArray(i -> new String[i]);
         switch (args[0]) {
-            case DETECT_MARKERS -> DetectMarkersApp.main(cmdArgs);
+            case DETECT_MARKERS -> DetectMarkers2dApp.main(cmdArgs);
             case GENERATE_MARKERS -> GenerateMarkerApp.main(cmdArgs);
             default ->
                     System.err.println(

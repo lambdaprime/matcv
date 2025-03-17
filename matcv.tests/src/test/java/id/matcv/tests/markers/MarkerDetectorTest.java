@@ -17,7 +17,7 @@
  */
 package id.matcv.tests.markers;
 
-import id.matcv.markers.MarkerDetector;
+import id.matcv.markers.MarkerDetector2d;
 import id.matcv.tests.OpencvTest;
 import id.xfunction.ResourceUtils;
 import java.nio.file.Paths;
@@ -33,7 +33,7 @@ public class MarkerDetectorTest extends OpencvTest {
     @Test
     public void test() {
         Mat img = Imgcodecs.imread(Paths.get("samples/1.png").toAbsolutePath().toString());
-        var result = new MarkerDetector().detect(img);
+        var result = new MarkerDetector2d().detect(img);
         Assertions.assertEquals(
                 utils.readResource("markers"), result.markersSortedByType().toString());
     }

@@ -34,7 +34,7 @@ import org.opencv.core.MatOfPoint2f;
  *
  * @author lambdaprime intid@protonmail.com
  */
-public record MarkerLocation(
+public record MarkerLocation2d(
         Marker marker,
         Vector2D p1,
         Vector2D p2,
@@ -50,11 +50,11 @@ public record MarkerLocation(
     private static final ApacheMathUtils utils = new ApacheMathUtils();
     private static final MatConverters converters = new MatConverters();
 
-    public MarkerLocation {
+    public MarkerLocation2d {
         Preconditions.equals(4, corners.size(0));
     }
 
-    MarkerLocation(
+    MarkerLocation2d(
             Vector2D p1,
             Vector2D p2,
             Vector2D p3,
@@ -101,7 +101,7 @@ public record MarkerLocation(
 
     /**
      * Uniquely identifies {@link #center()} point of a particular marker. It allows to match points
-     * of same marker across different {@link MarkerLocation}.
+     * of same marker across different {@link MarkerLocation2d}.
      */
     public int centerHash() {
         return marker.getType().getId() * 5 + 0;
@@ -109,7 +109,7 @@ public record MarkerLocation(
 
     /**
      * Uniquely identifies {@link #p1()} point of a particular marker. It allows to match points of
-     * same marker across different {@link MarkerLocation}.
+     * same marker across different {@link MarkerLocation2d}.
      */
     public int p1Hash() {
         return marker.getType().getId() * 5 + 1;
@@ -117,7 +117,7 @@ public record MarkerLocation(
 
     /**
      * Uniquely identifies {@link #p2()} point of a particular marker. It allows to match points of
-     * same marker across different {@link MarkerLocation}.
+     * same marker across different {@link MarkerLocation2d}.
      */
     public int p2Hash() {
         return marker.getType().getId() * 5 + 2;
@@ -125,7 +125,7 @@ public record MarkerLocation(
 
     /**
      * Uniquely identifies {@link #p3()} point of a particular marker. It allows to match points of
-     * same marker across different {@link MarkerLocation}.
+     * same marker across different {@link MarkerLocation2d}.
      */
     public int p3Hash() {
         return marker.getType().getId() * 5 + 3;
@@ -133,7 +133,7 @@ public record MarkerLocation(
 
     /**
      * Uniquely identifies {@link #p4()} point of a particular marker. It allows to match points of
-     * same marker across different {@link MarkerLocation}.
+     * same marker across different {@link MarkerLocation2d}.
      */
     public int p4Hash() {
         return marker.getType().getId() * 5 + 4;

@@ -43,7 +43,7 @@ public class CameraPoseEstimator {
         distortionMat = cameraInfo.distortionCoefficients().toMatOfDouble();
     }
 
-    public void estimate(Mat image, List<MarkerLocation> markers) {
+    public void estimate(Mat image, List<MarkerLocation2d> markers) {
         matUtils.debugMat("cameraMat", cameraMat);
         matUtils.debugMat("distortionMat", distortionMat);
         Preconditions.equals(

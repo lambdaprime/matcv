@@ -27,13 +27,13 @@ public class MarkerUtils {
     private static final PointConverters converters = new PointConverters();
 
     /** Highlight marker on the image */
-    public void drawMarker(Mat image, MarkerLocation markerLocation) {
+    public void drawMarker(Mat image, MarkerLocation2d markerLocation) {
         drawCenter(image, markerLocation);
         drawLine(image, markerLocation);
         drawName(image, markerLocation);
     }
 
-    private void drawName(Mat image, MarkerLocation markerLocation) {
+    private void drawName(Mat image, MarkerLocation2d markerLocation) {
         Imgproc.putText(
                 image,
                 markerLocation.marker().toString(),
@@ -44,11 +44,11 @@ public class MarkerUtils {
                 2);
     }
 
-    private void drawCenter(Mat img, MarkerLocation loc) {
+    private void drawCenter(Mat img, MarkerLocation2d loc) {
         Imgproc.circle(img, converters.toOpenCv(loc.center()), 4, new Scalar(0, 255, 0), 3);
     }
 
-    private void drawLine(Mat img, MarkerLocation loc) {
+    private void drawLine(Mat img, MarkerLocation2d loc) {
         Imgproc.line(
                 img,
                 converters.toOpenCv(loc.center()),

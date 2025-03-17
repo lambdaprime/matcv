@@ -33,11 +33,13 @@ import org.opencv.aruco.Aruco;
 import org.opencv.aruco.Dictionary;
 import org.opencv.core.Mat;
 
-public class MarkerDetector {
-    private static final XLogger LOGGER = XLogger.getLogger(MarkerDetector.class);
+public class MarkerDetector2d {
+    private static final XLogger LOGGER = XLogger.getLogger(MarkerDetector2d.class);
 
     public record Result(
-            Mat img, List<MarkerLocation> markersSortedByType, Optional<MarkerLocation> origin) {
+            Mat img,
+            List<MarkerLocation2d> markersSortedByType,
+            Optional<MarkerLocation2d> origin) {
 
         @Override
         public String toString() {
@@ -70,8 +72,8 @@ public class MarkerDetector {
     }
 
     public Result detect(Mat img, Optional<Path> file, EnumSet<MarkerType> types) {
-        var origin = Optional.<MarkerLocation>empty();
-        var markers = new LinkedList<MarkerLocation>();
+        var origin = Optional.<MarkerLocation2d>empty();
+        var markers = new LinkedList<MarkerLocation2d>();
         Dictionary dictionary = Aruco.getPredefinedDictionary(MarkerType.getDict());
         List<Mat> corners = new ArrayList<>();
         Mat ids = new Mat();
@@ -95,7 +97,7 @@ public class MarkerDetector {
             var p4 = new Vector2D(buf[0], buf[1]);
             var center = LineUtils.midPoint(LineUtils.midPoint(p1, p2), LineUtils.midPoint(p3, p4));
             var mloc =
-                    new MarkerLocation(
+                    new MarkerLocation2d(
                             p1,
                             p2,
                             p3,
@@ -109,7 +111,7 @@ public class MarkerDetector {
             markers.add(mloc);
             if (mloc.marker().isOrigin()) origin = Optional.of(markers.getLast());
         }
-        markers.sort(Comparator.<MarkerLocation, Marker>comparing(ml -> ml.marker()));
+        markers.sort(Comparator.<MarkerLocation2d, Marker>comparing(ml -> ml.marker()));
 
         LOGGER.info("Number of markers detected: {0}", markers.size());
         return new Result(img, markers, origin);

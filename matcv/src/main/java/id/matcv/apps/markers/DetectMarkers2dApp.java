@@ -20,7 +20,7 @@ package id.matcv.apps.markers;
 import id.matcv.camera.CameraInfo;
 import id.matcv.camera.CameraInfoPredefined;
 import id.matcv.markers.CameraPoseEstimator;
-import id.matcv.markers.MarkerDetector;
+import id.matcv.markers.MarkerDetector2d;
 import id.matcv.markers.MarkerUtils;
 import id.xfunction.cli.CommandOptions;
 import id.xfunction.cli.CommandOptions.Config;
@@ -34,7 +34,7 @@ import org.opencv.core.Core;
 import org.opencv.highgui.HighGui;
 import org.opencv.imgcodecs.Imgcodecs;
 
-public class DetectMarkersApp {
+public class DetectMarkers2dApp {
 
     private static CommandOptions options;
 
@@ -62,7 +62,7 @@ CAMERA_INFO - one of %s. Default is BLENDER_DEFAULT.
         Files.walk(Paths.get(args[0]), 1)
                 .filter(FilePredicates.match(".*\\.(png|jpg)"))
                 .sorted()
-                .forEach(DetectMarkersApp::detect);
+                .forEach(DetectMarkers2dApp::detect);
         HighGui.destroyAllWindows();
         // for some reason destroyAllWindows is not enough so we forcefully terminate JVM
         System.exit(0);
@@ -70,7 +70,7 @@ CAMERA_INFO - one of %s. Default is BLENDER_DEFAULT.
 
     private static void detect(Path imageFile) {
         var img = Imgcodecs.imread(imageFile.toString());
-        var markers = new MarkerDetector().detect(img).markersSortedByType();
+        var markers = new MarkerDetector2d().detect(img).markersSortedByType();
         System.err.format("%s markers detected on image %s\n", markers.size(), imageFile);
         if (markers.isEmpty()) return;
         markers.forEach(
