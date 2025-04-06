@@ -17,7 +17,7 @@
  */
 package id.mathcat;
 
-import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
+import id.matcv.Vector2D;
 
 public class LineUtils {
 

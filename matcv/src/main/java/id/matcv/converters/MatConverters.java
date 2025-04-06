@@ -17,10 +17,9 @@
  */
 package id.matcv.converters;
 
+import id.matcv.Vector2D;
 import id.xfunction.Preconditions;
 import java.util.List;
-import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
-import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
@@ -68,13 +67,13 @@ public class MatConverters {
         return buf;
     }
 
-    public Vector3D copyToVector3d(Mat matrix) {
-        Preconditions.equals(3, matrix.rows(), "Vector matrix has wrong number of rows");
-        Preconditions.equals(1, matrix.cols(), "Vector matrix has wrong number of cols");
-        var data = new double[3];
-        matrix.get(0, 0, data);
-        return new Vector3D(data[0], data[1], data[2]);
-    }
+    //    public Vector3D copyToVector3d(Mat matrix) {
+    //        Preconditions.equals(3, matrix.rows(), "Vector matrix has wrong number of rows");
+    //        Preconditions.equals(1, matrix.cols(), "Vector matrix has wrong number of cols");
+    //        var data = new double[3];
+    //        matrix.get(0, 0, data);
+    //        return new Vector3D(data[0], data[1], data[2]);
+    //    }
 
     public Mat copyToMat32F(Vector2D v) {
         return new MatOfPoint2f(pointConverters.toOpenCv(v));

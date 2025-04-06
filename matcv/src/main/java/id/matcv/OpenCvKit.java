@@ -23,7 +23,6 @@ import id.xfunction.Preconditions;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;

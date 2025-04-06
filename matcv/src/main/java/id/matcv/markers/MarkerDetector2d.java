@@ -18,6 +18,7 @@
 package id.matcv.markers;
 
 import id.matcv.FileMat;
+import id.matcv.Vector2D;
 import id.mathcat.LineUtils;
 import id.xfunction.XJsonStringBuilder;
 import id.xfunction.logging.XLogger;
@@ -28,7 +29,6 @@ import java.util.EnumSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
-import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 import org.opencv.aruco.Aruco;
 import org.opencv.aruco.Dictionary;
 import org.opencv.core.Mat;

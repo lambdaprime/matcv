@@ -17,14 +17,13 @@
  */
 package id.matcv.markers;
 
-import id.matcv.ApacheMathUtils;
+import id.matcv.Vector2D;
 import id.matcv.converters.MatConverters;
 import id.xfunction.Preconditions;
 import id.xfunction.XJsonStringBuilder;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
-import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint2f;
@@ -46,7 +45,6 @@ public record MarkerLocation2d(
         MatOfPoint2f corners,
         Vector2D vector,
         Optional<Path> imageFile) {
-    private static final ApacheMathUtils utils = new ApacheMathUtils();
     private static final MatConverters converters = new MatConverters();
 
     public MarkerLocation2d {
@@ -102,14 +100,14 @@ public record MarkerLocation2d(
     public String toString() {
         XJsonStringBuilder builder = new XJsonStringBuilder(this);
         builder.append("marker", marker);
-        builder.append("center", utils.toJsonString(center));
-        builder.append("p1", utils.toJsonString(p1));
-        builder.append("p2", utils.toJsonString(p2));
-        builder.append("p3", utils.toJsonString(p3));
-        builder.append("p4", utils.toJsonString(p4));
+        builder.append("center", center);
+        builder.append("p1", p1);
+        builder.append("p2", p2);
+        builder.append("p3", p3);
+        builder.append("p4", p4);
         builder.append("heightPixels", heightPixels);
         builder.append("widthPixels", widthPixels);
-        builder.append("vector", utils.toJsonString(vector));
+        builder.append("vector", vector);
         builder.append("imageFile", imageFile);
         return builder.toString();
     }

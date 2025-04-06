@@ -53,7 +53,6 @@ module id.matcv {
     requires id.xfunction;
     requires java.logging;
     requires transitive opencv;
-    requires transitive commons.math3;
 
     exports id.matcv;
     exports id.matcv.accessors;

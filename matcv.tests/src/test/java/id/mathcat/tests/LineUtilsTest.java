@@ -19,8 +19,8 @@ package id.mathcat.tests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import id.matcv.Vector2D;
 import id.mathcat.LineUtils;
-import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 import org.junit.jupiter.api.Test;
 
 public class LineUtilsTest {
@@ -28,7 +28,8 @@ public class LineUtilsTest {
     @Test
     public void test() {
         assertEquals(
-                "{2; -2}",
+                """
+                { "x": 2, "y": -2 }""",
                 LineUtils.createVector(new Vector2D(3, 5), new Vector2D(5, 3)).toString());
     }
 }
