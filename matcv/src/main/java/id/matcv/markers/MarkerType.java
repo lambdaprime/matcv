@@ -20,11 +20,16 @@ package id.matcv.markers;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import org.opencv.aruco.Aruco;
 
 /**
  * All these markers are from the dictionary of 50 unique markers with 7x7 square bits on each. See
  * {@link #getDict()}.
+ *
+ * <p>Each marker contains 5 key points which locations can be identified on the images. These key
+ * points are p1, ..., p4 and they are given in the clockwise order of the marker corners. Final key
+ * point is a center point of the marker.
  *
  * @author lambdaprime intid@protonmail.com
  */
@@ -37,11 +42,24 @@ public enum MarkerType {
     FIVE(5),
     SIX(6);
 
-    private int id;
+    private static final int NUMBER_OF_KEY_POINTS = 5;
     private static Map<Integer, MarkerType> map = new HashMap<>();
+    private int id;
+    private int centerHash;
+    private int p1Hash;
+    private int p2Hash;
+    private int p3Hash;
+    private int p4Hash;
+    private Set<Integer> hashes;
 
     private MarkerType(int id) {
         this.id = id;
+        this.centerHash = id * NUMBER_OF_KEY_POINTS + 0;
+        this.p1Hash = id * NUMBER_OF_KEY_POINTS + 1;
+        this.p2Hash = id * NUMBER_OF_KEY_POINTS + 2;
+        this.p3Hash = id * NUMBER_OF_KEY_POINTS + 3;
+        this.p4Hash = id * NUMBER_OF_KEY_POINTS + 4;
+        this.hashes = Set.of(centerHash, p1Hash, p2Hash, p3Hash, p4Hash);
     }
 
     public static int getDict() {
@@ -58,5 +76,57 @@ public enum MarkerType {
 
     public int getId() {
         return id;
+    }
+
+    /**
+     * Hash code which uniquely identifies center point of this marker. It allows to match points of
+     * same marker across different images.
+     */
+    public int centerHash() {
+        return centerHash;
+    }
+
+    /**
+     * Hash code which uniquely identifies p1 point of this marker. It allows to match points of
+     * same marker across different images.
+     */
+    public int p1Hash() {
+        return p1Hash;
+    }
+
+    /**
+     * Hash code which uniquely identifies p2 point of this marker. It allows to match points of
+     * same marker across different images.
+     */
+    public int p2Hash() {
+        return p2Hash;
+    }
+
+    /**
+     * Hash code which uniquely identifies p3 point of this marker. It allows to match points of
+     * same marker across different images.
+     */
+    public int p3Hash() {
+        return p3Hash;
+    }
+
+    /**
+     * Hash code which uniquely identifies p4 point of this marker. It allows to match points of
+     * same marker across different images.
+     */
+    public int p4Hash() {
+        return p4Hash;
+    }
+
+    /** Check if point with given hash belongs to this marker */
+    public boolean hasPoint(int hash) {
+        return hashes.contains(hash);
+    }
+
+    public static Optional<MarkerType> findMarkerByPointHash(int hash) {
+        for (var m : MarkerType.values()) {
+            if (m.hasPoint(hash)) return Optional.of(m);
+        }
+        return Optional.empty();
     }
 }

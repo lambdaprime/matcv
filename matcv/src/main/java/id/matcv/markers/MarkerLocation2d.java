@@ -46,7 +46,6 @@ public record MarkerLocation2d(
         MatOfPoint2f corners,
         Vector2D vector,
         Optional<Path> imageFile) {
-
     private static final ApacheMathUtils utils = new ApacheMathUtils();
     private static final MatConverters converters = new MatConverters();
 
@@ -97,46 +96,6 @@ public record MarkerLocation2d(
     /** Center point (first) + all corners */
     public List<Vector2D> points() {
         return List.of(center, p1, p2, p3, p4);
-    }
-
-    /**
-     * Uniquely identifies {@link #center()} point of a particular marker. It allows to match points
-     * of same marker across different {@link MarkerLocation2d}.
-     */
-    public int centerHash() {
-        return marker.getType().getId() * 5 + 0;
-    }
-
-    /**
-     * Uniquely identifies {@link #p1()} point of a particular marker. It allows to match points of
-     * same marker across different {@link MarkerLocation2d}.
-     */
-    public int p1Hash() {
-        return marker.getType().getId() * 5 + 1;
-    }
-
-    /**
-     * Uniquely identifies {@link #p2()} point of a particular marker. It allows to match points of
-     * same marker across different {@link MarkerLocation2d}.
-     */
-    public int p2Hash() {
-        return marker.getType().getId() * 5 + 2;
-    }
-
-    /**
-     * Uniquely identifies {@link #p3()} point of a particular marker. It allows to match points of
-     * same marker across different {@link MarkerLocation2d}.
-     */
-    public int p3Hash() {
-        return marker.getType().getId() * 5 + 3;
-    }
-
-    /**
-     * Uniquely identifies {@link #p4()} point of a particular marker. It allows to match points of
-     * same marker across different {@link MarkerLocation2d}.
-     */
-    public int p4Hash() {
-        return marker.getType().getId() * 5 + 4;
     }
 
     @Override

@@ -18,6 +18,7 @@
 package id.matcv;
 
 import id.xfunction.XJsonStringBuilder;
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 
 public class ApacheMathUtils {
@@ -26,6 +27,14 @@ public class ApacheMathUtils {
         XJsonStringBuilder builder = new XJsonStringBuilder(this);
         builder.append("x", vec.getX());
         builder.append("y", vec.getY());
+        return builder.toString();
+    }
+
+    public String toJsonString(Vector3D vec) {
+        XJsonStringBuilder builder = new XJsonStringBuilder(this);
+        builder.append("x", vec.getX());
+        builder.append("y", vec.getY());
+        builder.append("z", vec.getZ());
         return builder.toString();
     }
 }
