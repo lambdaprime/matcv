@@ -35,11 +35,11 @@ import org.opencv.core.MatOfPoint2f;
  */
 public record MarkerLocation2d(
         Marker marker,
+        Vector2D center,
         Vector2D p1,
         Vector2D p2,
         Vector2D p3,
         Vector2D p4,
-        Vector2D center,
         double heightPixels,
         double widthPixels,
         MatOfPoint2f corners,

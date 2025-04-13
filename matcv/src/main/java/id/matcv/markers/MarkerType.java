@@ -28,8 +28,9 @@ import org.opencv.aruco.Aruco;
  * {@link #getDict()}.
  *
  * <p>Each marker contains 5 key points which locations can be identified on the images. These key
- * points are p1, ..., p4 and they are given in the clockwise order of the marker corners. Final key
- * point is a center point of the marker.
+ * points are the center point of the marker and the corners p1, ..., p4 which are given in the
+ * clockwise order. The first corner is the top left corner, followed by the top right, bottom right
+ * and bottom left.
  *
  * @author lambdaprime intid@protonmail.com
  */

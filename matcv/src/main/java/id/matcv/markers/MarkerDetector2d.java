@@ -98,11 +98,11 @@ public class MarkerDetector2d {
             var center = LineUtils.midPoint(LineUtils.midPoint(p1, p2), LineUtils.midPoint(p3, p4));
             var mloc =
                     new MarkerLocation2d(
+                            center,
                             p1,
                             p2,
                             p3,
                             p4,
-                            center,
                             p1.distance(p2),
                             p2.distance(p3),
                             m,
