@@ -62,4 +62,5 @@ module id.matcv {
     exports id.matcv.feature.detector;
     exports id.matcv.apps.slider;
     exports id.matcv.markers;
+    exports id.matcv.types.datatables;
 }
