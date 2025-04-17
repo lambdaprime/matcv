@@ -17,7 +17,7 @@
  */
 package id.matcv.converters;
 
-import id.matcv.Vector2D;
+import id.matcv.types.Vector2D;
 import org.opencv.core.Point;
 
 public class PointConverters {

@@ -17,8 +17,8 @@
  */
 package id.matcv.markers;
 
-import id.matcv.FileMat;
-import id.matcv.Vector2D;
+import id.matcv.types.FileMat;
+import id.matcv.types.Vector2D;
 import id.mathcat.LineUtils;
 import id.xfunction.XJsonStringBuilder;
 import id.xfunction.logging.XLogger;

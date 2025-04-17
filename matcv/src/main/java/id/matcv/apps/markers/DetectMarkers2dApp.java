@@ -17,11 +17,11 @@
  */
 package id.matcv.apps.markers;
 
-import id.matcv.camera.CameraInfo;
-import id.matcv.camera.CameraInfoPredefined;
 import id.matcv.markers.CameraPoseEstimator;
 import id.matcv.markers.MarkerDetector2d;
 import id.matcv.markers.MarkerUtils;
+import id.matcv.types.camera.CameraInfo;
+import id.matcv.types.camera.CameraInfoPredefined;
 import id.xfunction.cli.CommandOptions;
 import id.xfunction.cli.CommandOptions.Config;
 import id.xfunction.nio.file.FilePredicates;

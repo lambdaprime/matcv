@@ -19,9 +19,9 @@ package id.matcv.tests.feature.match;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import id.matcv.FileMat;
 import id.matcv.OpenCvKit;
 import id.matcv.feature.match.Matchers;
+import id.matcv.types.FileMat;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.List;

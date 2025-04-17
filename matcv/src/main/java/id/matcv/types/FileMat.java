@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package id.matcv;
+package id.matcv.types;
 
 import java.nio.file.Path;
 import org.opencv.core.Core;

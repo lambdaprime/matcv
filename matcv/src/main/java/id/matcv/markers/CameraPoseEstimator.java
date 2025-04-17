@@ -18,7 +18,7 @@
 package id.matcv.markers;
 
 import id.matcv.MatUtils;
-import id.matcv.camera.CameraInfo;
+import id.matcv.types.camera.CameraInfo;
 import id.xfunction.Preconditions;
 import java.util.List;
 import org.opencv.aruco.Aruco;

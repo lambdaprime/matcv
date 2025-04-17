@@ -17,8 +17,8 @@
  */
 package id.matcv.feature.match;
 
-import id.matcv.FileMat;
 import id.matcv.converters.MatConverters;
+import id.matcv.types.FileMat;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;

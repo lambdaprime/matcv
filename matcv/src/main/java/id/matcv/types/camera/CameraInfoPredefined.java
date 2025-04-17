@@ -15,9 +15,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package id.matcv.camera;
+package id.matcv.types.camera;
 
-import id.matcv.camera.CameraInfo.Matrix;
+import id.matcv.types.camera.CameraInfo.Matrix;
 
 public enum CameraInfoPredefined {
     REALSENSE_D435i_1280_720(

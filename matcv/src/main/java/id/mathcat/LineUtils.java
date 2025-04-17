@@ -17,7 +17,7 @@
  */
 package id.mathcat;
 
-import id.matcv.Vector2D;
+import id.matcv.types.Vector2D;
 
 public class LineUtils {
 

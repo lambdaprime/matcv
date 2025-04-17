@@ -19,7 +19,7 @@ package id.mathcat.tests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import id.matcv.Vector2D;
+import id.matcv.types.Vector2D;
 import id.mathcat.LineUtils;
 import org.junit.jupiter.api.Test;
 
