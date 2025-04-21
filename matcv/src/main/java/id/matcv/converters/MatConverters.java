@@ -17,6 +17,8 @@
  */
 package id.matcv.converters;
 
+import id.matcv.types.Matrix3d;
+import id.matcv.types.MatrixNd;
 import id.matcv.types.Vector2D;
 import id.xfunction.Preconditions;
 import java.util.List;
@@ -67,14 +69,6 @@ public class MatConverters {
         return buf;
     }
 
-    //    public Vector3D copyToVector3d(Mat matrix) {
-    //        Preconditions.equals(3, matrix.rows(), "Vector matrix has wrong number of rows");
-    //        Preconditions.equals(1, matrix.cols(), "Vector matrix has wrong number of cols");
-    //        var data = new double[3];
-    //        matrix.get(0, 0, data);
-    //        return new Vector3D(data[0], data[1], data[2]);
-    //    }
-
     public Mat copyToMat32F(Vector2D v) {
         return new MatOfPoint2f(pointConverters.toOpenCv(v));
     }
@@ -87,5 +81,21 @@ public class MatConverters {
      */
     public List<Mat> toListOfMat(List<? extends Mat> list) {
         return (List<Mat>) list;
+    }
+
+    public Mat toMat64F(Matrix3d mx) {
+        return copyToMat64F(mx.getData(), 3, 3);
+    }
+
+    public Mat toMat32F(Matrix3d mx) {
+        return copyToMat32F(mx.getData(), 3, 3);
+    }
+
+    /**
+     * Return {@link MatOfDouble} of type {@link CvType#CV_64FC1} which always 1 dimensional (see <a
+     * href="https://github.com/vRallev/OpenCV/blob/60fe17cfd6519390b37888b0db28e6a40ff2eca6/opencv-library/opencv-android/src/main/java/org/opencv/core/MatOfDouble.java">code</a>
+     */
+    public MatOfDouble toMatOfDouble(MatrixNd mx) {
+        return new MatOfDouble(mx.getData());
     }
 }

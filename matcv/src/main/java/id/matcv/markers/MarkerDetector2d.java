@@ -33,6 +33,11 @@ import org.opencv.aruco.Aruco;
 import org.opencv.aruco.Dictionary;
 import org.opencv.core.Mat;
 
+/**
+ * Detect marked in 2d images
+ *
+ * @author lambdaprime intid@protonmail.com
+ */
 public class MarkerDetector2d {
     private static final XLogger LOGGER = XLogger.getLogger(MarkerDetector2d.class);
 

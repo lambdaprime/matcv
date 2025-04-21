@@ -18,6 +18,7 @@
 package id.matcv.markers;
 
 import id.matcv.MatUtils;
+import id.matcv.converters.MatConverters;
 import id.matcv.types.camera.CameraInfo;
 import id.xfunction.Preconditions;
 import java.util.List;
@@ -34,13 +35,14 @@ import org.opencv.core.MatOfDouble;
  */
 public class CameraPoseEstimator {
 
-    private static final MatUtils matUtils = new MatUtils();
+    private MatUtils matUtils = new MatUtils();
+    private MatConverters converters = new MatConverters();
     private Mat cameraMat;
     private MatOfDouble distortionMat;
 
     public CameraPoseEstimator(CameraInfo cameraInfo) {
-        cameraMat = cameraInfo.cameraMatrix().toMat64F();
-        distortionMat = cameraInfo.distortionCoefficients().toMatOfDouble();
+        cameraMat = converters.toMat64F(cameraInfo.cameraMatrix());
+        distortionMat = converters.toMatOfDouble(cameraInfo.distortionCoefficients());
     }
 
     public void estimate(Mat image, List<MarkerLocation2d> markers) {

@@ -17,14 +17,10 @@
  */
 package id.matcv.types.camera;
 
-import id.matcv.types.camera.CameraInfo.Matrix;
-
 public enum CameraInfoPredefined {
     REALSENSE_D435i_1280_720(
             new CameraInfo(
-                    new Matrix(
-                            3,
-                            3,
+                    new CameraMatrix(
                             new double[] {
                                 909.96856689453125, 0.0, 635.51580810546875,
                                 0.0, 909.84716796875, 353.34024047851562,
@@ -33,9 +29,7 @@ public enum CameraInfoPredefined {
 
     REALSENSE_D435i_640_480(
             new CameraInfo(
-                    new Matrix(
-                            3,
-                            3,
+                    new CameraMatrix(
                             new double[] {
                                 606.6457519531,
                                 0,
@@ -57,9 +51,7 @@ public enum CameraInfoPredefined {
      */
     BLENDER_DEFAULT_1280_720(
             new CameraInfo(
-                    new Matrix(
-                            3,
-                            3,
+                    new CameraMatrix(
                             new double[] {
                                 50.0, 0.0, 640.0,
                                 0.0, 50.0, 360.0,

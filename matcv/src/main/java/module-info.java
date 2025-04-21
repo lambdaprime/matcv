@@ -58,9 +58,10 @@ module id.matcv {
     exports id.matcv.accessors;
     exports id.matcv.grid;
     exports id.matcv.feature.match;
-    exports id.matcv.types.camera;
     exports id.matcv.feature.detector;
     exports id.matcv.apps.slider;
     exports id.matcv.markers;
+    exports id.matcv.types;
+    exports id.matcv.types.camera;
     exports id.matcv.types.datatables;
 }
