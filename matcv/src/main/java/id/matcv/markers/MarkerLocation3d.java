@@ -68,6 +68,10 @@ public class MarkerLocation3d {
         return data.getVector(4);
     }
 
+    public MatrixN3d getData() {
+        return data;
+    }
+
     /** Center point (first) + all corners */
     public List<Vector3D> points() {
         return List.of(center(), p1(), p2(), p3(), p4());
