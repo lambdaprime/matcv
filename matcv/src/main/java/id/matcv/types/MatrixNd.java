@@ -17,7 +17,7 @@
  */
 package id.matcv.types;
 
-import java.util.Arrays;
+import java.nio.DoubleBuffer;
 
 /**
  * @author lambdaprime intid@protonmail.com
@@ -26,26 +26,35 @@ public class MatrixNd {
 
     private int rows;
     private int cols;
-    private double[] data;
+    private DoubleBuffer data;
 
     public MatrixNd(int rows, int cols, double[] data) {
+        this(rows, cols, DoubleBuffer.wrap(data));
+    }
+
+    public MatrixNd(int rows, int cols, DoubleBuffer data) {
         this.rows = rows;
         this.cols = cols;
-        this.data = data;
+        this.data = data.duplicate();
+        this.data.limit(rows * cols);
     }
 
     public double get(int r, int c) {
         // use row-major storage order
-        return data[c * rows + r];
+        return data.get(c * rows + r);
     }
 
-    public double[] getData() {
+    public void set(int r, int c, double v) {
+        // use row-major storage order
+        data.put(c * rows + r, v);
+    }
+
+    public DoubleBuffer getData() {
         return data;
     }
 
     @Override
     public String toString() {
-        return String.format(
-                "Matrix [rows=%s, cols=%s, data=%s]", rows, cols, Arrays.toString(data));
+        return String.format("Matrix [rows=%s, cols=%s, data=%s]", rows, cols, data);
     }
 }

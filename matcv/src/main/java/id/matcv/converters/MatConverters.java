@@ -84,11 +84,11 @@ public class MatConverters {
     }
 
     public Mat toMat64F(Matrix3d mx) {
-        return copyToMat64F(mx.getData(), 3, 3);
+        return copyToMat64F(mx.getData().array(), 3, 3);
     }
 
     public Mat toMat32F(Matrix3d mx) {
-        return copyToMat32F(mx.getData(), 3, 3);
+        return copyToMat32F(mx.getData().array(), 3, 3);
     }
 
     /**
@@ -96,6 +96,6 @@ public class MatConverters {
      * href="https://github.com/vRallev/OpenCV/blob/60fe17cfd6519390b37888b0db28e6a40ff2eca6/opencv-library/opencv-android/src/main/java/org/opencv/core/MatOfDouble.java">code</a>
      */
     public MatOfDouble toMatOfDouble(MatrixNd mx) {
-        return new MatOfDouble(mx.getData());
+        return new MatOfDouble(mx.getData().array());
     }
 }

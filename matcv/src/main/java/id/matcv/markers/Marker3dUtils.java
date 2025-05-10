@@ -38,25 +38,37 @@ public class Marker3dUtils {
             List<MarkerLocation3d> markerLocations, Matrix4d tx) {
         var inPointsMx =
                 new DMatrixRMaj(4, markerLocations.size() * MarkerLocation3d.NUM_OF_POINTS);
+        // In order to mul Matrix4d with MatrixX3 we need to covert MatrixX3 to Matrix4X
+        // this would require to store points in column major order:
+        // p1.x p2.x ...
+        // p1.y p2.y ...
+        // p1.z p2.z ...
+        //    1    1 ...
         for (int i = 0; i < markerLocations.size(); i++) {
             var points = markerLocations.get(i).points();
             for (int j = 0; j < MarkerLocation3d.NUM_OF_POINTS; j++) {
                 var d = points.get(j).getData();
                 var col = i * MarkerLocation3d.NUM_OF_POINTS + j;
-                inPointsMx.set(0, col, d[0]);
-                inPointsMx.set(1, col, d[1]);
-                inPointsMx.set(2, col, d[2]);
+                inPointsMx.set(0, col, d.get(0));
+                inPointsMx.set(1, col, d.get(1));
+                inPointsMx.set(2, col, d.get(2));
                 inPointsMx.set(3, col, 1);
             }
         }
-        var ejmlTx = new DMatrixRMaj(tx.getData());
+        var ejmlTx = new DMatrixRMaj(tx.getData().array());
         ejmlTx.reshape(4, 4);
+        System.out.println(inPointsMx);
         DMatrixRMaj outPointsMx = new DMatrixRMaj();
         CommonOps_DDRM.mult(
                 ejmlTx,
                 inPointsMx,
                 outPointsMx); // This does M * V where V is the stack of all points
         var out = new ArrayList<MarkerLocation3d>(markerLocations.size());
+        // the answer stored in column major order
+        // we need to restore it back to row major and drop last row:
+        // p1.x p1.y p1.z
+        // p2.x p2.y p2.z
+        // ...
         for (int i = 0; i < markerLocations.size(); i++) {
             var loc = markerLocations.get(i);
             var colStart = i * MarkerLocation3d.NUM_OF_POINTS;

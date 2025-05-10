@@ -17,12 +17,18 @@
  */
 package id.matcv.types;
 
+import java.nio.DoubleBuffer;
+
 /**
  * @author lambdaprime intid@protonmail.com
  */
 public class Matrix4d extends MatrixNd {
 
     public Matrix4d(double[] data) {
+        this(DoubleBuffer.wrap(data));
+    }
+
+    public Matrix4d(DoubleBuffer data) {
         super(4, 4, data);
     }
 }

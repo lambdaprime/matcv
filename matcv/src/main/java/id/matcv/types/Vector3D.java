@@ -18,6 +18,7 @@
 package id.matcv.types;
 
 import id.xfunction.XJsonStringBuilder;
+import java.nio.DoubleBuffer;
 
 /**
  * @author lambdaprime intid@protonmail.com
@@ -25,36 +26,38 @@ import id.xfunction.XJsonStringBuilder;
 public class Vector3D {
 
     // use array for simple mapping to eigen or EJML
-    private double[] a = new double[3];
+    private DoubleBuffer data;
 
     public Vector3D(double x, double y, double z) {
-        a[0] = x;
-        a[1] = y;
-        a[2] = z;
+        this(DoubleBuffer.wrap(new double[] {x, y, z}));
     }
 
-    public double[] getData() {
-        return a;
+    public Vector3D(DoubleBuffer data) {
+        this.data = data;
+    }
+
+    public DoubleBuffer getData() {
+        return data;
     }
 
     public double getX() {
-        return a[0];
+        return data.get(0);
     }
 
     public double getY() {
-        return a[1];
+        return data.get(1);
     }
 
     public double getZ() {
-        return a[2];
+        return data.get(2);
     }
 
     @Override
     public String toString() {
         XJsonStringBuilder builder = new XJsonStringBuilder();
-        builder.append("x", a[0]);
-        builder.append("y", a[1]);
-        builder.append("z", a[2]);
+        builder.append("x", getX());
+        builder.append("y", getY());
+        builder.append("z", getZ());
         return builder.toString();
     }
 }
