@@ -54,6 +54,8 @@ module matcv {
     requires id.xfunction;
     requires java.logging;
     requires transitive opencv;
+    requires ejml.ddense;
+    requires ejml.core;
 
     exports id.matcv;
     exports id.matcv.accessors;
