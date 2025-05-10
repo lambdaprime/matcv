@@ -1,0 +1,49 @@
+/*
+ * Copyright 2023 matcv project
+ * 
+ * Website: https://github.com/lambdaprime/matcv
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package id.matcv.markers;
+
+import id.matcv.types.Vector3D;
+import id.xfunction.XJsonStringBuilder;
+import java.util.List;
+
+/**
+ * Points p1, ..., p4 are given in the same order as they present in {@link MarkerLocation2d}
+ *
+ * @author lambdaprime intid@protonmail.com
+ */
+public record MarkerLocation3d(
+        Marker marker, Vector3D center, Vector3D p1, Vector3D p2, Vector3D p3, Vector3D p4) {
+    public static final int NUM_OF_POINTS = 5;
+
+    /** Center point (first) + all corners */
+    public List<Vector3D> points() {
+        return List.of(center, p1, p2, p3, p4);
+    }
+
+    @Override
+    public String toString() {
+        XJsonStringBuilder builder = new XJsonStringBuilder(this);
+        builder.append("marker", marker);
+        builder.append("center", center);
+        builder.append("p1", p1);
+        builder.append("p2", p2);
+        builder.append("p3", p3);
+        builder.append("p4", p4);
+        return builder.toString();
+    }
+}

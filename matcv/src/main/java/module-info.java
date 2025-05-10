@@ -64,4 +64,5 @@ module id.matcv {
     exports id.matcv.types;
     exports id.matcv.types.camera;
     exports id.matcv.types.datatables;
+    exports id.matcv.types.pointcloud;
 }
