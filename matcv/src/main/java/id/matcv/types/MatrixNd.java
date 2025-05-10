@@ -41,12 +41,12 @@ public class MatrixNd {
 
     public double get(int r, int c) {
         // use row-major storage order
-        return data.get(c * rows + r);
+        return data.get(r * cols + c);
     }
 
     public void set(int r, int c, double v) {
         // use row-major storage order
-        data.put(c * rows + r, v);
+        data.put(r * cols + c, v);
     }
 
     public DoubleBuffer getData() {
@@ -55,6 +55,15 @@ public class MatrixNd {
 
     @Override
     public String toString() {
-        return String.format("Matrix [rows=%s, cols=%s, data=%s]", rows, cols, data);
+        var buf = new StringBuilder();
+        for (int r = 0; r < rows; r++) {
+            for (int c = 0; c < cols; c++) {
+                if (c == 0) buf.append(" ");
+                buf.append(get(r, c));
+                if (c < cols - 1) buf.append(", ");
+            }
+            if (r < rows - 1) buf.append(",\n");
+        }
+        return "{ \"data\" : [\n" + buf.toString() + "\n] }";
     }
 }
