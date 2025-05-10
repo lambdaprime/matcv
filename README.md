@@ -1,8 +1,8 @@
-**matcv** - Java module which provides different functionality for Computer Vision and extensions to [OpenCV](https://github.com/opencv).
+**matcv** - Java module for Computer Vision which provides additional functionality and extensions to [OpenCV](https://github.com/opencv).
 
 # Requirements
 
-Java 17+
+- Java 22+
 
 # Download
 
@@ -24,6 +24,6 @@ dependencies {
 
 [Development](DEVELOPMENT.md)
 
-# Contributors
+# Contacts
 
 lambdaprime <intid@protonmail.com>

@@ -1,5 +1,5 @@
 /**
- * <b>matcv</b> - Java module which provides different functionality for Computer Vision and
+ * <b>matcv</b> - Java module for Computer Vision which provides additional functionality and
  * extensions to <a href="https://github.com/opencv">OpenCV</a>.
  *
  * <h1>OpenCV setup</h1>
