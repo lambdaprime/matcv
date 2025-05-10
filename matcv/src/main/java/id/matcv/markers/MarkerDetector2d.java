@@ -118,7 +118,7 @@ public class MarkerDetector2d {
         }
         markers.sort(Comparator.<MarkerLocation2d, Marker>comparing(ml -> ml.marker()));
 
-        LOGGER.info("Number of markers detected: {0}", markers.size());
+        LOGGER.fine("Number of markers detected: {0}", markers.size());
         return new Result(img, markers, origin);
     }
 }

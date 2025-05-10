@@ -24,8 +24,8 @@ eclipse.classpath.file {
 }
 
 dependencies {
-  api files('/usr/share/java/opencv.jar')
-  api "io.github.lambdaprime:id.xfunction:28.0-SNAPSHOT"
+  api(project ":matcv")
+  implementation "io.github.lambdaprime:jrealsense:2.0-SNAPSHOT"
 }
 
 configurations {
@@ -34,8 +34,7 @@ configurations {
 
 jar {
   manifest { 
-    attributes 'Automatic-Module-Name': 'id.matcv',
-      'Main-Class': 'id.matcv.apps.MainApp'
+    attributes 'Implementation-Version': "${rootProject.version}"
   }
 }
 
@@ -50,15 +49,17 @@ java {
 compileJava {
   doFirst {
     options.compilerArgs = [
-      '--module-path', classpath.asPath
+      '--module-path', classpath.asPath,
     ]
     classpath = files()
   }
 }
 
+def packageDir = "$buildDir/package/${projectName}"
+
+ext.artifacts = fileTree(include: ['*'], dir: "$packageDir/libs")
+
 javadoc {
-  options.modulePath = classpath.getFiles().stream()
-    .collect(java.util.stream.Collectors.toList())
   options.noTimestamp = true
   options.noQualifiers = ["all"]
   options.noTree = true
@@ -68,10 +69,6 @@ javadoc {
   options.addBooleanOption('Xdoclint:all,-missing', true)
 }
 
-def packageDir = "$buildDir/package/${projectName}"
-
-ext.artifacts = fileTree(include: ['*'], dir: "$packageDir/libs")
-
 task createRelease(type: Zip) {
   archiveFileName = "$releaseFileName"
   destinationDirectory = file("$projectDir/release")
@@ -80,6 +77,7 @@ task createRelease(type: Zip) {
 
 task copyLibs(type: Copy) {
   from configurations.customConfig 
+  from jar.archiveFile
   from jar.archiveFile
   into "${packageDir}/libs"
 }
@@ -96,7 +94,6 @@ jar.dependsOn copyReadme
 task createPackage(type: Copy, dependsOn: [copyLibs]) {
   from "${project.rootDir}/README.md"
   from "${project.rootDir}/LICENSE-2.0.txt"
-  from file("$projectDir/src/matcv-app")
   into packageDir
 }
 
@@ -109,7 +106,6 @@ createRelease.dependsOn createPackage
 assemble.dependsOn createRelease
 clean.dependsOn cleanRelease
 
-
 // run spotless and format code before the build
 classes.dependsOn spotlessApply
 
@@ -121,7 +117,7 @@ task updateVersion() {
   new id.xfunction.text.Substitutor()
     .withRegexpSupport()
     .substitute(java.nio.file.Paths.get("${project.rootDir}/README.md"), Map.of(
-      "io.github.lambdaprime:matcv:[0-9.]+", "io.github.lambdaprime:matcv:" + version
+      "io.github.lambdaprime:matcv.realsense:[0-9.]+", "io.github.lambdaprime:matcv.realsense:" + version
     ));
 }
 createRelease.dependsOn updateVersion
@@ -152,12 +148,12 @@ if (project.hasProperty('publish')) {
   publishing {
     publications {
       mavenJava(MavenPublication) {
-        artifactId = 'matcv'
+        artifactId = 'matcv.realsense'
         groupId = 'io.github.lambdaprime'
         from components.java
         pom {
-          name = 'matcv'
-          description = 'Java tools for Computer Vision'
+          name = 'matcv.realsense'
+          description = 'Java module for Computer Vision with Intel RealSense cameras'
           url = 'http://portal2.atwebpages.com/matcv'
 
           licenses {

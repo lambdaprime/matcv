@@ -15,6 +15,7 @@ Gradle:
 ```
 dependencies {
   implementation 'io.github.lambdaprime:matcv:3.0'
+  implementation 'io.github.lambdaprime:matcv.realsense:3.0'
 }
 ```
 

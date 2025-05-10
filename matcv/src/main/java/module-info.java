@@ -44,12 +44,13 @@
  *
  * <p>Tested with OpenCV version is 4.6.0
  *
- * @see <a href="https://github.com/lambdaprime/matcv">Download matcv</a>
+ * @see <a
+ *     href="https://github.com/lambdaprime/matcv/blob/main/matcv/release/CHANGELOG.md">Releases</a>
  * @see <a href="https://github.com/lambdaprime/matcv">Github</a>
  * @see <a href="https://opencv.org/">OpenCV</a>
  * @author lambdaprime intid@protonmail.com
  */
-module id.matcv {
+module matcv {
     requires id.xfunction;
     requires java.logging;
     requires transitive opencv;

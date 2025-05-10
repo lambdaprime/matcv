@@ -104,7 +104,7 @@ public class MarkerDetector3d {
                                 pc.getPoint(p4Id)));
             }
             if (result.img() instanceof FileMat fm)
-                LOGGER.info(
+                LOGGER.fine(
                         "Found {0} keypoints on image {1}", pointHashesMap.size(), fm.getFile());
             var pointHashes =
                     pointHashesMap.entrySet().stream()
@@ -117,7 +117,7 @@ public class MarkerDetector3d {
             col2.add(locations);
         }
         var ret = new DataTable2<>(col1, col2);
-        LOGGER.info("detectorResults3d={0}", ret);
+        LOGGER.fine("detectorResults3d={0}", ret);
         return ret;
     }
 
