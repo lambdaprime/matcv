@@ -8,8 +8,8 @@
  *
  * <ul>
  *   <li>standard - provided for Windows/Android/iOS by <a href="https://opencv.org/">OpenCV</a>
- *       itself and for Linux but Canonical/Debian etc. This also known as non Maven distribution
- *       because you have to download OpenCV library manually and install it to classpath.
+ *       itself and for Linux by Canonical/Debian etc. This also known as non Maven distribution
+ *       because you have to install OpenCV library manually and add it to the classpath.
  *   <li><a href="https://github.com/openpnp/opencv">OpenPnP</a> - this is Maven compatible
  *       distribution and is very convenient as you just need to declare dependency on OpenCV in
  *       Maven/Gradle build.
@@ -18,13 +18,21 @@
  * <p>The problem with OpenPnP distribution is that it does not include all features of standard
  * distribution. Example is <a
  * href="https://docs.opencv.org/4.2.0/javadoc/org/opencv/aruco/package-summary.html">aruco</a>
- * package and possibly more. For that reason <b>matcv</b> relies on standard distribution:
+ * package and possibly more. For that reason <b>matcv</b> relies on standard distribution.
  *
- * <p>Linux:
+ * <p>To install standard distribution of OpenCV in Linux:
  *
  * <pre>{@code
  * apt install libopencv-java
  * }</pre>
+ *
+ * <p>Note: Standard OpenCV distribution has different Java requirements:
+ *
+ * <ul>
+ *   <li>opencv-460.jar requires Java 21+
+ *   <li>opencv-454.jar requires Java 11+
+ *   <li>...
+ * </ul>
  *
  * <h1>Usage</h1>
  *
@@ -42,7 +50,7 @@
  * <p>3. Add opencv.jar to module-path using -mp (for Linux it is usually: -mp
  * /usr/share/java/opencv.jar
  *
- * <p>Tested with OpenCV version is 4.6.0
+ * <p>Tested with OpenCV version 4.6.0
  *
  * @see <a
  *     href="https://github.com/lambdaprime/matcv/blob/main/matcv/release/CHANGELOG.md">Releases</a>

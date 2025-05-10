@@ -45,19 +45,19 @@ public class PointCloudFromMemorySegmentAccessorTest extends OpencvTest {
         var pc = new PointCloudFromMemorySegmentAccessor(segment, intrinsics, 1000);
         Assertions.assertEquals(
                 """
-                { "x": -0.2518753144, "y": -0.1871852704, "z": 0.482 }""",
+                { "x": -0.25188, "y": -0.18719, "z": 0.482 }""",
                 pc.getPoint(0).toString());
         Assertions.assertEquals(
                 """
-                { "x": -0.1678995414, "y": -0.2038843713, "z": 0.525 }""",
+                { "x": -0.1679, "y": -0.20388, "z": 0.525 }""",
                 pc.getPoint(123).toString());
         Assertions.assertEquals(
                 """
-                { "x": 0.3639036187, "y": -0.3082019363, "z": 0.797 }""",
+                { "x": 0.3639, "y": -0.3082, "z": 0.797 }""",
                 pc.getPoint(1234).toString());
         Assertions.assertEquals(
                 """
-                { "x": -0.1201192432, "y": -0.1970790384, "z": 0.552 }""",
+                { "x": -0.12012, "y": -0.19708, "z": 0.552 }""",
                 pc.getPoint(12345).toString());
     }
 }

@@ -17,7 +17,6 @@
  */
 package id.matcv.types;
 
-import id.xfunction.XJsonStringBuilder;
 import java.nio.DoubleBuffer;
 
 /**
@@ -54,10 +53,11 @@ public class Vector3D {
 
     @Override
     public String toString() {
-        XJsonStringBuilder builder = new XJsonStringBuilder();
-        builder.append("x", getX());
-        builder.append("y", getY());
-        builder.append("z", getZ());
-        return builder.toString();
+        return """
+               { "x": %s, "y": %s, "z": %s }"""
+                .formatted(
+                        MatrixNd.formatter.format(getX()),
+                        MatrixNd.formatter.format(getY()),
+                        MatrixNd.formatter.format(getZ()));
     }
 }

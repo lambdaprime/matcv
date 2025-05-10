@@ -18,11 +18,19 @@
 package id.matcv.types;
 
 import java.nio.DoubleBuffer;
+import java.text.DecimalFormat;
 
 /**
  * @author lambdaprime intid@protonmail.com
  */
 public class MatrixNd {
+
+    public static final DecimalFormat formatter = new DecimalFormat();
+
+    static {
+        formatter.setMaximumFractionDigits(5);
+        formatter.setGroupingUsed(false);
+    }
 
     private int rows;
     private int cols;
@@ -49,6 +57,14 @@ public class MatrixNd {
         data.put(r * cols + c, v);
     }
 
+    public int getRows() {
+        return rows;
+    }
+
+    public int getCols() {
+        return cols;
+    }
+
     public DoubleBuffer getData() {
         return data;
     }
@@ -59,7 +75,10 @@ public class MatrixNd {
         for (int r = 0; r < rows; r++) {
             for (int c = 0; c < cols; c++) {
                 if (c == 0) buf.append(" ");
-                buf.append(get(r, c));
+                var num = get(r, c);
+                var str = formatter.format(num);
+                if (str.equals("-0")) str = "0";
+                buf.append(str);
                 if (c < cols - 1) buf.append(", ");
             }
             if (r < rows - 1) buf.append(",\n");
