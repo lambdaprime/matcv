@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 matcv project
+ * Copyright 2025 matcv project
  * 
  * Website: https://github.com/lambdaprime/matcv
  * 
@@ -15,26 +15,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package id.matcv.tests.markers;
+package id.matcv.tests;
 
-import id.matcv.markers.MarkerDetector2d;
-import id.matcv.tests.OpencvTest;
-import id.xfunction.ResourceUtils;
-import java.nio.file.Paths;
+import id.matcv.converters.PointConverters;
+import id.matcv.types.Vector2D;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.opencv.core.Mat;
-import org.opencv.imgcodecs.Imgcodecs;
 
-public class MarkerDetectorTest extends OpencvTest {
-
-    private static final ResourceUtils utils = new ResourceUtils();
-
+public class PointConvertersTest {
     @Test
     public void test() {
-        Mat img = Imgcodecs.imread(Paths.get("samples/1.png").toAbsolutePath().toString());
-        var result = new MarkerDetector2d().detect(img);
+        var converters = new PointConverters();
+        Assertions.assertEquals(207483, converters.toIndex(new Vector2D(123, 324), 640, 480));
         Assertions.assertEquals(
-                utils.readResource("markers"), result.markersSortedByType().toString());
+                """
+                { "x": 123, "y": 324 }""",
+                converters.toPoint2d(207483, 640, 480).toString());
     }
 }

@@ -1,0 +1,60 @@
+/*
+ * Copyright 2025 matcv project
+ * 
+ * Website: https://github.com/lambdaprime/matcv
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package id.matcv.types;
+
+import id.xfunction.XJsonStringBuilder;
+
+/**
+ * @author lambdaprime intid@protonmail.com
+ */
+public class Vector3D {
+
+    // use array for simple mapping to eigen or EJML
+    private double[] a = new double[3];
+
+    public Vector3D(double x, double y, double z) {
+        a[0] = x;
+        a[1] = y;
+        a[2] = z;
+    }
+
+    public double[] getData() {
+        return a;
+    }
+
+    public double getX() {
+        return a[0];
+    }
+
+    public double getY() {
+        return a[1];
+    }
+
+    public double getZ() {
+        return a[2];
+    }
+
+    @Override
+    public String toString() {
+        XJsonStringBuilder builder = new XJsonStringBuilder();
+        builder.append("x", a[0]);
+        builder.append("y", a[1]);
+        builder.append("z", a[2]);
+        return builder.toString();
+    }
+}

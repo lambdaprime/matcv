@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 matcv project
+ * Copyright 2025 matcv project
  * 
  * Website: https://github.com/lambdaprime/matcv
  * 
@@ -15,25 +15,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package id.matcv.converters;
+package id.matcv.types.pointcloud;
 
-import id.matcv.types.Vector2D;
-import org.opencv.core.Point;
+import id.matcv.types.Vector3D;
 
-public class PointConverters {
-    public Point toOpenCv(Vector2D point) {
-        return toOpenCv(point, 0, 0);
-    }
+/**
+ * Point cloud stored inside float array.
+ *
+ * <p>Array format is: p1.x, p1.y, p1.z, p2.x, p2.y, p2.z, ..., pN.x, pN.y, pN.z
+ *
+ * @author lambdaprime intid@protonmail.com
+ */
+public record FloatArrayPointCloud(float[] data) implements PointCloud {
 
-    public Point toOpenCv(Vector2D point, int offsetX, int offsetY) {
-        return new Point(point.getX() + offsetX, point.getY() + offsetY);
-    }
-
-    public int toIndex(Vector2D p, int w, int h) {
-        return (int) p.getY() * w + (int) p.getX();
-    }
-
-    public Vector2D toPoint2d(int index, int w, int h) {
-        return new Vector2D(index % w, index / w);
+    @Override
+    public Vector3D getPoint(int index) {
+        var s = index * 3;
+        return new Vector3D(s + 0, s + 1, s + 2);
     }
 }
