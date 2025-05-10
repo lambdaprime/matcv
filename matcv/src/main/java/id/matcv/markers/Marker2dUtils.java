@@ -22,7 +22,7 @@ import org.opencv.core.Mat;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 
-public class MarkerUtils {
+public class Marker2dUtils {
 
     private static final PointConverters converters = new PointConverters();
 

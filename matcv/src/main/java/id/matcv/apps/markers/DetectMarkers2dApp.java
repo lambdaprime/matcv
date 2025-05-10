@@ -18,8 +18,8 @@
 package id.matcv.apps.markers;
 
 import id.matcv.markers.CameraPoseEstimator;
+import id.matcv.markers.Marker2dUtils;
 import id.matcv.markers.MarkerDetector2d;
-import id.matcv.markers.MarkerUtils;
 import id.matcv.types.camera.CameraInfo;
 import id.matcv.types.camera.CameraInfoPredefined;
 import id.xfunction.cli.CommandOptions;
@@ -76,7 +76,7 @@ CAMERA_INFO - one of %s. Default is BLENDER_DEFAULT.
         markers.forEach(
                 loc -> {
                     System.out.println(loc);
-                    new MarkerUtils().drawMarker(img, loc);
+                    new Marker2dUtils().drawMarker(img, loc);
                 });
 
         var poseEstimator = new CameraPoseEstimator(getCameraInfo());

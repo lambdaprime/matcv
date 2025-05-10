@@ -42,7 +42,7 @@ import org.opencv.imgcodecs.Imgcodecs;
 public class MarkerDetector3d {
     private static final XLogger LOGGER = XLogger.getLogger(MarkerDetector3d.class);
     private PointConverters converters = new PointConverters();
-    private MarkerUtils markerUtils = new MarkerUtils();
+    private Marker2dUtils markerUtils = new Marker2dUtils();
     private CameraIntrinsics intrinsics;
     private boolean showDetectedMarkers;
 
