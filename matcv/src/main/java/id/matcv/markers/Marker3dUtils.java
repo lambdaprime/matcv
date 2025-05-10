@@ -57,7 +57,6 @@ public class Marker3dUtils {
         }
         var ejmlTx = new DMatrixRMaj(tx.getData().array());
         ejmlTx.reshape(4, 4);
-        System.out.println(inPointsMx);
         DMatrixRMaj outPointsMx = new DMatrixRMaj();
         CommonOps_DDRM.mult(
                 ejmlTx,
