@@ -65,7 +65,11 @@ public class MarkerDetector3d {
         return detect(new DataTable2<>(imgs, inputTable.col2()));
     }
 
-    /** Detect all {@link MarkerType} markers */
+    /**
+     * Detect all {@link MarkerType} markers
+     *
+     * @param inputTable RGB image, point cloud
+     */
     public DataTable2<KeyPoints3dTable, List<MarkerLocation3d>> detect(
             DataTable2<? extends Mat, PointCloud> inputTable) {
         List<MarkerDetector2d.Result> detectorResults2d =

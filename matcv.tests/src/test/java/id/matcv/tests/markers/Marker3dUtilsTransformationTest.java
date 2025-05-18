@@ -23,9 +23,9 @@ import id.matcv.markers.MarkerLocation3d;
 import id.matcv.markers.MarkerType;
 import id.matcv.types.Matrix4d;
 import id.matcv.types.Vector3D;
+import id.xfunctiontests.XAsserts;
 import java.util.List;
 import java.util.stream.Stream;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
@@ -48,17 +48,14 @@ public class Marker3dUtilsTransformationTest {
                                 new Vector3D(-2, 3, 1)),
                         new MarkerLocation3d(
                                 new Marker(MarkerType.ONE),
-                                new Vector3D(0, 0, 0),
-                                new Vector3D(6, 2, 1),
-                                new Vector3D(6, -4, 1),
-                                new Vector3D(2, -4, 1),
-                                new Vector3D(2, 2, 1)),
+                                new Vector3D(3, -0.7, 0),
+                                new Vector3D(4.9, 2, 0.7),
+                                new Vector3D(4.9, -3.4, 0.7),
+                                new Vector3D(1.3, -3.4, 1.1),
+                                new Vector3D(1.3, 2, 1.1)),
                         new Matrix4d(
                                 new double[] {
-                                    1, 0, 4, 0,
-                                    0, 1, -1, 0,
-                                    0, 0, 1, 0,
-                                    0, 0, 0, 1
+                                    0.9, 0, 0.1, 3.0, 0, 0.9, 0, -0.7, -0.1, 0, 0.9, 0, 0, 0, 0, 1
                                 })),
                 // rotate 90 degrees ccw around center of coordinate system (0, 0)
                 new TestCase(
@@ -93,22 +90,30 @@ public class Marker3dUtilsTransformationTest {
                                 new Vector3D(0.012835922, 0.065386579, 0.4869999886)),
                         new MarkerLocation3d(
                                 new Marker(MarkerType.ONE),
-                                new Vector3D(-0.06301, 0.01087, 0.00061),
-                                new Vector3D(-0.08809, 0.03562, 0.00062),
-                                new Vector3D(-0.0373, 0.03591, 0.00168),
-                                new Vector3D(-0.03657, -0.01544, 0.00061),
-                                new Vector3D(-0.0879, -0.01596, -0.00049)),
+                                new Vector3D(-0.062, 0.010, 0),
+                                new Vector3D(-0.036, 0.036, 0),
+                                new Vector3D(-0.036, -0.016, 0),
+                                new Vector3D(-0.088, -0.016, 0),
+                                new Vector3D(-0.088, 0.036, 0)),
                         new Matrix4d(
                                 new double[] {
-                                    1.22858, 0.02926, -0.2168, 0, -0.14298, -1.03016, 0.1093, 0,
-                                    0.02084, -0.02202, 0.00141, 0, 0, 0, 0, 1
+                                    -1.2742E-02,
+                                    -9.8622E-01,
+                                    -1.6497E-01,
+                                    5.8830E-02,
+                                    -8.9366E-01,
+                                    8.5245E-02,
+                                    -4.4057E-01,
+                                    2.5978E-01,
+                                    4.4856E-01,
+                                    1.4182E-01,
+                                    -8.8243E-01,
+                                    4.2093E-01,
+                                    0,
+                                    0,
+                                    0,
+                                    1.000000000000000
                                 })));
-    }
-
-    private static String round(String str) {
-        return str.replaceAll("(\\.\\d)\\d+,", "$1,")
-                .replaceAll("-0.0", "0")
-                .replaceAll("0.0", "0");
     }
 
     @ParameterizedTest
@@ -116,7 +121,7 @@ public class Marker3dUtilsTransformationTest {
     public void test_calculateTransformationMatrix(TestCase testCase) {
         var utils = new Marker3dUtils();
         var tx = utils.calculateTransformationMatrix(testCase.from, testCase.to);
-        Assertions.assertEquals(round(testCase.tx.toString()), round(tx.toString()));
+        XAsserts.assertSimilar(testCase.tx.getData().array(), tx.getData().array(), 0.1);
     }
 
     @ParameterizedTest
@@ -124,6 +129,9 @@ public class Marker3dUtilsTransformationTest {
     public void test_transformAll(TestCase testCase) {
         var utils = new Marker3dUtils();
         var actual = utils.transformAll(List.of(testCase.from), testCase.tx);
-        Assertions.assertEquals(List.of(testCase.to).toString(), actual.toString());
+        XAsserts.assertSimilar(
+                testCase.to.getData().getData().array(),
+                actual.get(0).getData().getData().array(),
+                0.01);
     }
 }

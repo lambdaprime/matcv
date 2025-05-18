@@ -17,6 +17,7 @@
  */
 package id.matcv.markers;
 
+import id.matcv.impl.ejml.KabschAlgorithm;
 import id.matcv.types.Matrix4d;
 import id.matcv.types.MatrixN3d;
 import id.matcv.types.Vector3D;
@@ -27,7 +28,6 @@ import java.util.List;
 import java.util.Optional;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.CommonOps_DDRM;
-import org.ejml.dense.row.factory.LinearSolverFactory_DDRM;
 
 /**
  * @author lambdaprime intid@protonmail.com
@@ -113,18 +113,11 @@ public class Marker3dUtils {
     }
 
     public Matrix4d calculateTransformationMatrix(MarkerLocation3d from, MarkerLocation3d to) {
-        var fromMx = new DMatrixRMaj(4, MarkerLocation3d.NUM_OF_POINTS);
-        fromMx.fill(1);
-        transfer(from.getData(), fromMx);
-        var toMx = new DMatrixRMaj(4, MarkerLocation3d.NUM_OF_POINTS);
-        toMx.fill(1);
-        transfer(to.getData(), toMx);
-        var pinv = LinearSolverFactory_DDRM.pseudoInverse(true);
-        pinv.setA(fromMx);
-        var invMx = new DMatrixRMaj(4, MarkerLocation3d.NUM_OF_POINTS);
-        pinv.invert(invMx);
-        var outPointsMx = new DMatrixRMaj();
-        CommonOps_DDRM.mult(toMx, invMx, outPointsMx);
-        return new Matrix4d(outPointsMx.data);
+        return new Matrix4d(
+                new KabschAlgorithm()
+                        .calculateTransformation(
+                                DMatrixRMaj.wrap(5, 3, from.getData().getData().array()),
+                                DMatrixRMaj.wrap(5, 3, to.getData().getData().array()))
+                        .getData());
     }
 }
