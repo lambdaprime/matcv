@@ -32,6 +32,7 @@ import id.xfunction.lang.XThread;
 import id.xfunction.logging.XLogger;
 import id.xfunction.util.IdempotentService;
 import java.io.IOException;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -51,7 +52,7 @@ public class RealSenseCamera extends IdempotentService {
     /** Frames per second */
     private static final int FPS = 30;
 
-    private Consumer<RgbdImage> imageConsumer = rgbd -> {};
+    private List<Consumer<RgbdImage>> frameConsumers = List.of();
     private CameraIntrinsics intrinsics =
             CameraIntrinsicsPredefined.REALSENSE_D435i_640_480.getCameraIntrinsics();
     private boolean isShowFramesEnabled;
@@ -64,8 +65,8 @@ public class RealSenseCamera extends IdempotentService {
         return this;
     }
 
-    public RealSenseCamera withImageConsumer(Consumer<RgbdImage> imageConsumer) {
-        this.imageConsumer = imageConsumer;
+    public RealSenseCamera withFrameConsumers(List<Consumer<RgbdImage>> frameConsumers) {
+        this.frameConsumers = frameConsumers;
         return this;
     }
 
@@ -150,7 +151,8 @@ public class RealSenseCamera extends IdempotentService {
                         intrinsics.width(),
                         CvType.CV_16UC1,
                         depthFrame.getDataAsByteBuffer());
-        imageConsumer.accept(new RgbdImage(colorMx, depthMx));
+        var frame = new RgbdImage(colorMx, depthMx);
+        frameConsumers.forEach(c -> c.accept(frame));
     }
 
     /** Loop over the frames in the pipeline */
@@ -170,15 +172,17 @@ public class RealSenseCamera extends IdempotentService {
 
     public static void main(String[] args) throws IOException {
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-        // XLogger.load("logging-matcv-debug.properties");
+        XLogger.load("logging-matcv-debug.properties");
         var intrinsics = CameraIntrinsicsPredefined.REALSENSE_D435i_640_480.getCameraIntrinsics();
         try (var camera = new RealSenseCamera()) {
-            camera.withImageConsumer(
-                            new RgbdToMarker3dTransformer(
-                                    intrinsics,
-                                    markers -> LOGGER.info("Markers detected: {0}", markers)))
+            camera.withFrameConsumers(
+                            List.of(
+                                    new RgbdToMarker3dTransformer(
+                                            intrinsics,
+                                            markers ->
+                                                    LOGGER.info("Markers detected: {0}", markers))))
                     .withCameraIntrinsics(intrinsics)
-                    .withShowFrames(false)
+                    .withShowFrames(true)
                     .start();
             System.out.println("Press Enter to stop...");
             System.in.read();

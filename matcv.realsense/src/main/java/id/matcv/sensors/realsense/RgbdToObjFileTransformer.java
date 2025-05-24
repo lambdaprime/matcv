@@ -17,29 +17,26 @@
  */
 package id.matcv.sensors.realsense;
 
-import id.matcv.markers.Marker;
-import id.matcv.markers.MarkerDetector3d;
-import id.matcv.markers.MarkerLocation3d;
+import id.matcv.PointCloudUtils;
 import id.matcv.types.camera.CameraIntrinsics;
-import id.matcv.types.datatables.DataTable2;
 import id.matcv.types.pointcloud.PointCloudFromMemorySegmentAccessor;
 import java.lang.foreign.MemorySegment;
-import java.util.List;
+import java.nio.file.Path;
 import java.util.function.Consumer;
 
 /**
- * Accept {@link RgbdImage} and find all {@link Marker}
+ * Accept {@link RgbdImage} and save it to Wavefront OBJ file
  *
  * @author lambdaprime intid@protonmail.com
  */
-public class RgbdToMarker3dTransformer implements Consumer<RgbdImage> {
+public class RgbdToObjFileTransformer implements Consumer<RgbdImage> {
+    private PointCloudUtils utils = new PointCloudUtils();
     private CameraIntrinsics intrinsics;
-    private Consumer<List<MarkerLocation3d>> consumer;
+    private Path objFile;
 
-    public RgbdToMarker3dTransformer(
-            CameraIntrinsics intrinsics, Consumer<List<MarkerLocation3d>> consumer) {
+    public RgbdToObjFileTransformer(CameraIntrinsics intrinsics, Path objFile) {
         this.intrinsics = intrinsics;
-        this.consumer = consumer;
+        this.objFile = objFile;
     }
 
     @Override
@@ -49,12 +46,6 @@ public class RgbdToMarker3dTransformer implements Consumer<RgbdImage> {
                 MemorySegment.ofAddress(depthMat.dataAddr())
                         .reinterpret(depthMat.total() * Short.BYTES);
         var pc = new PointCloudFromMemorySegmentAccessor(segment, intrinsics, 1000.);
-        var markers =
-                new MarkerDetector3d(intrinsics)
-                        .detect(new DataTable2<>(List.of(rgbd.colorMat()), List.of(pc)))
-                        .col2()
-                        .get(0);
-        if (markers.isEmpty()) return;
-        consumer.accept(markers);
+        utils.exportToObj(objFile, pc);
     }
 }

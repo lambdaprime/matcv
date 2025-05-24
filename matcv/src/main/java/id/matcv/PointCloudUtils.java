@@ -21,8 +21,12 @@ import id.matcv.types.camera.CameraIntrinsics;
 import id.matcv.types.pointcloud.PointCloud;
 import id.matcv.types.pointcloud.PointCloudFromMemorySegmentAccessor;
 import id.xfunction.Preconditions;
+import id.xfunction.logging.XLogger;
+import java.io.IOException;
 import java.lang.foreign.MemorySegment;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.imgcodecs.Imgcodecs;
@@ -31,6 +35,7 @@ import org.opencv.imgcodecs.Imgcodecs;
  * @author lambdaprime intid@protonmail.com
  */
 public class PointCloudUtils {
+    private static final XLogger LOGGER = XLogger.getLogger(MatUtils.class);
     private static final MatUtils utils = new MatUtils();
 
     /**
@@ -43,5 +48,21 @@ public class PointCloudUtils {
         var segment =
                 MemorySegment.ofAddress(depth.dataAddr()).reinterpret(depth.total() * Short.BYTES);
         return new PointCloudFromMemorySegmentAccessor(segment, intrinsics, 1000);
+    }
+
+    /** Export point cloud to Wavefront (.obj) format */
+    public void exportToObj(Path file, PointCloud pc) {
+        LOGGER.entering("exportToObj");
+        try (var writer =
+                Files.newBufferedWriter(
+                        file, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE); ) {
+            for (int i = 0; i < pc.size(); i++) {
+                var v = pc.getPoint(i);
+                writer.append(String.format("v %f %f %f\n", v.getX(), v.getY(), v.getZ()));
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        LOGGER.exiting("exportToObj");
     }
 }
