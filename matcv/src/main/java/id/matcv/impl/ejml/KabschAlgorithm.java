@@ -17,7 +17,6 @@
  */
 package id.matcv.impl.ejml;
 
-import id.matcv.markers.MarkerLocation3d;
 import id.xfunction.Preconditions;
 import id.xfunction.logging.XLogger;
 import org.ejml.data.DMatrixRMaj;
@@ -94,32 +93,5 @@ public class KabschAlgorithm {
         TX.set(3, 3, 1);
 
         return TX;
-    }
-
-    public static void main(String[] args) {
-        var k =
-                new KabschAlgorithm()
-                        .calculateTransformation(
-                                DMatrixRMaj.wrap(
-                                        MarkerLocation3d.NUM_OF_POINTS,
-                                        3,
-                                        new double[] {
-                                            0.0350068936, 0.03700722, 0.4939999878,
-                                            0.0126514221, 0.0145922087, 0.4799999893,
-                                            0.0578009636, 0.0102748408, 0.5009999871,
-                                            0.0589546743, 0.0610268724, 0.5109999776,
-                                            0.012835922, 0.065386579, 0.4869999886
-                                        }),
-                                DMatrixRMaj.wrap(
-                                        MarkerLocation3d.NUM_OF_POINTS,
-                                        3,
-                                        new double[] {
-                                            -0.062, 0.010, 0,
-                                            -0.036, 0.036, 0,
-                                            -0.036, -0.016, 0,
-                                            -0.088, -0.016, 0,
-                                            -0.088, 0.036, 0
-                                        }));
-        System.out.println(k);
     }
 }

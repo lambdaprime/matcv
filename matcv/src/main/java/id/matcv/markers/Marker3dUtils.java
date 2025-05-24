@@ -51,6 +51,7 @@ public class Marker3dUtils {
         CommonOps_DDRM.transpose(ejmlMx, outMx);
     }
 
+    /** Apply transformation matrix to all marker coordinates */
     public List<MarkerLocation3d> transformAll(
             List<MarkerLocation3d> markerLocations, Matrix4d tx) {
         var inPoints =
@@ -112,6 +113,7 @@ public class Marker3dUtils {
         return out;
     }
 
+    /** Calculate 4x4 transformation matrix between the markers */
     public Matrix4d calculateTransformationMatrix(MarkerLocation3d from, MarkerLocation3d to) {
         return new Matrix4d(
                 new KabschAlgorithm()
@@ -119,5 +121,28 @@ public class Marker3dUtils {
                                 DMatrixRMaj.wrap(5, 3, from.getData().getData().array()),
                                 DMatrixRMaj.wrap(5, 3, to.getData().getData().array()))
                         .getData());
+    }
+
+    /**
+     * Calculate camera pose transformation matrix based on the current marker locations detected by
+     * the camera (for example using {@link MarkerDetector3d}) and known fixed marker location given
+     * in the world coordinates.
+     *
+     * <p>Camera pose can only be calculated when marker locations contain correspondent fixed
+     * marker. For example if fixed marker has type {@link MarkerType#ONE} then same marker should
+     * be present inside the input detected markers. The camera pose is calculated based on the
+     * relative positions between points of such two markers.
+     */
+    public Optional<Matrix4d> findCameraPoseTx(
+            List<MarkerLocation3d> markerLocations, MarkerLocation3d fixedMarkerPose) {
+        var markerType = fixedMarkerPose.marker().type();
+        var marker = findMarkerLocation(markerType, markerLocations).orElse(null);
+        if (marker == null) {
+            LOGGER.fine("Could not find marker {0}", markerType);
+            return Optional.empty();
+        }
+        var tx = calculateTransformationMatrix(marker, fixedMarkerPose);
+        LOGGER.fine("camera pose={0}", tx);
+        return Optional.of(tx);
     }
 }

@@ -44,6 +44,10 @@ public class MarkerLocation3d {
         this.data = new MatrixN3d(center, p1, p2, p3, p4);
     }
 
+    public MarkerLocation3d(Marker marker, List<Vector3D> points) {
+        this(marker, points.get(0), points.get(1), points.get(2), points.get(3), points.get(4));
+    }
+
     public Marker marker() {
         return marker;
     }
