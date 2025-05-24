@@ -145,4 +145,14 @@ public class Marker3dUtils {
         LOGGER.fine("camera pose={0}", tx);
         return Optional.of(tx);
     }
+
+    /** Frames received from depth cameras may contain noise pixels */
+    public boolean hasVaildPoints(MarkerLocation3d marker) {
+        var a = marker.p1().distance(marker.p2());
+        var b = marker.p2().distance(marker.p3());
+        var c = marker.p3().distance(marker.p4());
+        var d = marker.p4().distance(marker.p1());
+        var mse = (a + b + c + d) / 4.;
+        return mse < 0.09;
+    }
 }

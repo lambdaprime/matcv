@@ -23,5 +23,17 @@ import id.matcv.types.Vector3D;
  * @author lambdaprime intid@protonmail.com
  */
 public interface PointCloud {
+
+    /**
+     * Depth cameras may produce so called "holes" when data not being available for a particular
+     * pixel.
+     *
+     * <p>The "hole" in such cases is associated with depth value equal to 0.
+     */
+    Vector3D HOLE = new Vector3D(0, 0, 0);
+
     Vector3D getPoint(int index);
+
+    /** Total number of points */
+    int size();
 }

@@ -63,9 +63,16 @@ public class PointCloudFromMemorySegmentAccessor implements PointCloud {
     public Vector3D getPoint(int index) {
         var coords =
                 converters.toPoint2d(index, cameraIntrinsics.width(), cameraIntrinsics.height());
-        var z = segment.get(ValueLayout.JAVA_SHORT_UNALIGNED, index * Short.BYTES) / depthScale;
+        var d = segment.get(ValueLayout.JAVA_SHORT_UNALIGNED, index * Short.BYTES);
+        if (d == 0) return HOLE;
+        var z = d / depthScale;
         var x = (coords.getX() - cameraMatrix.cx()) * z / cameraMatrix.fx();
         var y = (coords.getY() - cameraMatrix.cy()) * z / cameraMatrix.fy();
         return new Vector3D(x, y, z);
+    }
+
+    @Override
+    public int size() {
+        return cameraIntrinsics.width() * cameraIntrinsics.height();
     }
 }

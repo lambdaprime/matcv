@@ -51,6 +51,27 @@ public class Vector3D {
         return data.get(2);
     }
 
+    /** Add value to each element of the vector and return resulting new vector */
+    public Vector3D add(int n) {
+        return new Vector3D(getX() + n, getY() + n, getZ() + n);
+    }
+
+    /** Divide value to each element of the vector and return resulting new vector */
+    public Vector3D div(int n) {
+        return new Vector3D(getX() / n, getY() / n, getZ() / n);
+    }
+
+    public double distance(Vector3D other) {
+        return Math.sqrt(
+                Math.pow(getX() - other.getX(), 2)
+                        + Math.pow(getY() - other.getY(), 2)
+                        + Math.pow(getZ() - other.getZ(), 2));
+    }
+
+    public boolean isFinite() {
+        return Double.isFinite(getX()) && Double.isFinite(getY()) && Double.isFinite(getZ());
+    }
+
     @Override
     public String toString() {
         return """

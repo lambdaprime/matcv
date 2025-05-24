@@ -33,4 +33,9 @@ public record FloatArrayPointCloud(float[] data) implements PointCloud {
         var s = index * 3;
         return new Vector3D(s + 0, s + 1, s + 2);
     }
+
+    @Override
+    public int size() {
+        return data.length / 3;
+    }
 }

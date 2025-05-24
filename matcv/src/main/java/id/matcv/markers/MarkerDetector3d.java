@@ -43,6 +43,7 @@ public class MarkerDetector3d {
     private static final XLogger LOGGER = XLogger.getLogger(MarkerDetector3d.class);
     private PointConverters converters = new PointConverters();
     private Marker2dUtils markerUtils = new Marker2dUtils();
+    private Marker3dUtils marker3dUtils = new Marker3dUtils();
     private CameraIntrinsics intrinsics;
     private boolean showDetectedMarkers;
 
@@ -98,14 +99,34 @@ public class MarkerDetector3d {
                 pointHashesMap.put(p2Id, mlt.p2Hash());
                 pointHashesMap.put(p3Id, mlt.p3Hash());
                 pointHashesMap.put(p4Id, mlt.p4Hash());
-                locations.add(
-                        new MarkerLocation3d(
-                                ml.marker(),
-                                pc.getPoint(centerId),
-                                pc.getPoint(p1Id),
-                                pc.getPoint(p2Id),
-                                pc.getPoint(p3Id),
-                                pc.getPoint(p4Id)));
+                var center = pc.getPoint(centerId);
+                if (center == PointCloud.HOLE) {
+                    LOGGER.fine("Marker {0} has hole in point center and will be ignored", mlt);
+                    continue;
+                }
+                var p1 = pc.getPoint(p1Id);
+                if (p1 == PointCloud.HOLE) {
+                    LOGGER.fine("Marker {0} has hole in point p1 and will be ignored", mlt);
+                    continue;
+                }
+                var p2 = pc.getPoint(p2Id);
+                if (p2 == PointCloud.HOLE) {
+                    LOGGER.fine("Marker {0} has hole in point p2 and will be ignored", mlt);
+                    continue;
+                }
+                var p3 = pc.getPoint(p3Id);
+                if (p3 == PointCloud.HOLE) {
+                    LOGGER.fine("Marker {0} has hole in point p3 and will be ignored", mlt);
+                    continue;
+                }
+                var p4 = pc.getPoint(p4Id);
+                if (p4 == PointCloud.HOLE) {
+                    LOGGER.fine("Marker {0} has hole in point p4 and will be ignored", mlt);
+                    continue;
+                }
+                var loc = new MarkerLocation3d(ml.marker(), center, p1, p2, p3, p4);
+                if (marker3dUtils.hasVaildPoints(loc)) locations.add(loc);
+                else LOGGER.fine("Marker has invalid points and will be ignored: {0}", loc);
             }
             if (result.img() instanceof FileMat fm)
                 LOGGER.fine(
