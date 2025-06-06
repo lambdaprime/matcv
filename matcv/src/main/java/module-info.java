@@ -76,4 +76,5 @@ module matcv {
     exports id.matcv.types.camera;
     exports id.matcv.types.datatables;
     exports id.matcv.types.pointcloud;
+    exports id.matcv.types.ndbuffers;
 }

@@ -17,9 +17,9 @@
  */
 package id.matcv.converters;
 
-import id.matcv.types.Matrix3d;
-import id.matcv.types.MatrixNd;
-import id.matcv.types.Vector2D;
+import id.matcv.types.ndbuffers.Matrix3d;
+import id.matcv.types.ndbuffers.MatrixNd;
+import id.matcv.types.ndbuffers.Vector2D;
 import id.xfunction.Preconditions;
 import java.util.List;
 import org.opencv.core.Core;

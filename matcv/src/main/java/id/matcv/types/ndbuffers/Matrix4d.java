@@ -15,32 +15,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package id.matcv.types;
+package id.matcv.types.ndbuffers;
 
 import java.nio.DoubleBuffer;
 
 /**
  * @author lambdaprime intid@protonmail.com
  */
-public class MatrixN3d extends MatrixNd {
+public class Matrix4d extends MatrixNd {
 
-    public MatrixN3d(double[] data) {
+    public Matrix4d(double[] data) {
         this(DoubleBuffer.wrap(data));
     }
 
-    public MatrixN3d(DoubleBuffer data) {
-        super(data.capacity() / 3, 3, data);
-    }
-
-    public MatrixN3d(Vector3D... vecs) {
-        this(new double[vecs.length * 3]);
-        var data = getData().duplicate();
-        for (var v : vecs) {
-            data.put(v.getData().duplicate());
-        }
-    }
-
-    public Vector3D getVector(int row) {
-        return new Vector3D(getData().slice(row * 3, 3));
+    public Matrix4d(DoubleBuffer data) {
+        super(4, 4, data);
     }
 }

@@ -19,7 +19,7 @@ package id.matcv;
 
 import id.matcv.accessors.FloatMatrixAccessor;
 import id.matcv.accessors.Vector2DMatrixAccessor;
-import id.matcv.types.Vector2D;
+import id.matcv.types.ndbuffers.Vector2D;
 import id.xfunction.Preconditions;
 import java.util.ArrayList;
 import java.util.LinkedList;
