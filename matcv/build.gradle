@@ -93,6 +93,7 @@ task copyReadme(type: Copy) {
 
 // overwrite template README which comes from resources folder
 jar.dependsOn copyReadme
+javadoc.dependsOn copyReadme
 
 task createPackage(type: Copy, dependsOn: [copyLibs]) {
   from "${project.rootDir}/README.md"

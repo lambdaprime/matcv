@@ -2,7 +2,7 @@
  * <b>matcv</b> - Java module for Computer Vision which provides additional functionality and
  * extensions to <a href="https://github.com/opencv">OpenCV</a>.
  *
- * <h1>OpenCV setup</h1>
+ * <h2>OpenCV setup</h2>
  *
  * <p>There are two popular distributions of OpenCV library for Java:
  *
@@ -34,7 +34,7 @@
  *   <li>...
  * </ul>
  *
- * <h1>Usage</h1>
+ * <h2>Usage</h2>
  *
  * <p>1. Before using <b>matcv</b> make sure to load OpenCV native library:
  *
