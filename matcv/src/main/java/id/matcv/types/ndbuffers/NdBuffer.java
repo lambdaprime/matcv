@@ -23,7 +23,7 @@ import java.text.DecimalFormat;
  * @author lambdaprime intid@protonmail.com
  */
 public abstract class NdBuffer {
-    protected static final DecimalFormat formatter = new DecimalFormat();
+    public static final DecimalFormat formatter = new DecimalFormat();
 
     static {
         formatter.setMaximumFractionDigits(5);

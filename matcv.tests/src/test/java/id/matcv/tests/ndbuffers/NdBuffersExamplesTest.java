@@ -18,7 +18,7 @@
 package id.matcv.tests.ndbuffers;
 
 import id.matcv.tests.OpencvTest;
-import id.matcv.types.ndbuffers.Matrix4d;
+import id.matcv.types.ndbuffers.matrix.Matrix4d;
 import java.lang.foreign.MemorySegment;
 import java.nio.ByteOrder;
 import org.junit.jupiter.api.Assertions;

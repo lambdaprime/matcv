@@ -17,7 +17,7 @@
  */
 package id.matcv.types.pointcloud;
 
-import id.matcv.types.ndbuffers.Vector3D;
+import id.matcv.types.ndbuffers.matrix.Vector3D;
 
 /**
  * Point cloud stored inside float array.

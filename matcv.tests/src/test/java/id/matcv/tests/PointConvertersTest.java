@@ -18,7 +18,7 @@
 package id.matcv.tests;
 
 import id.matcv.converters.PointConverters;
-import id.matcv.types.ndbuffers.Vector2D;
+import id.matcv.types.ndbuffers.matrix.Vector2D;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

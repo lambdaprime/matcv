@@ -17,8 +17,8 @@
  */
 package id.matcv.markers;
 
-import id.matcv.types.ndbuffers.MatrixN3d;
-import id.matcv.types.ndbuffers.Vector3D;
+import id.matcv.types.ndbuffers.matrix.MatrixN3d;
+import id.matcv.types.ndbuffers.matrix.Vector3D;
 import id.xfunction.XJsonStringBuilder;
 import java.util.List;
 

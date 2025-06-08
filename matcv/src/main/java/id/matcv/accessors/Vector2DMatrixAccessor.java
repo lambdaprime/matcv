@@ -17,7 +17,7 @@
  */
 package id.matcv.accessors;
 
-import id.matcv.types.ndbuffers.Vector2D;
+import id.matcv.types.ndbuffers.matrix.Vector2D;
 
 /**
  * Provides abstract access to the 2D matrix of {@link Vector2D} values without exposing the details

@@ -15,8 +15,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package id.matcv.types.ndbuffers;
+package id.matcv.types.ndbuffers.matrix;
 
+import id.matcv.types.ndbuffers.DoubleNdBuffer;
+import id.matcv.types.ndbuffers.NSlice;
+import id.matcv.types.ndbuffers.Shape;
+import id.matcv.types.ndbuffers.Slice;
 import java.nio.DoubleBuffer;
 
 /**
