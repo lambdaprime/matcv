@@ -42,7 +42,7 @@ public class NdBuffersExamplesTest extends OpencvTest {
                 };
         var mx = new Matrix4d(oneDimensionalArray);
         Assertions.assertEquals(8, mx.get(1, 3));
-        mx.set(1, 3, -1);
+        mx.set(-1, 1, 3);
         Assertions.assertEquals(-1, oneDimensionalArray[7]);
         var opencvMat = Mat.ones(new int[] {4, 4}, CvType.CV_64F);
         var segment =
@@ -58,7 +58,7 @@ public class NdBuffersExamplesTest extends OpencvTest {
                  1, 1, 1, 1
                 ] }""",
                 mx.toString());
-        mx.set(1, 3, -1.5);
+        mx.set(-1.5, 1, 3);
         Assertions.assertEquals(
                 """
                 [1, 1, 1, 1;

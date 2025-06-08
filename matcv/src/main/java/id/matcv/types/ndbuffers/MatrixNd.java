@@ -18,59 +18,35 @@
 package id.matcv.types.ndbuffers;
 
 import java.nio.DoubleBuffer;
-import java.text.DecimalFormat;
 
 /**
  * @author lambdaprime intid@protonmail.com
  */
-public class MatrixNd {
-
-    public static final DecimalFormat formatter = new DecimalFormat();
-
-    static {
-        formatter.setMaximumFractionDigits(5);
-        formatter.setGroupingUsed(false);
-    }
-
-    private int rows;
-    private int cols;
-    private DoubleBuffer data;
+public class MatrixNd extends DoubleNdBuffer {
 
     public MatrixNd(int rows, int cols, double[] data) {
         this(rows, cols, DoubleBuffer.wrap(data));
     }
 
     public MatrixNd(int rows, int cols, DoubleBuffer data) {
-        this.rows = rows;
-        this.cols = cols;
-        this.data = data.duplicate();
-        this.data.limit(rows * cols);
-    }
-
-    public double get(int r, int c) {
-        // use row-major storage order
-        return data.get(r * cols + c);
-    }
-
-    public void set(int r, int c, double v) {
-        // use row-major storage order
-        data.put(r * cols + c, v);
+        super(
+                new Shape(rows, cols),
+                new NSlice(new Slice(0, rows, 1), new Slice(0, cols, 1)),
+                data);
     }
 
     public int getRows() {
-        return rows;
+        return shape.dims()[0];
     }
 
     public int getCols() {
-        return cols;
-    }
-
-    public DoubleBuffer getData() {
-        return data;
+        return shape.dims()[1];
     }
 
     @Override
     public String toString() {
+        var rows = getRows();
+        var cols = getCols();
         var buf = new StringBuilder();
         for (int r = 0; r < rows; r++) {
             for (int c = 0; c < cols; c++) {
