@@ -17,38 +17,32 @@
  */
 package id.matcv.types.ndbuffers.matrix;
 
+import id.matcv.types.ndbuffers.NdBuffer;
 import java.nio.DoubleBuffer;
 
 /**
  * @author lambdaprime intid@protonmail.com
  */
-public class Vector3D {
-
-    // use array for simple mapping to eigen or EJML
-    private DoubleBuffer data;
+public class Vector3D extends MatrixNd {
 
     public Vector3D(double x, double y, double z) {
         this(DoubleBuffer.wrap(new double[] {x, y, z}));
     }
 
     public Vector3D(DoubleBuffer data) {
-        this.data = data;
-    }
-
-    public DoubleBuffer getData() {
-        return data;
+        super(1, 3, data);
     }
 
     public double getX() {
-        return data.get(0);
+        return get(0, 0);
     }
 
     public double getY() {
-        return data.get(1);
+        return get(0, 1);
     }
 
     public double getZ() {
-        return data.get(2);
+        return get(0, 2);
     }
 
     /** Add value to each element of the vector and return resulting new vector */
@@ -77,8 +71,8 @@ public class Vector3D {
         return """
                { "x": %s, "y": %s, "z": %s }"""
                 .formatted(
-                        MatrixNd.formatter.format(getX()),
-                        MatrixNd.formatter.format(getY()),
-                        MatrixNd.formatter.format(getZ()));
+                        NdBuffer.formatter.format(getX()),
+                        NdBuffer.formatter.format(getY()),
+                        NdBuffer.formatter.format(getZ()));
     }
 }

@@ -18,35 +18,36 @@
 package id.matcv.types.ndbuffers.matrix;
 
 import id.xfunction.XJsonStringBuilder;
+import java.nio.DoubleBuffer;
 
-public class Vector2D {
-
-    private double x;
-    private double y;
+public class Vector2D extends MatrixNd {
 
     public Vector2D(double x, double y) {
-        this.x = x;
-        this.y = y;
+        this(DoubleBuffer.wrap(new double[] {x, y}));
+    }
+
+    public Vector2D(DoubleBuffer data) {
+        super(1, 2, data);
     }
 
     public double getX() {
-        return x;
+        return get(0, 0);
     }
 
     public double getY() {
-        return y;
+        return get(0, 1);
     }
 
     public Vector2D subtract(Vector2D other) {
-        return new Vector2D(x - other.x, y - other.y);
+        return new Vector2D(getX() - other.getX(), getY() - other.getY());
     }
 
     public double distance(Vector2D other) {
-        return Math.sqrt(Math.pow(x - other.x, 2) + Math.pow(y - other.y, 2));
+        return Math.sqrt(Math.pow(getX() - other.getX(), 2) + Math.pow(getY() - other.getY(), 2));
     }
 
     public Vector2D add(Vector2D other) {
-        return new Vector2D(other.x + x, other.y + y);
+        return new Vector2D(other.getX() + getX(), other.getY() + getY());
     }
 
     @Override
