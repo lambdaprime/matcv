@@ -121,7 +121,7 @@ public class Marker3dUtilsTransformationTest {
     public void test_calculateTransformationMatrix(TestCase testCase) {
         var utils = new Marker3dUtils();
         var tx = utils.calculateTransformationMatrix(testCase.from, testCase.to);
-        XAsserts.assertSimilar(testCase.tx.getData().array(), tx.getData().array(), 0.1);
+        XAsserts.assertSimilar(testCase.tx.duplicate().array(), tx.duplicate().array(), 0.1);
     }
 
     @ParameterizedTest
@@ -130,8 +130,8 @@ public class Marker3dUtilsTransformationTest {
         var utils = new Marker3dUtils();
         var actual = utils.transformAll(List.of(testCase.from), testCase.tx);
         XAsserts.assertSimilar(
-                testCase.to.getData().getData().array(),
-                actual.get(0).getData().getData().array(),
+                testCase.to.getData().duplicate().array(),
+                actual.get(0).getData().duplicate().array(),
                 0.01);
     }
 }

@@ -43,7 +43,7 @@ public class Marker3dUtils {
     /** Transpose input matrix and transfer its data to output matrix */
     void transfer(MatrixN3d mx, DMatrixRMaj outMx) {
         var ejmlMx = new DMatrixRMaj();
-        ejmlMx.setData(mx.getData().array());
+        ejmlMx.setData(mx.duplicate().array());
         ejmlMx.reshape(mx.getRows(), 3);
         // CommonOps_DDRM.transpose modifies shape of the output matrix
         // so we use wrapper matrix as an output matrix and not the original
@@ -63,14 +63,14 @@ public class Marker3dUtils {
         // p1.z p2.z ...
         //    1    1 ...
         for (int i = 0; i < markerLocations.size(); i++) {
-            inPoints.put(markerLocations.get(i).getData().getData().duplicate());
+            inPoints.put(markerLocations.get(i).getData().duplicate().duplicate());
         }
         var inPointsMx =
                 new DMatrixRMaj(4, markerLocations.size() * MarkerLocation3d.NUM_OF_POINTS);
         inPointsMx.fill(1);
         transfer(new MatrixN3d(inPoints), inPointsMx);
         var ejmlTx = new DMatrixRMaj();
-        ejmlTx.setData(tx.getData().array());
+        ejmlTx.setData(tx.duplicate().array());
         ejmlTx.reshape(4, 4);
         var outPointsMx = new DMatrixRMaj();
         CommonOps_DDRM.mult(
@@ -118,8 +118,8 @@ public class Marker3dUtils {
         return new Matrix4d(
                 new KabschAlgorithm()
                         .calculateTransformation(
-                                DMatrixRMaj.wrap(5, 3, from.getData().getData().array()),
-                                DMatrixRMaj.wrap(5, 3, to.getData().getData().array()))
+                                DMatrixRMaj.wrap(5, 3, from.getData().duplicate().array()),
+                                DMatrixRMaj.wrap(5, 3, to.getData().duplicate().array()))
                         .getData());
     }
 

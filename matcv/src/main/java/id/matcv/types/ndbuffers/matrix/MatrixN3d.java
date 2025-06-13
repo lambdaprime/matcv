@@ -34,13 +34,13 @@ public class MatrixN3d extends MatrixNd {
 
     public MatrixN3d(Vector3d... vecs) {
         this(new double[vecs.length * 3]);
-        var data = getData().duplicate();
+        var data = duplicate().duplicate();
         for (var v : vecs) {
-            data.put(v.getData().duplicate());
+            data.put(v.duplicate().duplicate());
         }
     }
 
     public Vector3d getVector(int row) {
-        return new Vector3d(getData().slice(row * 3, 3));
+        return new Vector3d(duplicate().slice(row * 3, 3));
     }
 }

@@ -17,6 +17,7 @@
  */
 package id.matcv.types.ndbuffers;
 
+import java.nio.ByteBuffer;
 import java.nio.DoubleBuffer;
 
 /**
@@ -39,7 +40,8 @@ public class DoubleNdBuffer extends NdBuffer {
         data.put(mapper.map(indices), v);
     }
 
-    public DoubleBuffer getData() {
-        return data;
+    /** Create duplicate of internal {@link ByteBuffer} by calling {@link ByteBuffer#duplicate()} */
+    public DoubleBuffer duplicate() {
+        return data.duplicate();
     }
 }
