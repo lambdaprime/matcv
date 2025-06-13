@@ -20,7 +20,7 @@ package id.matcv.types.pointcloud;
 import id.matcv.converters.PointConverters;
 import id.matcv.types.camera.CameraIntrinsics;
 import id.matcv.types.camera.CameraMatrix;
-import id.matcv.types.ndbuffers.matrix.Vector3D;
+import id.matcv.types.ndbuffers.matrix.Vector3d;
 import java.lang.foreign.MemorySegment;
 import java.lang.foreign.ValueLayout;
 
@@ -60,7 +60,7 @@ public class PointCloudFromMemorySegmentAccessor implements PointCloud {
     }
 
     @Override
-    public Vector3D getPoint(int index) {
+    public Vector3d getPoint(int index) {
         var coords =
                 converters.toPoint2d(index, cameraIntrinsics.width(), cameraIntrinsics.height());
         var d = segment.get(ValueLayout.JAVA_SHORT_UNALIGNED, index * Short.BYTES);
@@ -68,7 +68,7 @@ public class PointCloudFromMemorySegmentAccessor implements PointCloud {
         var z = d / depthScale;
         var x = (coords.getX() - cameraMatrix.cx()) * z / cameraMatrix.fx();
         var y = (coords.getY() - cameraMatrix.cy()) * z / cameraMatrix.fy();
-        return new Vector3D(x, y, z);
+        return new Vector3d(x, y, z);
     }
 
     @Override

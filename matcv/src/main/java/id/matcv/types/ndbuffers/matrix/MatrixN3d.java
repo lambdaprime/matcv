@@ -32,7 +32,7 @@ public class MatrixN3d extends MatrixNd {
         super(data.capacity() / 3, 3, data);
     }
 
-    public MatrixN3d(Vector3D... vecs) {
+    public MatrixN3d(Vector3d... vecs) {
         this(new double[vecs.length * 3]);
         var data = getData().duplicate();
         for (var v : vecs) {
@@ -40,7 +40,7 @@ public class MatrixN3d extends MatrixNd {
         }
     }
 
-    public Vector3D getVector(int row) {
-        return new Vector3D(getData().slice(row * 3, 3));
+    public Vector3d getVector(int row) {
+        return new Vector3d(getData().slice(row * 3, 3));
     }
 }

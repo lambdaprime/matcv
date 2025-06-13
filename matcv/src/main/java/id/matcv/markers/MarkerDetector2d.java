@@ -18,7 +18,7 @@
 package id.matcv.markers;
 
 import id.matcv.types.FileMat;
-import id.matcv.types.ndbuffers.matrix.Vector2D;
+import id.matcv.types.ndbuffers.matrix.Vector2d;
 import id.mathcat.LineUtils;
 import id.xfunction.XJsonStringBuilder;
 import id.xfunction.logging.XLogger;
@@ -93,13 +93,13 @@ public class MarkerDetector2d {
             var m = corners.get(i);
             double[] buf;
             buf = m.get(0, 0);
-            var p1 = new Vector2D(buf[0], buf[1]);
+            var p1 = new Vector2d(buf[0], buf[1]);
             buf = m.get(0, 1);
-            var p2 = new Vector2D(buf[0], buf[1]);
+            var p2 = new Vector2d(buf[0], buf[1]);
             buf = m.get(0, 2);
-            var p3 = new Vector2D(buf[0], buf[1]);
+            var p3 = new Vector2d(buf[0], buf[1]);
             buf = m.get(0, 3);
-            var p4 = new Vector2D(buf[0], buf[1]);
+            var p4 = new Vector2d(buf[0], buf[1]);
             var center = LineUtils.midPoint(LineUtils.midPoint(p1, p2), LineUtils.midPoint(p3, p4));
             var mloc =
                     new MarkerLocation2d(

@@ -17,7 +17,7 @@
  */
 package id.matcv.types.pointcloud;
 
-import id.matcv.types.ndbuffers.matrix.Vector3D;
+import id.matcv.types.ndbuffers.matrix.Vector3d;
 
 /**
  * Point cloud stored inside float array.
@@ -29,9 +29,9 @@ import id.matcv.types.ndbuffers.matrix.Vector3D;
 public record FloatArrayPointCloud(float[] data) implements PointCloud {
 
     @Override
-    public Vector3D getPoint(int index) {
+    public Vector3d getPoint(int index) {
         var s = index * 3;
-        return new Vector3D(s + 0, s + 1, s + 2);
+        return new Vector3d(s + 0, s + 1, s + 2);
     }
 
     @Override

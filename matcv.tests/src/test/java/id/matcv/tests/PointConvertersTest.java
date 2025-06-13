@@ -18,7 +18,7 @@
 package id.matcv.tests;
 
 import id.matcv.converters.PointConverters;
-import id.matcv.types.ndbuffers.matrix.Vector2D;
+import id.matcv.types.ndbuffers.matrix.Vector2d;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -26,7 +26,7 @@ public class PointConvertersTest {
     @Test
     public void test() {
         var converters = new PointConverters();
-        Assertions.assertEquals(207483, converters.toIndex(new Vector2D(123, 324), 640, 480));
+        Assertions.assertEquals(207483, converters.toIndex(new Vector2d(123, 324), 640, 480));
         Assertions.assertEquals(
                 """
                 { "x": 123, "y": 324 }""",

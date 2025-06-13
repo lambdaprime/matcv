@@ -17,7 +17,7 @@
  */
 package id.matcv.types.pointcloud;
 
-import id.matcv.types.ndbuffers.matrix.Vector3D;
+import id.matcv.types.ndbuffers.matrix.Vector3d;
 
 /**
  * @author lambdaprime intid@protonmail.com
@@ -30,9 +30,9 @@ public interface PointCloud {
      *
      * <p>The "hole" in such cases is associated with depth value equal to 0.
      */
-    Vector3D HOLE = new Vector3D(0, 0, 0);
+    Vector3d HOLE = new Vector3d(0, 0, 0);
 
-    Vector3D getPoint(int index);
+    Vector3d getPoint(int index);
 
     /** Total number of points */
     int size();

@@ -23,13 +23,13 @@ import java.nio.DoubleBuffer;
 /**
  * @author lambdaprime intid@protonmail.com
  */
-public class Vector3D extends MatrixNd {
+public class Vector3d extends MatrixNd {
 
-    public Vector3D(double x, double y, double z) {
+    public Vector3d(double x, double y, double z) {
         this(DoubleBuffer.wrap(new double[] {x, y, z}));
     }
 
-    public Vector3D(DoubleBuffer data) {
+    public Vector3d(DoubleBuffer data) {
         super(1, 3, data);
     }
 
@@ -46,16 +46,16 @@ public class Vector3D extends MatrixNd {
     }
 
     /** Add value to each element of the vector and return resulting new vector */
-    public Vector3D add(int n) {
-        return new Vector3D(getX() + n, getY() + n, getZ() + n);
+    public Vector3d add(int n) {
+        return new Vector3d(getX() + n, getY() + n, getZ() + n);
     }
 
     /** Divide value to each element of the vector and return resulting new vector */
-    public Vector3D div(int n) {
-        return new Vector3D(getX() / n, getY() / n, getZ() / n);
+    public Vector3d div(int n) {
+        return new Vector3d(getX() / n, getY() / n, getZ() / n);
     }
 
-    public double distance(Vector3D other) {
+    public double distance(Vector3d other) {
         return Math.sqrt(
                 Math.pow(getX() - other.getX(), 2)
                         + Math.pow(getY() - other.getY(), 2)

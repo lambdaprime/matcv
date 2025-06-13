@@ -19,7 +19,7 @@ package id.matcv.converters;
 
 import id.matcv.types.ndbuffers.matrix.Matrix3d;
 import id.matcv.types.ndbuffers.matrix.MatrixNd;
-import id.matcv.types.ndbuffers.matrix.Vector2D;
+import id.matcv.types.ndbuffers.matrix.Vector2d;
 import id.xfunction.Preconditions;
 import java.util.List;
 import org.opencv.core.Core;
@@ -69,7 +69,7 @@ public class MatConverters {
         return buf;
     }
 
-    public Mat copyToMat32F(Vector2D v) {
+    public Mat copyToMat32F(Vector2d v) {
         return new MatOfPoint2f(pointConverters.toOpenCv(v));
     }
 

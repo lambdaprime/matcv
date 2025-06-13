@@ -19,7 +19,7 @@ package id.matcv;
 
 import id.matcv.accessors.FloatMatrixAccessor;
 import id.matcv.accessors.Vector2DMatrixAccessor;
-import id.matcv.types.ndbuffers.matrix.Vector2D;
+import id.matcv.types.ndbuffers.matrix.Vector2d;
 import id.xfunction.Preconditions;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -120,7 +120,7 @@ public class OpenCvKit {
                 Vector2DMatrixAccessor.fromGetter(
                         shadowX.rows(),
                         shadowX.cols(),
-                        (x, y) -> new Vector2D(shadowX.get(x, y), shadowY.get(x, y))));
+                        (x, y) -> new Vector2d(shadowX.get(x, y), shadowY.get(x, y))));
     }
 
     /**

@@ -17,23 +17,23 @@
  */
 package id.matcv.converters;
 
-import id.matcv.types.ndbuffers.matrix.Vector2D;
+import id.matcv.types.ndbuffers.matrix.Vector2d;
 import org.opencv.core.Point;
 
 public class PointConverters {
-    public Point toOpenCv(Vector2D point) {
+    public Point toOpenCv(Vector2d point) {
         return toOpenCv(point, 0, 0);
     }
 
-    public Point toOpenCv(Vector2D point, int offsetX, int offsetY) {
+    public Point toOpenCv(Vector2d point, int offsetX, int offsetY) {
         return new Point(point.getX() + offsetX, point.getY() + offsetY);
     }
 
-    public int toIndex(Vector2D p, int w, int h) {
+    public int toIndex(Vector2d p, int w, int h) {
         return (int) p.getY() * w + (int) p.getX();
     }
 
-    public Vector2D toPoint2d(int index, int w, int h) {
-        return new Vector2D(index % w, index / w);
+    public Vector2d toPoint2d(int index, int w, int h) {
+        return new Vector2d(index % w, index / w);
     }
 }

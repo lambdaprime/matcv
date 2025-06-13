@@ -20,7 +20,7 @@ package id.matcv.markers;
 import id.matcv.impl.ejml.KabschAlgorithm;
 import id.matcv.types.ndbuffers.matrix.Matrix4d;
 import id.matcv.types.ndbuffers.matrix.MatrixN3d;
-import id.matcv.types.ndbuffers.matrix.Vector3D;
+import id.matcv.types.ndbuffers.matrix.Vector3d;
 import id.xfunction.logging.XLogger;
 import java.nio.DoubleBuffer;
 import java.util.ArrayList;
@@ -89,23 +89,23 @@ public class Marker3dUtils {
             out.add(
                     new MarkerLocation3d(
                             loc.marker(),
-                            new Vector3D(
+                            new Vector3d(
                                     outPointsMx.get(0, colStart + 0),
                                     outPointsMx.get(1, colStart + 0),
                                     outPointsMx.get(2, colStart + 0)),
-                            new Vector3D(
+                            new Vector3d(
                                     outPointsMx.get(0, colStart + 1),
                                     outPointsMx.get(1, colStart + 1),
                                     outPointsMx.get(2, colStart + 1)),
-                            new Vector3D(
+                            new Vector3d(
                                     outPointsMx.get(0, colStart + 2),
                                     outPointsMx.get(1, colStart + 2),
                                     outPointsMx.get(2, colStart + 2)),
-                            new Vector3D(
+                            new Vector3d(
                                     outPointsMx.get(0, colStart + 3),
                                     outPointsMx.get(1, colStart + 3),
                                     outPointsMx.get(2, colStart + 3)),
-                            new Vector3D(
+                            new Vector3d(
                                     outPointsMx.get(0, colStart + 4),
                                     outPointsMx.get(1, colStart + 4),
                                     outPointsMx.get(2, colStart + 4))));

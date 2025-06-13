@@ -18,7 +18,7 @@
 package id.matcv.markers;
 
 import id.matcv.types.ndbuffers.matrix.MatrixN3d;
-import id.matcv.types.ndbuffers.matrix.Vector3D;
+import id.matcv.types.ndbuffers.matrix.Vector3d;
 import id.xfunction.XJsonStringBuilder;
 import java.util.List;
 
@@ -39,12 +39,12 @@ public class MarkerLocation3d {
     }
 
     public MarkerLocation3d(
-            Marker marker, Vector3D center, Vector3D p1, Vector3D p2, Vector3D p3, Vector3D p4) {
+            Marker marker, Vector3d center, Vector3d p1, Vector3d p2, Vector3d p3, Vector3d p4) {
         this.marker = marker;
         this.data = new MatrixN3d(center, p1, p2, p3, p4);
     }
 
-    public MarkerLocation3d(Marker marker, List<Vector3D> points) {
+    public MarkerLocation3d(Marker marker, List<Vector3d> points) {
         this(marker, points.get(0), points.get(1), points.get(2), points.get(3), points.get(4));
     }
 
@@ -52,23 +52,23 @@ public class MarkerLocation3d {
         return marker;
     }
 
-    public Vector3D center() {
+    public Vector3d center() {
         return data.getVector(0);
     }
 
-    public Vector3D p1() {
+    public Vector3d p1() {
         return data.getVector(1);
     }
 
-    public Vector3D p2() {
+    public Vector3d p2() {
         return data.getVector(2);
     }
 
-    public Vector3D p3() {
+    public Vector3d p3() {
         return data.getVector(3);
     }
 
-    public Vector3D p4() {
+    public Vector3d p4() {
         return data.getVector(4);
     }
 
@@ -77,7 +77,7 @@ public class MarkerLocation3d {
     }
 
     /** Center point (first) + all corners */
-    public List<Vector3D> points() {
+    public List<Vector3d> points() {
         return List.of(center(), p1(), p2(), p3(), p4());
     }
 

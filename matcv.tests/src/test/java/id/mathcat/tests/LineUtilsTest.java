@@ -19,7 +19,7 @@ package id.mathcat.tests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import id.matcv.types.ndbuffers.matrix.Vector2D;
+import id.matcv.types.ndbuffers.matrix.Vector2d;
 import id.mathcat.LineUtils;
 import org.junit.jupiter.api.Test;
 
@@ -30,6 +30,6 @@ public class LineUtilsTest {
         assertEquals(
                 """
                 { "x": 2, "y": -2 }""",
-                LineUtils.createVector(new Vector2D(3, 5), new Vector2D(5, 3)).toString());
+                LineUtils.createVector(new Vector2d(3, 5), new Vector2d(5, 3)).toString());
     }
 }

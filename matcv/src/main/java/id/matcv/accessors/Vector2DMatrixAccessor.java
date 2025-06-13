@@ -17,10 +17,10 @@
  */
 package id.matcv.accessors;
 
-import id.matcv.types.ndbuffers.matrix.Vector2D;
+import id.matcv.types.ndbuffers.matrix.Vector2d;
 
 /**
- * Provides abstract access to the 2D matrix of {@link Vector2D} values without exposing the details
+ * Provides abstract access to the 2D matrix of {@link Vector2d} values without exposing the details
  * where and how it is stored.
  *
  * <p>It helps to write generic algorithms which can process data from different sources.
@@ -28,7 +28,7 @@ import id.matcv.types.ndbuffers.matrix.Vector2D;
  * @author lambdaprime intid@protonmail.com
  */
 public interface Vector2DMatrixAccessor {
-    Vector2D get(int row, int col);
+    Vector2d get(int row, int col);
 
     int rows();
 
@@ -36,13 +36,13 @@ public interface Vector2DMatrixAccessor {
 
     @FunctionalInterface
     public interface Getter {
-        Vector2D get(int row, int col);
+        Vector2d get(int row, int col);
     }
 
     public static Vector2DMatrixAccessor fromGetter(int rows, int cols, Getter getter) {
         return new Vector2DMatrixAccessor() {
             @Override
-            public Vector2D get(int row, int col) {
+            public Vector2d get(int row, int col) {
                 return getter.get(row, col);
             }
 

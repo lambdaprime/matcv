@@ -22,7 +22,7 @@ import id.matcv.markers.Marker3dUtils;
 import id.matcv.markers.MarkerLocation3d;
 import id.matcv.markers.MarkerType;
 import id.matcv.types.ndbuffers.matrix.Matrix4d;
-import id.matcv.types.ndbuffers.matrix.Vector3D;
+import id.matcv.types.ndbuffers.matrix.Vector3d;
 import id.xfunctiontests.XAsserts;
 import java.util.List;
 import java.util.stream.Stream;
@@ -41,18 +41,18 @@ public class Marker3dUtilsTransformationTest {
                 new TestCase(
                         new MarkerLocation3d(
                                 new Marker(MarkerType.ONE),
-                                new Vector3D(0, 0, 0),
-                                new Vector3D(2, 3, 1),
-                                new Vector3D(2, -3, 1),
-                                new Vector3D(-2, -3, 1),
-                                new Vector3D(-2, 3, 1)),
+                                new Vector3d(0, 0, 0),
+                                new Vector3d(2, 3, 1),
+                                new Vector3d(2, -3, 1),
+                                new Vector3d(-2, -3, 1),
+                                new Vector3d(-2, 3, 1)),
                         new MarkerLocation3d(
                                 new Marker(MarkerType.ONE),
-                                new Vector3D(3, -0.7, 0),
-                                new Vector3D(4.9, 2, 0.7),
-                                new Vector3D(4.9, -3.4, 0.7),
-                                new Vector3D(1.3, -3.4, 1.1),
-                                new Vector3D(1.3, 2, 1.1)),
+                                new Vector3d(3, -0.7, 0),
+                                new Vector3d(4.9, 2, 0.7),
+                                new Vector3d(4.9, -3.4, 0.7),
+                                new Vector3d(1.3, -3.4, 1.1),
+                                new Vector3d(1.3, 2, 1.1)),
                         new Matrix4d(
                                 new double[] {
                                     0.9, 0, 0.1, 3.0, 0, 0.9, 0, -0.7, -0.1, 0, 0.9, 0, 0, 0, 0, 1
@@ -61,18 +61,18 @@ public class Marker3dUtilsTransformationTest {
                 new TestCase(
                         new MarkerLocation3d(
                                 new Marker(MarkerType.ONE),
-                                new Vector3D(0, 0, 0),
-                                new Vector3D(2, 3, 1),
-                                new Vector3D(2, -3, 1),
-                                new Vector3D(-2, -3, 1),
-                                new Vector3D(-2, 3, 1)),
+                                new Vector3d(0, 0, 0),
+                                new Vector3d(2, 3, 1),
+                                new Vector3d(2, -3, 1),
+                                new Vector3d(-2, -3, 1),
+                                new Vector3d(-2, 3, 1)),
                         new MarkerLocation3d(
                                 new Marker(MarkerType.ONE),
-                                new Vector3D(0, 0, 0),
-                                new Vector3D(-3, 2, 1),
-                                new Vector3D(3, 2, 1),
-                                new Vector3D(3, -2, 1),
-                                new Vector3D(-3, -2, 1)),
+                                new Vector3d(0, 0, 0),
+                                new Vector3d(-3, 2, 1),
+                                new Vector3d(3, 2, 1),
+                                new Vector3d(3, -2, 1),
+                                new Vector3d(-3, -2, 1)),
                         new Matrix4d(
                                 new double[] {
                                     0, -1, 0, 0,
@@ -83,18 +83,18 @@ public class Marker3dUtilsTransformationTest {
                 new TestCase(
                         new MarkerLocation3d(
                                 new Marker(MarkerType.ONE),
-                                new Vector3D(0.0350068936, 0.03700722, 0.4939999878),
-                                new Vector3D(0.0126514221, 0.0145922087, 0.4799999893),
-                                new Vector3D(0.0578009636, 0.0102748408, 0.5009999871),
-                                new Vector3D(0.0589546743, 0.0610268724, 0.5109999776),
-                                new Vector3D(0.012835922, 0.065386579, 0.4869999886)),
+                                new Vector3d(0.0350068936, 0.03700722, 0.4939999878),
+                                new Vector3d(0.0126514221, 0.0145922087, 0.4799999893),
+                                new Vector3d(0.0578009636, 0.0102748408, 0.5009999871),
+                                new Vector3d(0.0589546743, 0.0610268724, 0.5109999776),
+                                new Vector3d(0.012835922, 0.065386579, 0.4869999886)),
                         new MarkerLocation3d(
                                 new Marker(MarkerType.ONE),
-                                new Vector3D(-0.062, 0.010, 0),
-                                new Vector3D(-0.036, 0.036, 0),
-                                new Vector3D(-0.036, -0.016, 0),
-                                new Vector3D(-0.088, -0.016, 0),
-                                new Vector3D(-0.088, 0.036, 0)),
+                                new Vector3d(-0.062, 0.010, 0),
+                                new Vector3d(-0.036, 0.036, 0),
+                                new Vector3d(-0.036, -0.016, 0),
+                                new Vector3d(-0.088, -0.016, 0),
+                                new Vector3d(-0.088, 0.036, 0)),
                         new Matrix4d(
                                 new double[] {
                                     -1.2742E-02,

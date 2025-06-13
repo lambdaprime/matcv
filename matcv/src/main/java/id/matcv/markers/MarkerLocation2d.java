@@ -18,7 +18,7 @@
 package id.matcv.markers;
 
 import id.matcv.converters.MatConverters;
-import id.matcv.types.ndbuffers.matrix.Vector2D;
+import id.matcv.types.ndbuffers.matrix.Vector2d;
 import id.xfunction.Preconditions;
 import id.xfunction.XJsonStringBuilder;
 import java.nio.file.Path;
@@ -35,15 +35,15 @@ import org.opencv.core.MatOfPoint2f;
  */
 public record MarkerLocation2d(
         Marker marker,
-        Vector2D center,
-        Vector2D p1,
-        Vector2D p2,
-        Vector2D p3,
-        Vector2D p4,
+        Vector2d center,
+        Vector2d p1,
+        Vector2d p2,
+        Vector2d p3,
+        Vector2d p4,
         double heightPixels,
         double widthPixels,
         MatOfPoint2f corners,
-        Vector2D vector,
+        Vector2d vector,
         Optional<Path> imageFile) {
     private static final MatConverters converters = new MatConverters();
 
@@ -52,15 +52,15 @@ public record MarkerLocation2d(
     }
 
     MarkerLocation2d(
-            Vector2D p1,
-            Vector2D p2,
-            Vector2D p3,
-            Vector2D p4,
-            Vector2D center,
+            Vector2d p1,
+            Vector2d p2,
+            Vector2d p3,
+            Vector2d p4,
+            Vector2d center,
             double heightPixels,
             double widthPixels,
             Mat corners,
-            Vector2D vector,
+            Vector2d vector,
             Marker marker) {
         this(
                 marker,
@@ -92,7 +92,7 @@ public record MarkerLocation2d(
     }
 
     /** Center point (first) + all corners */
-    public List<Vector2D> points() {
+    public List<Vector2d> points() {
         return List.of(center, p1, p2, p3, p4);
     }
 
