@@ -20,11 +20,11 @@ package id.matcv.types.ndbuffers;
 /**
  * @author lambdaprime intid@protonmail.com
  */
-public class NdMapper {
+public class NdTo1dMapper {
     private Shape shape;
     private NSlice nslice;
 
-    public NdMapper(Shape shape, NSlice nslice) {
+    public NdTo1dMapper(Shape shape, NSlice nslice) {
         if (shape.dims().length != nslice.slices().length)
             throw new IllegalArgumentException(
                     "mismatch between number of slices and shape dimensions");

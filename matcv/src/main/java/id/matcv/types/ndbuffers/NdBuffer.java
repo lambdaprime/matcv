@@ -32,11 +32,11 @@ public abstract class NdBuffer {
 
     protected Shape shape;
     protected NSlice nslice;
-    protected NdMapper mapper;
+    protected NdTo1dMapper mapper;
 
     protected NdBuffer(Shape shape, NSlice nslice) {
         this.shape = shape;
         this.nslice = nslice;
-        this.mapper = new NdMapper(shape, nslice);
+        this.mapper = new NdTo1dMapper(shape, nslice);
     }
 }

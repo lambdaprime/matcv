@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import id.matcv.types.ndbuffers.NSlice;
-import id.matcv.types.ndbuffers.NdMapper;
+import id.matcv.types.ndbuffers.NdTo1dMapper;
 import id.matcv.types.ndbuffers.Shape;
 import id.matcv.types.ndbuffers.Slice;
 import java.util.stream.IntStream;
@@ -31,11 +31,11 @@ import org.junit.jupiter.api.Test;
 /**
  * @author lambdaprime intid@protonmail.com
  */
-public class NdMapperTest {
+public class NdTo1dMapperTest {
 
     @Test
     public void test() {
-        var mapper1 = new NdMapper(new Shape(17), new NSlice(new Slice(0, 17, 1)));
+        var mapper1 = new NdTo1dMapper(new Shape(17), new NSlice(new Slice(0, 17, 1)));
         assertArrayEquals(
                 new int[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16},
                 IntStream.range(0, 17).map(mapper1::map).toArray());
@@ -47,7 +47,7 @@ public class NdMapperTest {
         // 6 7  8
         // 9 10 11
         var mapper2 =
-                new NdMapper(
+                new NdTo1dMapper(
                         shape,
                         new NSlice(
                                 new Slice(0, shape.dims()[0], 2),
@@ -58,7 +58,7 @@ public class NdMapperTest {
                 ArrayIndexOutOfBoundsException.class, () -> assertEquals(6, mapper2.map(1, 1)));
 
         var mapper3 =
-                new NdMapper(
+                new NdTo1dMapper(
                         shape, new NSlice(new Slice(1, 3, 1), new Slice(0, shape.dims()[1], 1)));
         assertEquals(3, mapper3.map(0, 0));
         assertEquals(4, mapper3.map(0, 1));
