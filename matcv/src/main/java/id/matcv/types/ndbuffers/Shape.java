@@ -51,7 +51,9 @@ public class Shape {
         return prefixSizes[startDim];
     }
 
-    /** Iterate over all dimensions */
+    /**
+     * Iterate over all dimensions of the shape by generating valid indices in the increasing order
+     */
     public Stream<int[]> iterate() {
         var max = Arrays.stream(dims).map(i -> i - 1).toArray();
         var stream =

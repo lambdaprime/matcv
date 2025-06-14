@@ -24,6 +24,8 @@ import id.matcv.types.ndbuffers.Slice;
 import java.nio.DoubleBuffer;
 
 /**
+ * Matrix NxN
+ *
  * @author lambdaprime intid@protonmail.com
  */
 public class MatrixNd extends DoubleNdBuffer {

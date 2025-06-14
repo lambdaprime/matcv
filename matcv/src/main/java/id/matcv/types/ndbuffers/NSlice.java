@@ -27,7 +27,6 @@ import java.util.Arrays;
 public record NSlice(Slice... slices) {
     /**
      * @param exprs list of expressions as defined in {@link Slice#of(String)}
-     * @return
      */
     public static NSlice of(String... exprs) {
         return new NSlice(Arrays.stream(exprs).map(Slice::of).toArray(i -> new Slice[i]));

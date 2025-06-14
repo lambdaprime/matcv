@@ -20,6 +20,8 @@ package id.matcv.types.ndbuffers.matrix;
 import java.nio.DoubleBuffer;
 
 /**
+ * Matrix 4x4
+ *
  * @author lambdaprime intid@protonmail.com
  */
 public class Matrix4d extends MatrixNd {

@@ -40,26 +40,21 @@ public class NdTo1dMapperTest {
                 new int[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16},
                 IntStream.range(0, 17).map(mapper1::map).toArray());
 
-        var shape = new Shape(4, 3);
+        var sourceShape = new Shape(4, 3);
         // indices:
         // 0 1  2
         // 3 4  5
         // 6 7  8
         // 9 10 11
         var mapper2 =
-                new NdTo1dMapper(
-                        shape,
-                        new NSlice(
-                                new Slice(0, shape.dims()[0], 2),
-                                new Slice(0, shape.dims()[1], shape.dims()[1])));
+                new NdTo1dMapper(sourceShape, new NSlice(new Slice(0, 4, 2), new Slice(0, 3, 3)));
         assertEquals(0, mapper2.map(0, 0));
         assertEquals(6, mapper2.map(1, 0));
         Assertions.assertThrows(
                 ArrayIndexOutOfBoundsException.class, () -> assertEquals(6, mapper2.map(1, 1)));
 
         var mapper3 =
-                new NdTo1dMapper(
-                        shape, new NSlice(new Slice(1, 3, 1), new Slice(0, shape.dims()[1], 1)));
+                new NdTo1dMapper(sourceShape, new NSlice(new Slice(1, 3, 1), new Slice(0, 3, 1)));
         assertEquals(3, mapper3.map(0, 0));
         assertEquals(4, mapper3.map(0, 1));
         assertEquals(5, mapper3.map(0, 2));

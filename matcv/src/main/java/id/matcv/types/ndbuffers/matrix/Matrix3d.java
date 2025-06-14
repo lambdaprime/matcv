@@ -20,6 +20,8 @@ package id.matcv.types.ndbuffers.matrix;
 import java.nio.DoubleBuffer;
 
 /**
+ * Matrix 3x3
+ *
  * @author lambdaprime intid@protonmail.com
  */
 public class Matrix3d extends MatrixNd {

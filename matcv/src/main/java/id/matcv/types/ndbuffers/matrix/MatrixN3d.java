@@ -20,6 +20,8 @@ package id.matcv.types.ndbuffers.matrix;
 import java.nio.DoubleBuffer;
 
 /**
+ * Matrix Nx3
+ *
  * @author lambdaprime intid@protonmail.com
  */
 public class MatrixN3d extends MatrixNd {
@@ -34,9 +36,9 @@ public class MatrixN3d extends MatrixNd {
 
     public MatrixN3d(Vector3d... vecs) {
         this(new double[vecs.length * 3]);
-        var data = duplicate().duplicate();
+        var data = duplicate();
         for (var v : vecs) {
-            data.put(v.duplicate().duplicate());
+            data.put(v.duplicate());
         }
     }
 
