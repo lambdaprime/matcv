@@ -15,26 +15,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package id.matcv.types.ndbuffers;
+package id.matcv.tests.ndbuffers;
 
-import java.util.Arrays;
+import id.matcv.types.ndbuffers.NSlice;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
- * N-dimensional slice
- *
  * @author lambdaprime intid@protonmail.com
  */
-public record NSlice(Slice... slices) {
-    /**
-     * @param exprs list of expressions as defined in {@link Slice#of(String)}
-     * @return
-     */
-    public static NSlice of(String... exprs) {
-        return new NSlice(Arrays.stream(exprs).map(Slice::of).toArray(i -> new Slice[i]));
-    }
-
-    @Override
-    public final String toString() {
-        return Arrays.toString(slices);
+public class NSliceTest {
+    @Test
+    public void test_of() {
+        Assertions.assertEquals(
+                """
+[Slice[start=0, stop=2147483647, step=1], Slice[start=1, stop=7, step=2], Slice[start=5, stop=2147483647, step=1]]""",
+                NSlice.of(":", "1:7:2", "5:").toString());
     }
 }

@@ -3,7 +3,7 @@
  *
  * <p>Multidimensional data structures in Java are organized non-sequentially across fragmented
  * regions of memory, which differs from the continuous block storage method used in languages like
- * C and C++.. See <a href="https://en.wikipedia.org/wiki/Row-_and_column-major_order">Row- and
+ * C and C++. See <a href="https://en.wikipedia.org/wiki/Row-_and_column-major_order">Row- and
  * column-major order</a> for more details (<b>ndbuffers</b> are using row-major storage order).
  *
  * <p><b>ndbuffers</b> enable processing sequential data stored within one-dimensional Java arrays

@@ -23,6 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import id.matcv.types.ndbuffers.Slice;
 import java.util.stream.IntStream;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -84,5 +85,17 @@ public class SliceTest {
         assertEquals(0, slice.index(0));
         assertEquals(2, slice.index(1));
         assertEquals(4, slice.index(2));
+    }
+
+    @Test
+    public void test_of() {
+        var ex = assertThrows(IllegalArgumentException.class, () -> Slice.of("").toString());
+        Assertions.assertEquals("Slice expression is empty", ex.getMessage());
+        Assertions.assertEquals(
+                "Slice[start=0, stop=2147483647, step=1]", Slice.of(":").toString());
+        Assertions.assertEquals("Slice[start=1, stop=7, step=2]", Slice.of("1:7:2").toString());
+        Assertions.assertEquals(
+                "Slice[start=5, stop=2147483647, step=1]", Slice.of("5:").toString());
+        Assertions.assertEquals("Slice[start=1, stop=2, step=1]", Slice.of("1:2").toString());
     }
 }
