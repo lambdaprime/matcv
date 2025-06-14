@@ -18,7 +18,12 @@
 package id.matcv.tests.ndbuffers;
 
 import id.matcv.tests.OpencvTest;
+import id.matcv.types.ndbuffers.NSlice;
+import id.matcv.types.ndbuffers.Slice;
+import id.matcv.types.ndbuffers.matrix.Matrix3d;
 import id.matcv.types.ndbuffers.matrix.Matrix4d;
+import id.matcv.types.ndbuffers.matrix.MatrixNd;
+import id.matcv.types.ndbuffers.matrix.Vector3d;
 import java.lang.foreign.MemorySegment;
 import java.nio.ByteOrder;
 import org.junit.jupiter.api.Assertions;
@@ -40,15 +45,60 @@ public class NdBuffersExamplesTest extends OpencvTest {
                     9, 10, 11, 12,
                     13, 14, 15, 16
                 };
-        var mx = new Matrix4d(oneDimensionalArray);
-        Assertions.assertEquals(8, mx.get(1, 3));
-        mx.set(-1, 1, 3);
+        var mx4d = new Matrix4d(oneDimensionalArray);
+        Assertions.assertEquals(8, mx4d.get(1, 3));
+        mx4d.set(-1, 1, 3);
         Assertions.assertEquals(-1, oneDimensionalArray[7]);
+
+        Assertions.assertEquals(
+                """
+                { "data" : [
+                 1, 2, 3, 4,
+                 5, 6, 7, -1,
+                 9, 10, 11, 12,
+                 13, 14, 15, 16
+                ] }""",
+                mx4d.dump());
+        var mx3d = new Matrix3d(Slice.of("1:4"), Slice.of("1:4"), mx4d);
+        Assertions.assertEquals(
+                """
+                { "data" : [
+                 6, 7, -1,
+                 10, 11, 12,
+                 14, 15, 16
+                ] }""",
+                mx3d.dump());
+        var mx2d = new MatrixNd(Slice.of("0:3:2"), Slice.of("0:3:2"), mx3d);
+        Assertions.assertEquals(
+                """
+                { "data" : [
+                 6, -1,
+                 14, 16
+                ] }""",
+                mx2d.dump());
+        mx2d.set(-16, 1, 1);
+        Assertions.assertEquals(
+                """
+                { "data" : [
+                 1, 2, 3, 4,
+                 5, 6, 7, -1,
+                 9, 10, 11, 12,
+                 13, 14, 15, -16
+                ] }""",
+                mx4d.dump());
+        var vector3d = new Vector3d(NSlice.of("1:", ":"), mx3d);
+        Assertions.assertEquals(
+                """
+                { "data" : [
+                 10, 11, 12
+                ] }""",
+                vector3d.dump());
+
         var opencvMat = Mat.ones(new int[] {4, 4}, CvType.CV_64F);
         var segment =
                 MemorySegment.ofAddress(opencvMat.dataAddr())
                         .reinterpret(opencvMat.total() * Double.BYTES);
-        mx = new Matrix4d(segment.asByteBuffer().order(ByteOrder.nativeOrder()).asDoubleBuffer());
+        mx4d = new Matrix4d(segment.asByteBuffer().order(ByteOrder.nativeOrder()).asDoubleBuffer());
         Assertions.assertEquals(
                 """
                 { "data" : [
@@ -57,8 +107,8 @@ public class NdBuffersExamplesTest extends OpencvTest {
                  1, 1, 1, 1,
                  1, 1, 1, 1
                 ] }""",
-                mx.dump());
-        mx.set(-1.5, 1, 3);
+                mx4d.dump());
+        mx4d.set(-1.5, 1, 3);
         Assertions.assertEquals(
                 """
                 [1, 1, 1, 1;

@@ -23,34 +23,18 @@ import java.nio.DoubleBuffer;
 /**
  * @author lambdaprime intid@protonmail.com
  */
-public class DoubleNdBuffer extends NdBuffer {
-    private DoubleBuffer data;
+public interface DoubleNdBuffer {
 
-    public DoubleNdBuffer(Shape shape, NSlice nslice, double[] data) {
-        this(shape, nslice, DoubleBuffer.wrap(data));
-    }
+    Shape shape();
 
-    public DoubleNdBuffer(Shape shape, NSlice nslice, DoubleBuffer data) {
-        super(shape, nslice);
-        this.data = data.duplicate();
-        this.data.limit(shape.size(0));
-    }
+    double get(int... indices);
 
-    public double get(int... indices) {
-        return data.get(mapper.map(indices));
-    }
+    void set(double v, int... indices);
 
-    public void set(double v, int... indices) {
-        data.put(mapper.map(indices), v);
-    }
-
-    /** Create duplicate of internal {@link ByteBuffer} by calling {@link ByteBuffer#duplicate()} */
-    public DoubleBuffer duplicate() {
-        return data.duplicate();
-    }
-
-    @Override
-    public String toString() {
-        return "DoubleNdBuffer[shape=%s, nslice=%s]".formatted(shape, nslice);
-    }
+    /**
+     * Create duplicate of internal {@link ByteBuffer} by calling {@link ByteBuffer#duplicate()}
+     *
+     * <p>In case of view it applies {@link ByteBuffer#duplicate()} on the source {@link ByteBuffer}
+     */
+    DoubleBuffer duplicate();
 }

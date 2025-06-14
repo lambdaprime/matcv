@@ -18,7 +18,9 @@
 package id.matcv.types.ndbuffers.matrix;
 
 import id.matcv.types.ndbuffers.DoubleNdBuffer;
+import id.matcv.types.ndbuffers.DoubleNdBufferDirect;
 import id.matcv.types.ndbuffers.NSlice;
+import id.matcv.types.ndbuffers.NdBuffer;
 import id.matcv.types.ndbuffers.Shape;
 import id.matcv.types.ndbuffers.Slice;
 import java.nio.DoubleBuffer;
@@ -28,17 +30,36 @@ import java.nio.DoubleBuffer;
  *
  * @author lambdaprime intid@protonmail.com
  */
-public class MatrixNd extends DoubleNdBuffer {
+public class MatrixNd extends NdBuffer implements DoubleNdBuffer {
+
+    protected DoubleNdBuffer data;
 
     public MatrixNd(int rows, int cols, double[] data) {
         this(rows, cols, DoubleBuffer.wrap(data));
     }
 
     public MatrixNd(int rows, int cols, DoubleBuffer data) {
-        super(
-                new Shape(rows, cols),
-                new NSlice(new Slice(0, rows, 1), new Slice(0, cols, 1)),
-                data);
+        this(new NSlice(new Slice(0, rows, 1), new Slice(0, cols, 1)), data);
+    }
+
+    public MatrixNd(Slice rows, Slice cols, DoubleNdBuffer data) {
+        this(new NSlice(rows, cols), data);
+    }
+
+    public MatrixNd(Slice rows, Slice cols, DoubleBuffer data) {
+        this(new NSlice(rows, cols), data);
+    }
+
+    public MatrixNd(NSlice nslice, DoubleBuffer data) {
+        this(nslice, new DoubleNdBufferDirect(Shape.of(nslice), nslice, data));
+    }
+
+    public MatrixNd(NSlice nslice, DoubleNdBuffer data) {
+        super(Shape.of(nslice), nslice);
+        if (shape.dims().length != 2)
+            throw new IllegalArgumentException(
+                    "Matrix requires 2 slices instead of " + shape.dims().length);
+        this.data = data;
     }
 
     public int getRows() {
@@ -47,6 +68,21 @@ public class MatrixNd extends DoubleNdBuffer {
 
     public int getCols() {
         return shape.dims()[1];
+    }
+
+    @Override
+    public double get(int... indices) {
+        return data.get(nslice.map(indices));
+    }
+
+    @Override
+    public void set(double v, int... indices) {
+        data.set(v, nslice.map(indices));
+    }
+
+    @Override
+    public DoubleBuffer duplicate() {
+        return data.duplicate();
     }
 
     public String dump() {

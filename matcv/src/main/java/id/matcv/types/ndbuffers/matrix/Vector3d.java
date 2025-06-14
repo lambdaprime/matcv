@@ -17,13 +17,17 @@
  */
 package id.matcv.types.ndbuffers.matrix;
 
+import id.matcv.types.ndbuffers.DoubleNdBuffer;
+import id.matcv.types.ndbuffers.NSlice;
 import id.matcv.types.ndbuffers.NdBuffer;
+import id.matcv.types.ndbuffers.Shape;
 import java.nio.DoubleBuffer;
 
 /**
  * @author lambdaprime intid@protonmail.com
  */
 public class Vector3d extends MatrixNd {
+    private static final Shape SHAPE = new Shape(1, 3);
 
     public Vector3d(double x, double y, double z) {
         this(DoubleBuffer.wrap(new double[] {x, y, z}));
@@ -31,6 +35,10 @@ public class Vector3d extends MatrixNd {
 
     public Vector3d(DoubleBuffer data) {
         super(1, 3, data);
+    }
+
+    public Vector3d(NSlice nslice, DoubleNdBuffer data) {
+        super(nslice.trim(SHAPE), data);
     }
 
     public double getX() {

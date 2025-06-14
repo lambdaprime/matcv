@@ -53,23 +53,23 @@ public class MarkerLocation3d {
     }
 
     public Vector3d center() {
-        return data.getVector(0);
+        return data.getVectorView(0);
     }
 
     public Vector3d p1() {
-        return data.getVector(1);
+        return data.getVectorView(1);
     }
 
     public Vector3d p2() {
-        return data.getVector(2);
+        return data.getVectorView(2);
     }
 
     public Vector3d p3() {
-        return data.getVector(3);
+        return data.getVectorView(3);
     }
 
     public Vector3d p4() {
-        return data.getVector(4);
+        return data.getVectorView(4);
     }
 
     public MatrixN3d getData() {

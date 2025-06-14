@@ -23,12 +23,14 @@ import java.util.stream.IntStream;
 
 /**
  * @param start index of the first item. Default is 0.
- * @param stop index of the last item of the slice. Default is {@link Integer#MAX_VALUE} which means
+ * @param stop index of the last item of the slice. Default is {@link Slice#MAX_INDEX} which means
  *     slicing continues up to the last item inside current dimension.
  * @param step step size between consecutive items of the slice. Default is 1.
  * @author lambdaprime intid@protonmail.com
  */
 public record Slice(int start, int stop, int step) {
+
+    public static final int MAX_INDEX = Integer.MAX_VALUE;
 
     /**
      * @see <a
@@ -44,7 +46,7 @@ public record Slice(int start, int stop, int step) {
                         .mapToInt(Integer::parseInt)
                         .toArray();
         var start = 0;
-        var stop = Integer.MAX_VALUE;
+        var stop = MAX_INDEX;
         var step = 1;
         if (tokens.length == 0) return new Slice(start, stop, step);
         else if (tokens.length == 1) return new Slice(tokens[0], stop, step);
@@ -67,5 +69,14 @@ public record Slice(int start, int stop, int step) {
         if (res >= stop)
             throw new ArrayIndexOutOfBoundsException("stop=%d index=%d".formatted(stop, res));
         return res;
+    }
+
+    /** Total number of items */
+    public int size() {
+        return Math.ceilDiv(stop - start, step);
+    }
+
+    public Object trimStop(int maxStop) {
+        return stop <= maxStop ? this : new Slice(start, maxStop, step);
     }
 }

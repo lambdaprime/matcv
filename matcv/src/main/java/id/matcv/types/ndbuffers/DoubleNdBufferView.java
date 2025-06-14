@@ -17,33 +17,31 @@
  */
 package id.matcv.types.ndbuffers;
 
-import java.text.DecimalFormat;
+import java.nio.DoubleBuffer;
 
 /**
  * @author lambdaprime intid@protonmail.com
  */
-public abstract class NdBuffer {
-    public static final DecimalFormat formatter = new DecimalFormat();
+public class DoubleNdBufferView extends NdBuffer implements DoubleNdBuffer {
+    private DoubleNdBuffer data;
 
-    static {
-        formatter.setMaximumFractionDigits(5);
-        formatter.setGroupingUsed(false);
-    }
-
-    protected NSlice nslice;
-    protected Shape shape;
-
-    protected NdBuffer(Shape sourceShape, NSlice nslice) {
-        this.nslice = nslice;
-        this.shape = Shape.of(nslice);
-    }
-
-    public Shape shape() {
-        return shape;
+    public DoubleNdBufferView(NSlice nslice, DoubleNdBuffer data) {
+        super(Shape.of(nslice), nslice);
+        this.data = data;
     }
 
     @Override
-    public String toString() {
-        return "NdBuffer[shape=%s, nslice=%s]".formatted(shape, nslice);
+    public double get(int... indices) {
+        return data.get(nslice.map(indices));
+    }
+
+    @Override
+    public void set(double v, int... indices) {
+        data.set(v, nslice.map(indices));
+    }
+
+    @Override
+    public DoubleBuffer duplicate() {
+        return data.duplicate();
     }
 }

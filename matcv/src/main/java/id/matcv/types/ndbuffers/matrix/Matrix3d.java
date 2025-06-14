@@ -17,6 +17,10 @@
  */
 package id.matcv.types.ndbuffers.matrix;
 
+import id.matcv.types.ndbuffers.DoubleNdBuffer;
+import id.matcv.types.ndbuffers.NSlice;
+import id.matcv.types.ndbuffers.Shape;
+import id.matcv.types.ndbuffers.Slice;
 import java.nio.DoubleBuffer;
 
 /**
@@ -25,12 +29,25 @@ import java.nio.DoubleBuffer;
  * @author lambdaprime intid@protonmail.com
  */
 public class Matrix3d extends MatrixNd {
+    private static final Shape SHAPE = new Shape(3, 3);
 
     public Matrix3d(double[] data) {
-        this(DoubleBuffer.wrap(data));
+        super(3, 3, data);
     }
 
     public Matrix3d(DoubleBuffer data) {
         super(3, 3, data);
+    }
+
+    public Matrix3d(Slice rows, Slice cols, DoubleBuffer data) {
+        super(rows, cols, data);
+    }
+
+    public Matrix3d(Slice rows, Slice cols, DoubleNdBuffer data) {
+        super(new NSlice(rows, cols).trim(SHAPE), data);
+        if (rows.size() != 3)
+            throw new IllegalArgumentException("Number of rows mismatch 3 !=" + rows.size());
+        if (cols.size() != 3)
+            throw new IllegalArgumentException("Number of cols mismatch 3 !=" + cols.size());
     }
 }

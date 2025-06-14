@@ -38,6 +38,11 @@ public class Shape {
         toString = "shape=" + Arrays.toString(dims);
     }
 
+    /** Calculate shape described by N-dimensional slice */
+    public static Shape of(NSlice slice) {
+        return new Shape(Arrays.stream(slice.slices()).mapToInt(Slice::size).toArray());
+    }
+
     public int[] dims() {
         return dims;
     }

@@ -17,6 +17,8 @@
  */
 package id.matcv.types.ndbuffers.matrix;
 
+import id.matcv.types.ndbuffers.NSlice;
+import id.matcv.types.ndbuffers.Slice;
 import java.nio.DoubleBuffer;
 
 /**
@@ -25,9 +27,8 @@ import java.nio.DoubleBuffer;
  * @author lambdaprime intid@protonmail.com
  */
 public class MatrixN3d extends MatrixNd {
-
     public MatrixN3d(double[] data) {
-        this(DoubleBuffer.wrap(data));
+        super(data.length / 3, 3, data);
     }
 
     public MatrixN3d(DoubleBuffer data) {
@@ -42,7 +43,7 @@ public class MatrixN3d extends MatrixNd {
         }
     }
 
-    public Vector3d getVector(int row) {
-        return new Vector3d(duplicate().slice(row * 3, 3));
+    public Vector3d getVectorView(int row) {
+        return new Vector3d(new NSlice(new Slice(row, row + 1, 1), new Slice(0, 3, 1)), data);
     }
 }

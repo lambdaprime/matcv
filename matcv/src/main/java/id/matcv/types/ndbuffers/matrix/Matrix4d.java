@@ -17,6 +17,9 @@
  */
 package id.matcv.types.ndbuffers.matrix;
 
+import id.matcv.types.ndbuffers.NSlice;
+import id.matcv.types.ndbuffers.Shape;
+import id.matcv.types.ndbuffers.Slice;
 import java.nio.DoubleBuffer;
 
 /**
@@ -25,12 +28,17 @@ import java.nio.DoubleBuffer;
  * @author lambdaprime intid@protonmail.com
  */
 public class Matrix4d extends MatrixNd {
+    private static final Shape SHAPE = new Shape(4, 4);
 
     public Matrix4d(double[] data) {
-        this(DoubleBuffer.wrap(data));
+        super(4, 4, data);
     }
 
     public Matrix4d(DoubleBuffer data) {
         super(4, 4, data);
+    }
+
+    public Matrix4d(Slice rows, Slice cols, DoubleBuffer data) {
+        super(new NSlice(rows, cols).trim(SHAPE), data);
     }
 }

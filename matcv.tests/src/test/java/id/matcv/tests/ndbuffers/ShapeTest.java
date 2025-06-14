@@ -20,7 +20,9 @@ package id.matcv.tests.ndbuffers;
 import static java.util.stream.Collectors.joining;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import id.matcv.types.ndbuffers.NSlice;
 import id.matcv.types.ndbuffers.Shape;
+import id.matcv.types.ndbuffers.Slice;
 import java.util.Arrays;
 import org.junit.jupiter.api.Test;
 
@@ -47,5 +49,15 @@ public class ShapeTest {
         var shape = new Shape(2, 3);
         assertEquals(6, shape.size(0));
         assertEquals(3, shape.size(1));
+    }
+
+    @Test
+    public void test_of() {
+        assertEquals(
+                "shape=[2, 1]",
+                Shape.of(new NSlice(new Slice(0, 4, 2), new Slice(0, 3, 3))).toString());
+        assertEquals(
+                "shape=[2, 2]",
+                Shape.of(new NSlice(new Slice(0, 3, 2), new Slice(0, 3, 2))).toString());
     }
 }

@@ -18,6 +18,7 @@
 package id.matcv.types.ndbuffers;
 
 import java.util.Arrays;
+import java.util.stream.IntStream;
 
 /**
  * N-dimensional slice
@@ -30,6 +31,22 @@ public record NSlice(Slice... slices) {
      */
     public static NSlice of(String... exprs) {
         return new NSlice(Arrays.stream(exprs).map(Slice::of).toArray(i -> new Slice[i]));
+    }
+
+    public int[] map(int[] indices) {
+        if (slices.length != indices.length) throw new IllegalArgumentException();
+        return IntStream.range(0, indices.length).map(i -> slices[i].index(indices[i])).toArray();
+    }
+
+    /**
+     * Slices where {@link Slice#stop()} exceeds shape bounds are trimmed so that new {@link
+     * Slice#stop()} will point to the index of the last item within the shape
+     */
+    public NSlice trim(Shape shape) {
+        return new NSlice(
+                IntStream.range(0, slices.length)
+                        .mapToObj(i -> slices[i].trimStop(slices[i].start() + shape.dims()[i]))
+                        .toArray(i -> new Slice[i]));
     }
 
     @Override
