@@ -26,6 +26,10 @@ import java.nio.DoubleBuffer;
 public class DoubleNdBuffer extends NdBuffer {
     private DoubleBuffer data;
 
+    public DoubleNdBuffer(Shape shape, NSlice nslice, double[] data) {
+        this(shape, nslice, DoubleBuffer.wrap(data));
+    }
+
     public DoubleNdBuffer(Shape shape, NSlice nslice, DoubleBuffer data) {
         super(shape, nslice);
         this.data = data.duplicate();
@@ -43,5 +47,10 @@ public class DoubleNdBuffer extends NdBuffer {
     /** Create duplicate of internal {@link ByteBuffer} by calling {@link ByteBuffer#duplicate()} */
     public DoubleBuffer duplicate() {
         return data.duplicate();
+    }
+
+    @Override
+    public String toString() {
+        return "DoubleNdBuffer[shape=%s, nslice=%s]".formatted(shape, nslice);
     }
 }

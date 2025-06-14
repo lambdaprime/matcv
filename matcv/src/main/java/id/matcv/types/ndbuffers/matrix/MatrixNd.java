@@ -47,8 +47,7 @@ public class MatrixNd extends DoubleNdBuffer {
         return shape.dims()[1];
     }
 
-    @Override
-    public String toString() {
+    public String dump() {
         var rows = getRows();
         var cols = getCols();
         var buf = new StringBuilder();

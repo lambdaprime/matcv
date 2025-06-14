@@ -57,7 +57,7 @@ public class NdBuffersExamplesTest extends OpencvTest {
                  1, 1, 1, 1,
                  1, 1, 1, 1
                 ] }""",
-                mx.toString());
+                mx.dump());
         mx.set(-1.5, 1, 3);
         Assertions.assertEquals(
                 """
