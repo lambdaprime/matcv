@@ -20,7 +20,7 @@ package id.matcv.types.pointcloud;
 import id.matcv.converters.PointConverters;
 import id.matcv.types.camera.CameraIntrinsics;
 import id.matcv.types.camera.CameraMatrix;
-import id.matcv.types.ndbuffers.matrix.Vector3d;
+import id.ndbuffers.matrix.Vector3d;
 import java.lang.foreign.MemorySegment;
 import java.lang.foreign.ValueLayout;
 

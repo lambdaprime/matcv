@@ -17,7 +17,7 @@
  */
 package id.matcv.types.camera;
 
-import id.matcv.types.ndbuffers.matrix.Matrix3d;
+import id.ndbuffers.matrix.Matrix3d;
 
 /**
  * @author lambdaprime intid@protonmail.com

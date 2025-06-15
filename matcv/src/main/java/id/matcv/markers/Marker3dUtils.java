@@ -18,9 +18,9 @@
 package id.matcv.markers;
 
 import id.matcv.impl.ejml.KabschAlgorithm;
-import id.matcv.types.ndbuffers.matrix.Matrix4d;
-import id.matcv.types.ndbuffers.matrix.MatrixN3d;
-import id.matcv.types.ndbuffers.matrix.Vector3d;
+import id.ndbuffers.matrix.Matrix4d;
+import id.ndbuffers.matrix.MatrixN3d;
+import id.ndbuffers.matrix.Vector3d;
 import id.xfunction.logging.XLogger;
 import java.nio.DoubleBuffer;
 import java.util.ArrayList;

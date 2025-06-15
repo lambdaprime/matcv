@@ -51,6 +51,7 @@ public class Marker2dUtils {
         Imgproc.circle(img, converters.toOpenCv(loc.center()), 4, new Scalar(0, 255, 0), 3);
     }
 
+    //
     private void drawLine(Mat img, MarkerLocation2d loc) {
         Imgproc.line(
                 img,

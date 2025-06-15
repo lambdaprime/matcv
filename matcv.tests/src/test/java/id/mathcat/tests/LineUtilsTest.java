@@ -19,8 +19,8 @@ package id.mathcat.tests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import id.matcv.types.ndbuffers.matrix.Vector2d;
 import id.mathcat.LineUtils;
+import id.ndbuffers.matrix.Vector2d;
 import org.junit.jupiter.api.Test;
 
 public class LineUtilsTest {

@@ -64,6 +64,7 @@ module matcv {
     requires transitive opencv;
     requires ejml.ddense;
     requires ejml.core;
+    requires transitive ndbuffers;
 
     exports id.matcv;
     exports id.matcv.accessors;
@@ -76,5 +77,4 @@ module matcv {
     exports id.matcv.types.camera;
     exports id.matcv.types.datatables;
     exports id.matcv.types.pointcloud;
-    exports id.matcv.types.ndbuffers;
 }

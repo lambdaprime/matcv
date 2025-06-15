@@ -26,6 +26,7 @@ eclipse.classpath.file {
 dependencies {
   api files('/usr/share/java/opencv.jar')
   api "io.github.lambdaprime:id.xfunction:28.0-SNAPSHOT"
+  api "io.github.lambdaprime:ndbuffers:1.0-SNAPSHOT"
   implementation "org.ejml:ejml-ddense:0.44.0"
 }
 

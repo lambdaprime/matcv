@@ -17,7 +17,7 @@
  */
 package id.mathcat;
 
-import id.matcv.types.ndbuffers.matrix.Vector2d;
+import id.ndbuffers.matrix.Vector2d;
 
 public class LineUtils {
 

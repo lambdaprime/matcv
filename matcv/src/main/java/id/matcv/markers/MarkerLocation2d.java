@@ -18,7 +18,7 @@
 package id.matcv.markers;
 
 import id.matcv.converters.MatConverters;
-import id.matcv.types.ndbuffers.matrix.Vector2d;
+import id.ndbuffers.matrix.Vector2d;
 import id.xfunction.Preconditions;
 import id.xfunction.XJsonStringBuilder;
 import java.nio.file.Path;

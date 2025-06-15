@@ -18,8 +18,8 @@
 package id.matcv.markers;
 
 import id.matcv.types.FileMat;
-import id.matcv.types.ndbuffers.matrix.Vector2d;
 import id.mathcat.LineUtils;
+import id.ndbuffers.matrix.Vector2d;
 import id.xfunction.XJsonStringBuilder;
 import id.xfunction.logging.XLogger;
 import java.nio.file.Path;
