@@ -17,10 +17,13 @@
  */
 package id.matcv.converters;
 
+import id.ndbuffers.NdBuffersFactory;
 import id.ndbuffers.matrix.Vector2d;
 import org.opencv.core.Point;
 
 public class PointConverters {
+    private static final NdBuffersFactory ndFactory = new NdBuffersFactory();
+
     public Point toOpenCv(Vector2d point) {
         return toOpenCv(point, 0, 0);
     }
@@ -34,6 +37,6 @@ public class PointConverters {
     }
 
     public Vector2d toPoint2d(int index, int w, int h) {
-        return new Vector2d(index % w, index / w);
+        return ndFactory.vector2d(index % w, index / w);
     }
 }

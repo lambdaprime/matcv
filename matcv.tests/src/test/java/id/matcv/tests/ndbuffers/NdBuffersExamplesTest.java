@@ -43,12 +43,12 @@ public class NdBuffersExamplesTest extends OpencvTest {
         Assertions.assertEquals(
                 """
                 { "data" : [
-                 1, 1, 1, 1,
-                 1, 1, 1, 1,
-                 1, 1, 1, 1,
-                 1, 1, 1, 1
+                 [1, 1, 1, 1],
+                 [1, 1, 1, 1],
+                 [1, 1, 1, 1],
+                 [1, 1, 1, 1]
                 ] }""",
-                mx4d.dump());
+                mx4d.dumpAsJson());
         mx4d.set(-1.5, 1, 3);
         Assertions.assertEquals(
                 """
