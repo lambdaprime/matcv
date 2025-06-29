@@ -19,11 +19,14 @@ package id.matcv.sensors.realsense;
 
 import id.jrealsense.Config;
 import id.jrealsense.Context;
+import id.jrealsense.Filter;
 import id.jrealsense.FormatType;
 import id.jrealsense.FrameSet;
 import id.jrealsense.Pipeline;
 import id.jrealsense.StreamType;
 import id.jrealsense.devices.DeviceLocator;
+import id.jrealsense.filters.SpatialFilter;
+import id.jrealsense.frames.DepthFrame;
 import id.jrealsense.frames.Frame;
 import id.jrealsense.utils.FrameUtils;
 import id.matcv.types.camera.CameraIntrinsics;
@@ -32,6 +35,7 @@ import id.xfunction.lang.XThread;
 import id.xfunction.logging.XLogger;
 import id.xfunction.util.IdempotentService;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -58,6 +62,7 @@ public class RealSenseCamera extends IdempotentService {
     private boolean isShowFramesEnabled;
     private ExecutorService executor = Executors.newSingleThreadExecutor();
     private boolean isExecutorPrivate = true;
+    private boolean isSpatialFilterEnabled;
 
     public RealSenseCamera withExecutor(ExecutorService executor) {
         this.executor = executor;
@@ -77,6 +82,11 @@ public class RealSenseCamera extends IdempotentService {
 
     public RealSenseCamera withShowFrames(boolean isEnabled) {
         this.isShowFramesEnabled = isEnabled;
+        return this;
+    }
+
+    public RealSenseCamera withSpatialFilter(boolean isEnabled) {
+        this.isSpatialFilterEnabled = isEnabled;
         return this;
     }
 
@@ -114,7 +124,10 @@ public class RealSenseCamera extends IdempotentService {
                                 FormatType.RS2_FORMAT_BGR8,
                                 FPS);
                         pipeline.start(config);
-                        loop(pipeline);
+                        var depthFilters = new ArrayList<Filter<DepthFrame, DepthFrame>>();
+                        if (isSpatialFilterEnabled) depthFilters.add(SpatialFilter.create());
+                        loop(pipeline, depthFilters);
+                        depthFilters.forEach(Filter::close);
                     }
                 });
     }
@@ -156,18 +169,25 @@ public class RealSenseCamera extends IdempotentService {
     }
 
     /** Loop over the frames in the pipeline */
-    private void loop(Pipeline pipeline) {
+    private void loop(Pipeline pipeline, List<Filter<DepthFrame, DepthFrame>> depthFilters) {
         while (getServiceStatus() == Status.STARTED && !executor.isShutdown()) {
             FrameSet frameSet = pipeline.waitForFrames();
             if (frameSet.size() == 0) continue;
             frameSet = utils.alignToColorStream(frameSet);
             var colorFrameOpt = frameSet.getColorFrame(FormatType.RS2_FORMAT_BGR8);
-            var depthFrameOpt = frameSet.getDepthFrame();
+            var depthFrameOpt =
+                    frameSet.getDepthFrame().map(frame -> applyfilters(depthFilters, frame));
             if (colorFrameOpt.isPresent() && depthFrameOpt.isPresent()) {
                 proc(colorFrameOpt.get(), depthFrameOpt.get());
             }
             frameSet.close();
         }
+    }
+
+    private DepthFrame applyfilters(
+            List<Filter<DepthFrame, DepthFrame>> filters, DepthFrame frame) {
+        for (var filter : filters) frame = filter.process(frame);
+        return frame;
     }
 
     public static void main(String[] args) throws IOException {
