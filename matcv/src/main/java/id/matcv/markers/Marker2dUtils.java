@@ -17,7 +17,7 @@
  */
 package id.matcv.markers;
 
-import id.matcv.converters.PointConverters;
+import id.matcv.converters.NdBufferConverters;
 import org.opencv.core.Mat;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
@@ -27,7 +27,7 @@ import org.opencv.imgproc.Imgproc;
  */
 public class Marker2dUtils {
 
-    private static final PointConverters converters = new PointConverters();
+    private static final NdBufferConverters converters = new NdBufferConverters();
 
     /** Highlight marker on the image */
     public void drawMarker(Mat image, MarkerLocation2d markerLocation) {

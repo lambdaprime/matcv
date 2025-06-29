@@ -96,8 +96,8 @@ public class MatUtils {
         if (!LOGGER.isLoggable(Level.FINER)) return;
         debugShape(description, matrix);
         if (slice.equals(new Rect(0, 0, matrix.cols(), matrix.rows())))
-            description += " full dump ";
-        else description += " slice " + slice;
+            description = "FULL DUMP: " + description;
+        else description = "SLICE: " + slice;
         LOGGER.fine(description + ":\n" + matrix.submat(slice).dump());
     }
 
@@ -135,7 +135,7 @@ public class MatUtils {
     public void debugShape(String description, Mat matrix) {
         if (!LOGGER.isLoggable(Level.FINER)) return;
         LOGGER.fine(
-                "{0} shape {1}, rows {2} cols {3}",
+                "SHAPE {0}: {1}, rows {2} cols {3}",
                 description, matrix.toString(), matrix.rows(), matrix.cols());
     }
 

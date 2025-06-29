@@ -35,7 +35,7 @@ import org.opencv.utils.Converters;
  * @author lambdaprime intid@protonmail.com
  */
 public class MatConverters {
-    private static final PointConverters pointConverters = new PointConverters();
+    private static final NdBufferConverters pointConverters = new NdBufferConverters();
 
     /** Create new CV_8U matrix */
     public Mat copyToMat(byte... values) {

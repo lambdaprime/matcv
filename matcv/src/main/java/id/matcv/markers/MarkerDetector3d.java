@@ -17,7 +17,7 @@
  */
 package id.matcv.markers;
 
-import id.matcv.converters.PointConverters;
+import id.matcv.converters.NdBufferConverters;
 import id.matcv.types.FileMat;
 import id.matcv.types.KeyPoints3dTable;
 import id.matcv.types.camera.CameraIntrinsics;
@@ -41,7 +41,7 @@ import org.opencv.imgcodecs.Imgcodecs;
  */
 public class MarkerDetector3d {
     private static final XLogger LOGGER = XLogger.getLogger(MarkerDetector3d.class);
-    private PointConverters converters = new PointConverters();
+    private NdBufferConverters converters = new NdBufferConverters();
     private Marker2dUtils markerUtils = new Marker2dUtils();
     private Marker3dUtils marker3dUtils = new Marker3dUtils();
     private CameraIntrinsics intrinsics;

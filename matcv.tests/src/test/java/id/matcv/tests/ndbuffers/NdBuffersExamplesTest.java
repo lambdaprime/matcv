@@ -18,6 +18,7 @@
 package id.matcv.tests.ndbuffers;
 
 import id.matcv.tests.OpencvTest;
+import id.ndbuffers.NdBuffersJsonUtils;
 import id.ndbuffers.matrix.Matrix4d;
 import java.lang.foreign.MemorySegment;
 import java.nio.ByteOrder;
@@ -30,6 +31,7 @@ import org.opencv.core.Mat;
  * @author lambdaprime intid@protonmail.com
  */
 public class NdBuffersExamplesTest extends OpencvTest {
+    private static final NdBuffersJsonUtils jsonUtils = new NdBuffersJsonUtils();
 
     @Test
     public void test() {
@@ -48,7 +50,7 @@ public class NdBuffersExamplesTest extends OpencvTest {
                  [1, 1, 1, 1],
                  [1, 1, 1, 1]
                 ] }""",
-                mx4d.dumpAsJson());
+                jsonUtils.dumpAsJson(mx4d));
         mx4d.set(-1.5, 1, 3);
         Assertions.assertEquals(
                 """

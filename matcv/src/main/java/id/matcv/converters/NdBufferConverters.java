@@ -18,10 +18,19 @@
 package id.matcv.converters;
 
 import id.ndbuffers.NdBuffersFactory;
+import id.ndbuffers.matrix.Matrix3d;
 import id.ndbuffers.matrix.Vector2d;
+import id.xfunction.Preconditions;
+import java.lang.foreign.MemorySegment;
+import java.nio.ByteOrder;
+import org.opencv.core.CvType;
+import org.opencv.core.Mat;
 import org.opencv.core.Point;
 
-public class PointConverters {
+/**
+ * @author lambdaprime intid@protonmail.com
+ */
+public class NdBufferConverters {
     private static final NdBuffersFactory ndFactory = new NdBuffersFactory();
 
     public Point toOpenCv(Vector2d point) {
@@ -38,5 +47,13 @@ public class PointConverters {
 
     public Vector2d toPoint2d(int index, int w, int h) {
         return ndFactory.vector2d(index % w, index / w);
+    }
+
+    public Matrix3d mapToMatrix3d(Mat opencvMat) {
+        Preconditions.equals(CvType.CV_64F, opencvMat.type());
+        var segment =
+                MemorySegment.ofAddress(opencvMat.dataAddr())
+                        .reinterpret(opencvMat.total() * Double.BYTES);
+        return new Matrix3d(segment.asByteBuffer().order(ByteOrder.nativeOrder()).asDoubleBuffer());
     }
 }

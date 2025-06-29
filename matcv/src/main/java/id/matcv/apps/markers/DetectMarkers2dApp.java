@@ -41,7 +41,7 @@ public class DetectMarkers2dApp {
     private static void usage() {
         System.out.println(
                 """
-Detects all markers present on the images. Markers are highlighted and their location is printed to console.
+Detects all markers present on the images. Markers are highlighted with a vector pointing from the center of the marker to the center of the line between p1, p2 corners. Additionally, markers location is printed to the console.
 
 Arguments: <INPUT_PATH> [-cameraInfo=<CAMERA_INFO>]
 

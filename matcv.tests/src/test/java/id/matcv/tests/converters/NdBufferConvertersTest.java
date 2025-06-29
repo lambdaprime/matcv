@@ -15,17 +15,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package id.matcv.tests;
+package id.matcv.tests.converters;
 
-import id.matcv.converters.PointConverters;
+import id.matcv.converters.NdBufferConverters;
 import id.ndbuffers.matrix.Vector2d;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class PointConvertersTest {
+/**
+ * @author lambdaprime intid@protonmail.com
+ */
+public class NdBufferConvertersTest {
     @Test
     public void test() {
-        var converters = new PointConverters();
+        var converters = new NdBufferConverters();
         Assertions.assertEquals(207483, converters.toIndex(new Vector2d(123, 324), 640, 480));
         Assertions.assertEquals(
                 """
