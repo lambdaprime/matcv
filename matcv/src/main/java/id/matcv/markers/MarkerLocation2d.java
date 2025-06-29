@@ -18,6 +18,7 @@
 package id.matcv.markers;
 
 import id.matcv.converters.MatConverters;
+import id.ndbuffers.matrix.MatrixN2d;
 import id.ndbuffers.matrix.Vector2d;
 import id.xfunction.Preconditions;
 import id.xfunction.XJsonStringBuilder;
@@ -33,30 +34,43 @@ import org.opencv.core.MatOfPoint2f;
  *
  * @author lambdaprime intid@protonmail.com
  */
-public record MarkerLocation2d(
-        Marker marker,
-        Vector2d center,
-        Vector2d p1,
-        Vector2d p2,
-        Vector2d p3,
-        Vector2d p4,
-        double heightPixels,
-        double widthPixels,
-        MatOfPoint2f corners,
-        Vector2d vector,
-        Optional<Path> imageFile) {
+public class MarkerLocation2d {
     private static final MatConverters converters = new MatConverters();
+    private Marker marker;
+    private MatrixN2d data;
+    private double heightPixels;
+    private double widthPixels;
+    private MatOfPoint2f corners;
+    private Vector2d vector;
+    private Optional<Path> imageFile;
 
-    public MarkerLocation2d {
-        Preconditions.equals(4, corners.size(0));
-    }
-
-    MarkerLocation2d(
+    public MarkerLocation2d(
+            Marker marker,
+            Vector2d center,
             Vector2d p1,
             Vector2d p2,
             Vector2d p3,
             Vector2d p4,
+            double heightPixels,
+            double widthPixels,
+            MatOfPoint2f corners,
+            Vector2d vector,
+            Optional<Path> imageFile) {
+        this.marker = marker;
+        this.data = new MatrixN2d(center, p1, p2, p3, p4);
+        this.corners = corners;
+        this.heightPixels = heightPixels;
+        this.widthPixels = widthPixels;
+        this.vector = vector;
+        this.imageFile = imageFile;
+    }
+
+    MarkerLocation2d(
             Vector2d center,
+            Vector2d p1,
+            Vector2d p2,
+            Vector2d p3,
+            Vector2d p4,
             double heightPixels,
             double widthPixels,
             Mat corners,
@@ -74,6 +88,39 @@ public record MarkerLocation2d(
                 new MatOfPoint2f(corners.reshape(2, 4)),
                 vector,
                 Optional.empty());
+        Preconditions.equals(4, this.corners.size(0));
+    }
+
+    public Marker marker() {
+        return marker;
+    }
+
+    public Vector2d center() {
+        return data.getVectorView(0);
+    }
+
+    public Vector2d p1() {
+        return data.getVectorView(1);
+    }
+
+    public Vector2d p2() {
+        return data.getVectorView(2);
+    }
+
+    public Vector2d p3() {
+        return data.getVectorView(3);
+    }
+
+    public Vector2d p4() {
+        return data.getVectorView(4);
+    }
+
+    public Vector2d vector() {
+        return vector;
+    }
+
+    public MatrixN2d getData() {
+        return data;
     }
 
     /** Height of the marker in pixels */
@@ -91,20 +138,20 @@ public record MarkerLocation2d(
         return corners;
     }
 
-    /** Center point (first) + all corners */
+    /** Center point (first) + all corners in the clockwise order of the marker corners */
     public List<Vector2d> points() {
-        return List.of(center, p1, p2, p3, p4);
+        return List.of(center(), p1(), p2(), p3(), p4());
     }
 
     @Override
     public String toString() {
         XJsonStringBuilder builder = new XJsonStringBuilder(this);
         builder.append("marker", marker);
-        builder.append("center", center);
-        builder.append("p1", p1);
-        builder.append("p2", p2);
-        builder.append("p3", p3);
-        builder.append("p4", p4);
+        builder.append("center", center());
+        builder.append("p1", p1());
+        builder.append("p2", p2());
+        builder.append("p3", p3());
+        builder.append("p4", p4());
         builder.append("heightPixels", heightPixels);
         builder.append("widthPixels", widthPixels);
         builder.append("vector", vector);
@@ -115,7 +162,7 @@ public record MarkerLocation2d(
     /** Concatenates {@link #corners()} + {@link #center()} */
     public MatOfPoint2f copyPointsToMatOfPoint2f() {
         var points = new MatOfPoint2f();
-        Core.vconcat(List.of(corners, converters.copyToMat32F(center)), points);
+        Core.vconcat(List.of(corners, converters.copyToMat32F(center())), points);
         return points;
     }
 }

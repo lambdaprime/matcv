@@ -76,7 +76,7 @@ public class MarkerLocation3d {
         return data;
     }
 
-    /** Center point (first) + all corners */
+    /** Center point (first) + all corners in the clockwise order of the marker corners */
     public List<Vector3d> points() {
         return List.of(center(), p1(), p2(), p3(), p4());
     }
