@@ -79,7 +79,7 @@ public class MatConverters {
      * of some other types which extend {@link Mat}. To deal with this you may need to use either
      * cast operation or this method.
      */
-    public List<Mat> toListOfMat(List<? extends Mat> list) {
+    public List<Mat> mapToListOfMat(List<? extends Mat> list) {
         return (List<Mat>) list;
     }
 

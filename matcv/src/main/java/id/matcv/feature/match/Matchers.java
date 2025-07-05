@@ -77,10 +77,10 @@ public class Matchers {
         // and concats then to single matrix
         // [1, 1,
         //  2, 2]
-        Core.vconcat(converters.toListOfMat(queryDescriptors), querySet);
+        Core.vconcat(converters.mapToListOfMat(queryDescriptors), querySet);
 
         var trainSet = new Mat();
-        Core.vconcat(converters.toListOfMat(trainDescriptors), trainSet);
+        Core.vconcat(converters.mapToListOfMat(trainDescriptors), trainSet);
 
         var matches = func.match(querySet, trainSet);
 
