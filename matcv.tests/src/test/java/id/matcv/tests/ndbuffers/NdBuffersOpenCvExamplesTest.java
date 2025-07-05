@@ -30,7 +30,7 @@ import org.opencv.core.Mat;
 /**
  * @author lambdaprime intid@protonmail.com
  */
-public class NdBuffersExamplesTest extends OpenCvTest {
+public class NdBuffersOpenCvExamplesTest extends OpenCvTest {
     private static final NdBuffersJsonUtils jsonUtils = new NdBuffersJsonUtils();
 
     @Test
