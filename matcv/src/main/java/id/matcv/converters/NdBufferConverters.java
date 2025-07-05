@@ -17,7 +17,9 @@
  */
 package id.matcv.converters;
 
+import id.ndbuffers.DoubleNdBuffer;
 import id.ndbuffers.NdBuffersFactory;
+import id.ndbuffers.Shape;
 import id.ndbuffers.matrix.Matrix3d;
 import id.ndbuffers.matrix.Vector2d;
 import id.xfunction.Preconditions;
@@ -55,5 +57,14 @@ public class NdBufferConverters {
                 MemorySegment.ofAddress(opencvMat.dataAddr())
                         .reinterpret(opencvMat.total() * Double.BYTES);
         return new Matrix3d(segment.asByteBuffer().order(ByteOrder.nativeOrder()).asDoubleBuffer());
+    }
+
+    public DoubleNdBuffer mapToNdBuffer(Mat opencvMat, int... shape) {
+        var segment =
+                MemorySegment.ofAddress(opencvMat.dataAddr())
+                        .reinterpret(opencvMat.total() * opencvMat.channels() * Double.BYTES);
+        return ndFactory.ndBuffer(
+                new Shape(shape),
+                segment.asByteBuffer().order(ByteOrder.nativeOrder()).asDoubleBuffer());
     }
 }
