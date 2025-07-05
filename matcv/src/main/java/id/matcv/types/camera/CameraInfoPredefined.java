@@ -20,13 +20,11 @@ package id.matcv.types.camera;
 public enum CameraInfoPredefined {
     REALSENSE_D435i_1280_720(
             new CameraInfo(
-                    CameraIntrinsicsPredefined.REALSENSE_D435i_1280_720.getCameraIntrinsics()
-                            .cameraMatrix())),
+                    CameraIntrinsicsPredefined.REALSENSE_D435i_1280_720.getCameraIntrinsics())),
 
     REALSENSE_D435i_640_480(
             new CameraInfo(
-                    CameraIntrinsicsPredefined.REALSENSE_D435i_640_480.getCameraIntrinsics()
-                            .cameraMatrix())),
+                    CameraIntrinsicsPredefined.REALSENSE_D435i_640_480.getCameraIntrinsics())),
 
     /**
      * Default camera in <a href="https://www.blender.org/">Blender</a>
@@ -37,9 +35,7 @@ public enum CameraInfoPredefined {
      */
     BLENDER_DEFAULT_1280_720(
             new CameraInfo(
-                    CameraIntrinsicsPredefined.BLENDER_DEFAULT_1280_720
-                            .getCameraIntrinsics()
-                            .cameraMatrix()));
+                    CameraIntrinsicsPredefined.BLENDER_DEFAULT_1280_720.getCameraIntrinsics()));
 
     private CameraInfo cameraInfo;
 

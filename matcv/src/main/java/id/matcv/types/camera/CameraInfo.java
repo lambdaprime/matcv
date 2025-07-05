@@ -26,7 +26,7 @@ import id.ndbuffers.matrix.MatrixNd;
  * @author lambdaprime intid@protonmail.com
  */
 public record CameraInfo(
-        CameraMatrix cameraMatrix,
+        CameraIntrinsics cameraIntrinsics,
         MatrixNd distortionCoefficients,
         MatrixNd rectificationMatrix,
         MatrixNd projectionMatrix) {
@@ -43,7 +43,7 @@ public record CameraInfo(
                         0, 0, 1
                     });
 
-    public CameraInfo(CameraMatrix cameraMatrix) {
-        this(cameraMatrix, DEFAULT_DISTORTION, DEFAULT_RECTIFICATION, null);
+    public CameraInfo(CameraIntrinsics cameraIntrinsics) {
+        this(cameraIntrinsics, DEFAULT_DISTORTION, DEFAULT_RECTIFICATION, null);
     }
 }

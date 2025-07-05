@@ -48,7 +48,7 @@ public class CameraPoseEstimator {
     private MatOfDouble distortionMat;
 
     public CameraPoseEstimator(CameraInfo cameraInfo) {
-        cameraMat = converters.toMat64F(cameraInfo.cameraMatrix());
+        cameraMat = converters.toMat64F(cameraInfo.cameraIntrinsics().cameraMatrix());
         distortionMat = converters.toMatOfDouble(cameraInfo.distortionCoefficients());
     }
 

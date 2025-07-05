@@ -81,7 +81,7 @@ public class Marker2dUtils {
     /** Correct distortion of marker points with respect to given camera intrinsics */
     public List<MarkerLocation2d> undistort(
             Mat image, List<MarkerLocation2d> markers, CameraInfo cameraInfo) {
-        var cameraMat = converters.toMat64F(cameraInfo.cameraMatrix());
+        var cameraMat = converters.toMat64F(cameraInfo.cameraIntrinsics().cameraMatrix());
         var distortionMat = converters.toMatOfDouble(cameraInfo.distortionCoefficients());
         matUtils.debugMat("cameraMat", cameraMat);
         matUtils.debugMat("distortionMat", distortionMat);
