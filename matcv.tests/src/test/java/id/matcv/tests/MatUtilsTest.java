@@ -29,7 +29,7 @@ import org.opencv.core.Size;
 /**
  * @author lambdaprime intid@protonmail.com
  */
-public class MatUtilsTest extends OpencvTest {
+public class MatUtilsTest extends OpenCvTest {
 
     private MatUtils utils = new MatUtils();
 

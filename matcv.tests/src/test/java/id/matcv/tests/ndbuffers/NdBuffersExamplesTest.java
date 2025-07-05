@@ -17,7 +17,7 @@
  */
 package id.matcv.tests.ndbuffers;
 
-import id.matcv.tests.OpencvTest;
+import id.matcv.tests.OpenCvTest;
 import id.ndbuffers.NdBuffersJsonUtils;
 import id.ndbuffers.matrix.Matrix4d;
 import java.lang.foreign.MemorySegment;
@@ -30,7 +30,7 @@ import org.opencv.core.Mat;
 /**
  * @author lambdaprime intid@protonmail.com
  */
-public class NdBuffersExamplesTest extends OpencvTest {
+public class NdBuffersExamplesTest extends OpenCvTest {
     private static final NdBuffersJsonUtils jsonUtils = new NdBuffersJsonUtils();
 
     @Test

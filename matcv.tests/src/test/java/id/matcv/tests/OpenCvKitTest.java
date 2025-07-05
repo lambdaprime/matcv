@@ -33,7 +33,7 @@ import org.opencv.core.Scalar;
 /**
  * @author lambdaprime intid@protonmail.com
  */
-public class OpenCvKitTest extends OpencvTest {
+public class OpenCvKitTest extends OpenCvTest {
     private static final ResourceUtils utils = new ResourceUtils();
     private OpenCvKit openCvKit = new OpenCvKit();
 

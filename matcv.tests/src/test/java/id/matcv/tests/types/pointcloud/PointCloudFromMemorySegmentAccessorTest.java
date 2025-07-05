@@ -18,7 +18,7 @@
 package id.matcv.tests.types.pointcloud;
 
 import id.matcv.MatUtils;
-import id.matcv.tests.OpencvTest;
+import id.matcv.tests.OpenCvTest;
 import id.matcv.types.camera.CameraIntrinsicsPredefined;
 import id.matcv.types.pointcloud.PointCloudFromMemorySegmentAccessor;
 import java.lang.foreign.MemorySegment;
@@ -28,7 +28,7 @@ import org.junit.jupiter.api.Test;
 import org.opencv.core.Mat;
 import org.opencv.imgcodecs.Imgcodecs;
 
-public class PointCloudFromMemorySegmentAccessorTest extends OpencvTest {
+public class PointCloudFromMemorySegmentAccessorTest extends OpenCvTest {
 
     private static final MatUtils utils = new MatUtils();
 

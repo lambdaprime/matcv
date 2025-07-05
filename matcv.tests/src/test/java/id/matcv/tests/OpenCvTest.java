@@ -22,7 +22,7 @@ import org.opencv.core.Core;
 /**
  * @author lambdaprime intid@protonmail.com
  */
-public class OpencvTest {
+public class OpenCvTest {
     static {
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
     }

@@ -27,7 +27,7 @@ import org.opencv.core.MatOfInt;
 /**
  * @author lambdaprime intid@protonmail.com
  */
-public class MatConvertersTest extends OpencvTest {
+public class MatConvertersTest extends OpenCvTest {
 
     private MatConverters converters = new MatConverters();
 

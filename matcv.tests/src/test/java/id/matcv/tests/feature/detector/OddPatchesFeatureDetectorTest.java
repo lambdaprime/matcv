@@ -20,11 +20,11 @@ package id.matcv.tests.feature.detector;
 import id.matcv.MatUtils;
 import id.matcv.SubmatrixDetector;
 import id.matcv.feature.detector.OddPatchesFeatureDetector;
-import id.matcv.tests.OpencvTest;
+import id.matcv.tests.OpenCvTest;
 import java.io.IOException;
 import org.opencv.highgui.HighGui;
 
-public class OddPatchesFeatureDetectorTest extends OpencvTest {
+public class OddPatchesFeatureDetectorTest extends OpenCvTest {
 
     // @Test
     public void demo() throws IOException {

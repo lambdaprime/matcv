@@ -19,7 +19,7 @@ package id.matcv.tests.markers;
 
 import id.matcv.MatUtils;
 import id.matcv.markers.MarkerDetector3d;
-import id.matcv.tests.OpencvTest;
+import id.matcv.tests.OpenCvTest;
 import id.matcv.types.camera.CameraIntrinsicsPredefined;
 import id.matcv.types.datatables.DataTable2;
 import id.matcv.types.pointcloud.PointCloudFromMemorySegmentAccessor;
@@ -32,7 +32,7 @@ import org.opencv.core.Mat;
 import org.opencv.core.Rect;
 import org.opencv.imgcodecs.Imgcodecs;
 
-public class MarkerDetector3dTest extends OpencvTest {
+public class MarkerDetector3dTest extends OpenCvTest {
 
     private static final MatUtils utils = new MatUtils();
 

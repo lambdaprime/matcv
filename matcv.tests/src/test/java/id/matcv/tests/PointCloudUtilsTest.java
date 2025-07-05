@@ -23,7 +23,7 @@ import java.nio.file.Paths;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class PointCloudUtilsTest extends OpencvTest {
+public class PointCloudUtilsTest extends OpenCvTest {
     @Test
     public void test() {
         var pc =
