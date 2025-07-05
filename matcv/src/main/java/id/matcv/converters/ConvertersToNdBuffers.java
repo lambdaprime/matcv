@@ -27,25 +27,12 @@ import java.lang.foreign.MemorySegment;
 import java.nio.ByteOrder;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
-import org.opencv.core.Point;
 
 /**
  * @author lambdaprime intid@protonmail.com
  */
-public class NdBufferConverters {
+public class ConvertersToNdBuffers {
     private static final NdBuffersFactory ndFactory = new NdBuffersFactory();
-
-    public Point toOpenCv(Vector2d point) {
-        return toOpenCv(point, 0, 0);
-    }
-
-    public Point toOpenCv(Vector2d point, int offsetX, int offsetY) {
-        return new Point(point.getX() + offsetX, point.getY() + offsetY);
-    }
-
-    public int toIndex(Vector2d p, int w, int h) {
-        return (int) p.getY() * w + (int) p.getX();
-    }
 
     public Vector2d toPoint2d(int index, int w, int h) {
         return ndFactory.vector2d(index % w, index / w);
@@ -66,5 +53,9 @@ public class NdBufferConverters {
         return ndFactory.ndBuffer(
                 new Shape(shape),
                 segment.asByteBuffer().order(ByteOrder.nativeOrder()).asDoubleBuffer());
+    }
+
+    public int toIndex(Vector2d p, int w, int h) {
+        return (int) p.getY() * w + (int) p.getX();
     }
 }

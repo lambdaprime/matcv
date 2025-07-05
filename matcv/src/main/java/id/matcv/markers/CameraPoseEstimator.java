@@ -18,8 +18,8 @@
 package id.matcv.markers;
 
 import id.matcv.MatUtils;
-import id.matcv.converters.MatConverters;
-import id.matcv.converters.NdBufferConverters;
+import id.matcv.converters.ConvertersToNdBuffers;
+import id.matcv.converters.ConvertersToOpenCv;
 import id.matcv.types.camera.CameraInfo;
 import id.ndbuffers.NdBuffersFactory;
 import id.ndbuffers.matrix.Matrix4d;
@@ -42,8 +42,8 @@ public class CameraPoseEstimator {
 
     private NdBuffersFactory ndFactory = new NdBuffersFactory();
     private MatUtils matUtils = new MatUtils();
-    private MatConverters converters = new MatConverters();
-    private NdBufferConverters ndConverters = new NdBufferConverters();
+    private ConvertersToOpenCv converters = new ConvertersToOpenCv();
+    private ConvertersToNdBuffers ndConverters = new ConvertersToNdBuffers();
     private Mat cameraMat;
     private MatOfDouble distortionMat;
 

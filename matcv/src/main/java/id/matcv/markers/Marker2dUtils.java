@@ -19,8 +19,7 @@ package id.matcv.markers;
 
 import id.matcv.MatUtils;
 import id.matcv.RgbColors;
-import id.matcv.converters.MatConverters;
-import id.matcv.converters.NdBufferConverters;
+import id.matcv.converters.ConvertersToOpenCv;
 import id.matcv.types.camera.CameraInfo;
 import id.xfunction.Preconditions;
 import java.util.ArrayList;
@@ -35,8 +34,7 @@ import org.opencv.imgproc.Imgproc;
  */
 public class Marker2dUtils {
 
-    private static final NdBufferConverters ndConverters = new NdBufferConverters();
-    private static final MatConverters converters = new MatConverters();
+    private static final ConvertersToOpenCv converters = new ConvertersToOpenCv();
     private static final MatUtils matUtils = new MatUtils();
 
     /** Highlight marker on the image */
@@ -59,7 +57,7 @@ public class Marker2dUtils {
         Imgproc.putText(
                 image,
                 markerLocation.marker().toString(),
-                ndConverters.toOpenCv(markerLocation.center(), 15, 10),
+                converters.toPoint(markerLocation.center(), 15, 10),
                 Imgproc.FONT_HERSHEY_PLAIN,
                 1.,
                 new Scalar(0, 255, 0),
@@ -67,14 +65,14 @@ public class Marker2dUtils {
     }
 
     private void drawCenter(Mat img, MarkerLocation2d loc) {
-        Imgproc.circle(img, ndConverters.toOpenCv(loc.center()), 4, new Scalar(0, 255, 0), 3);
+        Imgproc.circle(img, converters.toPoint(loc.center()), 4, new Scalar(0, 255, 0), 3);
     }
 
     private void drawLine(Mat img, MarkerLocation2d loc) {
         Imgproc.line(
                 img,
-                ndConverters.toOpenCv(loc.center()),
-                ndConverters.toOpenCv(loc.vector().add(loc.center())),
+                converters.toPoint(loc.center()),
+                converters.toPoint(loc.vector().add(loc.center())),
                 new Scalar(0, 255, 0));
     }
 

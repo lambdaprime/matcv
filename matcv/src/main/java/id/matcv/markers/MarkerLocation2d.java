@@ -17,7 +17,7 @@
  */
 package id.matcv.markers;
 
-import id.matcv.converters.MatConverters;
+import id.matcv.converters.ConvertersToOpenCv;
 import id.mathcat.LineUtils;
 import id.ndbuffers.matrix.MatrixN2d;
 import id.ndbuffers.matrix.Vector2d;
@@ -36,7 +36,7 @@ import org.opencv.core.MatOfPoint2f;
  * @author lambdaprime intid@protonmail.com
  */
 public class MarkerLocation2d extends AbstractMarkerLocation {
-    private static final MatConverters converters = new MatConverters();
+    private static final ConvertersToOpenCv converters = new ConvertersToOpenCv();
     private MatrixN2d data;
     private double heightPixels;
     private double widthPixels;

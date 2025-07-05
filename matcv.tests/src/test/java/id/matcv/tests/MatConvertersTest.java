@@ -17,7 +17,7 @@
  */
 package id.matcv.tests;
 
-import id.matcv.converters.MatConverters;
+import id.matcv.converters.ConvertersToOpenCv;
 import id.xfunction.XByte;
 import java.util.Arrays;
 import org.junit.jupiter.api.Assertions;
@@ -29,7 +29,7 @@ import org.opencv.core.MatOfInt;
  */
 public class MatConvertersTest extends OpenCvTest {
 
-    private MatConverters converters = new MatConverters();
+    private ConvertersToOpenCv converters = new ConvertersToOpenCv();
 
     @Test
     public void test_asMat() {

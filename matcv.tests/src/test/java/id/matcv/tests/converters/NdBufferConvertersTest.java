@@ -17,7 +17,7 @@
  */
 package id.matcv.tests.converters;
 
-import id.matcv.converters.NdBufferConverters;
+import id.matcv.converters.ConvertersToNdBuffers;
 import id.ndbuffers.matrix.Vector2d;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -28,7 +28,7 @@ import org.junit.jupiter.api.Test;
 public class NdBufferConvertersTest {
     @Test
     public void test() {
-        var converters = new NdBufferConverters();
+        var converters = new ConvertersToNdBuffers();
         Assertions.assertEquals(207483, converters.toIndex(new Vector2d(123, 324), 640, 480));
         Assertions.assertEquals(
                 """

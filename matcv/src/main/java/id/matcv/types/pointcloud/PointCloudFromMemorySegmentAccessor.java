@@ -17,7 +17,7 @@
  */
 package id.matcv.types.pointcloud;
 
-import id.matcv.converters.NdBufferConverters;
+import id.matcv.converters.ConvertersToNdBuffers;
 import id.matcv.types.camera.CameraIntrinsics;
 import id.matcv.types.camera.CameraMatrix;
 import id.ndbuffers.matrix.Vector3d;
@@ -39,7 +39,7 @@ import java.lang.foreign.ValueLayout;
  */
 public class PointCloudFromMemorySegmentAccessor implements PointCloud {
 
-    private NdBufferConverters converters = new NdBufferConverters();
+    private ConvertersToNdBuffers converters = new ConvertersToNdBuffers();
     private MemorySegment segment;
     private CameraIntrinsics cameraIntrinsics;
     private CameraMatrix cameraMatrix;

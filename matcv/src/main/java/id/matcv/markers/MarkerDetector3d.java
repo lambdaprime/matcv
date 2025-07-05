@@ -18,7 +18,7 @@
 package id.matcv.markers;
 
 import id.matcv.OpenCvKit;
-import id.matcv.converters.NdBufferConverters;
+import id.matcv.converters.ConvertersToNdBuffers;
 import id.matcv.types.FileMat;
 import id.matcv.types.KeyPoints3dTable;
 import id.matcv.types.camera.CameraInfo;
@@ -40,7 +40,7 @@ import org.opencv.imgcodecs.Imgcodecs;
  */
 public class MarkerDetector3d {
     private static final XLogger LOGGER = XLogger.getLogger(MarkerDetector3d.class);
-    private NdBufferConverters converters = new NdBufferConverters();
+    private ConvertersToNdBuffers converters = new ConvertersToNdBuffers();
     private Marker2dUtils markerUtils = new Marker2dUtils();
     private Marker3dUtils marker3dUtils = new Marker3dUtils();
     private OpenCvKit cvKit = new OpenCvKit();

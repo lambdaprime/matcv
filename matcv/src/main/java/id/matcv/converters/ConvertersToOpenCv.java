@@ -27,6 +27,7 @@ import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfDouble;
 import org.opencv.core.MatOfPoint2f;
+import org.opencv.core.Point;
 import org.opencv.utils.Converters;
 
 /**
@@ -34,9 +35,7 @@ import org.opencv.utils.Converters;
  *
  * @author lambdaprime intid@protonmail.com
  */
-public class MatConverters {
-    private static final NdBufferConverters pointConverters = new NdBufferConverters();
-
+public class ConvertersToOpenCv {
     /** Create new CV_8U matrix */
     public Mat copyToMat(byte... values) {
         var mat = new Mat(1, values.length, CvType.CV_8U);
@@ -54,23 +53,8 @@ public class MatConverters {
         return r.reshape(1, new int[] {rows, cols});
     }
 
-    /**
-     * Input matrix should be continuous vector with 1 or 2 channels ({@link CvType#CV_32S}, {@link
-     * CvType#CV_32SC2})
-     */
-    public int[] copyToIntArray(Mat matrix) {
-        Preconditions.isTrue(matrix.isContinuous(), "Non continous matrix");
-        var type = matrix.type();
-        Preconditions.isTrue(
-                type == CvType.CV_32S || type == CvType.CV_32SC2, "Incompatible matrix type");
-        Preconditions.equals(2, matrix.dims(), "Incompatible matrix dimension");
-        var buf = new int[matrix.channels() * matrix.size(0)];
-        matrix.get(0, 0, buf);
-        return buf;
-    }
-
     public Mat copyToMat32F(Vector2d v) {
-        return new MatOfPoint2f(pointConverters.toOpenCv(v));
+        return new MatOfPoint2f(toPoint(v));
     }
 
     /**
@@ -97,5 +81,28 @@ public class MatConverters {
      */
     public MatOfDouble toMatOfDouble(MatrixNd mx) {
         return new MatOfDouble(mx.duplicate().array());
+    }
+
+    public Point toPoint(Vector2d point) {
+        return toPoint(point, 0, 0);
+    }
+
+    public Point toPoint(Vector2d point, int offsetX, int offsetY) {
+        return new Point(point.getX() + offsetX, point.getY() + offsetY);
+    }
+
+    /**
+     * Input matrix should be continuous vector with 1 or 2 channels ({@link CvType#CV_32S}, {@link
+     * CvType#CV_32SC2})
+     */
+    public int[] copyToIntArray(Mat matrix) {
+        Preconditions.isTrue(matrix.isContinuous(), "Non continous matrix");
+        var type = matrix.type();
+        Preconditions.isTrue(
+                type == CvType.CV_32S || type == CvType.CV_32SC2, "Incompatible matrix type");
+        Preconditions.equals(2, matrix.dims(), "Incompatible matrix dimension");
+        var buf = new int[matrix.channels() * matrix.size(0)];
+        matrix.get(0, 0, buf);
+        return buf;
     }
 }

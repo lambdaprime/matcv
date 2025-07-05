@@ -18,7 +18,7 @@
 package id.matcv.markers;
 
 import id.matcv.MatUtils;
-import id.matcv.converters.MatConverters;
+import id.matcv.converters.ConvertersToOpenCv;
 import id.matcv.types.FileMat;
 import id.matcv.types.camera.CameraInfo;
 import id.xfunction.XJsonStringBuilder;
@@ -44,7 +44,7 @@ import org.opencv.core.MatOfPoint2f;
 public class MarkerDetector2d {
     private static final XLogger LOGGER = XLogger.getLogger(MarkerDetector2d.class);
     private static final MatUtils matUtils = new MatUtils();
-    private static final MatConverters converters = new MatConverters();
+    private static final ConvertersToOpenCv converters = new ConvertersToOpenCv();
 
     public record Result(
             Mat img,

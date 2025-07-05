@@ -17,7 +17,7 @@
  */
 package id.matcv.feature.match;
 
-import id.matcv.converters.MatConverters;
+import id.matcv.converters.ConvertersToOpenCv;
 import id.matcv.types.FileMat;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -30,7 +30,7 @@ import org.opencv.features2d.FlannBasedMatcher;
 
 public class Matchers {
 
-    private MatConverters converters = new MatConverters();
+    private ConvertersToOpenCv converters = new ConvertersToOpenCv();
 
     @FunctionalInterface
     private interface MatchFunc {
