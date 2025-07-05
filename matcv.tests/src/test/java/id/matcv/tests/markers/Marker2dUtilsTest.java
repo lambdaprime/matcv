@@ -88,7 +88,12 @@ public class Marker2dUtilsTest extends OpenCvTest {
                  "widthPixels": 68.249542123,\
                  "vector": { "x": -34.75, "y": 7.75 } }]""",
                 markers.toString());
-        var undistorted = new Marker2dUtils().undistort(img, markers, CameraInfoPredefined.REALSENSE_D435i_640_480.getCameraInfo());
+        var undistorted =
+                new Marker2dUtils()
+                        .undistort(
+                                img,
+                                markers,
+                                CameraInfoPredefined.REALSENSE_D435i_640_480.getCameraInfo());
         assertEquals(
                 """
                 [{\

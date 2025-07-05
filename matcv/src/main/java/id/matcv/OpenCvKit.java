@@ -19,16 +19,19 @@ package id.matcv;
 
 import id.matcv.accessors.FloatMatrixAccessor;
 import id.matcv.accessors.Vector2DMatrixAccessor;
+import id.matcv.types.FileMat;
 import id.ndbuffers.matrix.Vector2d;
 import id.xfunction.Preconditions;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.function.Function;
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
 import org.opencv.core.Scalar;
+import org.opencv.highgui.HighGui;
 import org.opencv.imgproc.Imgproc;
 
 /**
@@ -171,5 +174,21 @@ public class OpenCvKit {
             out.add(new Point(sumCols / sumWeights, sumRows / sumWeights));
         }
         return out;
+    }
+
+    /**
+     * Display image on the screen
+     *
+     * @param waitKey block the execution until user press any key
+     */
+    public void show(Mat img, boolean waitKey) {
+        Function<Mat, String> titleExtractor =
+                mat ->
+                        switch (mat) {
+                            case FileMat fmat -> fmat.getFile().getFileName().toString();
+                            default -> "";
+                        };
+        HighGui.imshow(titleExtractor.apply(img), img);
+        if (waitKey) HighGui.waitKey();
     }
 }

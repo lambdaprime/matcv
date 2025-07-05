@@ -17,6 +17,7 @@
  */
 package id.matcv.markers;
 
+import id.matcv.OpenCvKit;
 import id.matcv.converters.NdBufferConverters;
 import id.matcv.types.FileMat;
 import id.matcv.types.KeyPoints3dTable;
@@ -31,9 +32,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
-import java.util.function.Function;
 import org.opencv.core.Mat;
-import org.opencv.highgui.HighGui;
 import org.opencv.imgcodecs.Imgcodecs;
 
 /**
@@ -44,6 +43,7 @@ public class MarkerDetector3d {
     private NdBufferConverters converters = new NdBufferConverters();
     private Marker2dUtils markerUtils = new Marker2dUtils();
     private Marker3dUtils marker3dUtils = new Marker3dUtils();
+    private OpenCvKit cvKit = new OpenCvKit();
     private CameraIntrinsics intrinsics;
     private boolean showDetectedMarkers;
 
@@ -149,19 +149,12 @@ public class MarkerDetector3d {
     private List<MarkerDetector2d.Result> runArucoMarkersDetector(
             List<? extends Mat> rgbImages, boolean showDetectedMarkers) {
         List<MarkerDetector2d.Result> results = new ArrayList<MarkerDetector2d.Result>();
-        Function<Mat, String> titleExtractor =
-                mat ->
-                        switch (mat) {
-                            case FileMat fmat -> fmat.getFile().getFileName().toString();
-                            default -> "";
-                        };
         for (var img : rgbImages) {
             var result = new MarkerDetector2d().detect(img);
             results.add(result);
             if (showDetectedMarkers) {
                 result.markersSortedByType().forEach(ml -> markerUtils.drawMarker(img, ml));
-                HighGui.imshow(titleExtractor.apply(img), img);
-                HighGui.waitKey();
+                cvKit.show(img, true);
             }
         }
         return results;
