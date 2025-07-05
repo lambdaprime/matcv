@@ -29,6 +29,7 @@ import id.jrealsense.filters.SpatialFilter;
 import id.jrealsense.frames.DepthFrame;
 import id.jrealsense.frames.Frame;
 import id.jrealsense.utils.FrameUtils;
+import id.matcv.types.camera.CameraInfoPredefined;
 import id.matcv.types.camera.CameraIntrinsics;
 import id.matcv.types.camera.CameraIntrinsicsPredefined;
 import id.xfunction.lang.XThread;
@@ -193,15 +194,15 @@ public class RealSenseCamera extends IdempotentService {
     public static void main(String[] args) throws IOException {
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
         XLogger.load("logging-matcv-debug.properties");
-        var intrinsics = CameraIntrinsicsPredefined.REALSENSE_D435i_640_480.getCameraIntrinsics();
+        var cameraInfo = CameraInfoPredefined.REALSENSE_D435i_640_480.getCameraInfo();
         try (var camera = new RealSenseCamera()) {
             camera.withFrameConsumers(
                             List.of(
                                     new RgbdToMarker3dTransformer(
-                                            intrinsics,
+                                            cameraInfo,
                                             markers ->
                                                     LOGGER.info("Markers detected: {0}", markers))))
-                    .withCameraIntrinsics(intrinsics)
+                    .withCameraIntrinsics(cameraInfo.cameraIntrinsics())
                     .withShowFrames(true)
                     .start();
             System.out.println("Press Enter to stop...");

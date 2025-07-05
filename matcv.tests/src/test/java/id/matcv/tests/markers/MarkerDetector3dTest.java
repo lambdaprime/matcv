@@ -20,7 +20,7 @@ package id.matcv.tests.markers;
 import id.matcv.MatUtils;
 import id.matcv.markers.MarkerDetector3d;
 import id.matcv.tests.OpenCvTest;
-import id.matcv.types.camera.CameraIntrinsicsPredefined;
+import id.matcv.types.camera.CameraInfoPredefined;
 import id.matcv.types.datatables.DataTable2;
 import id.matcv.types.pointcloud.PointCloudFromMemorySegmentAccessor;
 import java.lang.foreign.MemorySegment;
@@ -52,10 +52,12 @@ public class MarkerDetector3dTest extends OpenCvTest {
         utils.debugMat("depth", depth, new Rect(0, 0, 10, 10));
         var segment =
                 MemorySegment.ofAddress(depth.dataAddr()).reinterpret(depth.total() * Short.BYTES);
-        var intrinsics = CameraIntrinsicsPredefined.REALSENSE_D435i_640_480.getCameraIntrinsics();
-        var pc = new PointCloudFromMemorySegmentAccessor(segment, intrinsics, 1000);
+        var cameraInfo = CameraInfoPredefined.REALSENSE_D435i_640_480.getCameraInfo();
+        var pc =
+                new PointCloudFromMemorySegmentAccessor(
+                        segment, cameraInfo.cameraIntrinsics(), 1000);
         var markers =
-                new MarkerDetector3d(intrinsics)
+                new MarkerDetector3d(cameraInfo)
                         .detect(new DataTable2<>(List.of(rgb), List.of(pc)))
                         .col2();
         Assertions.assertEquals(

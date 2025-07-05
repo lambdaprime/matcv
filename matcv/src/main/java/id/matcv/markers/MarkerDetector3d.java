@@ -21,7 +21,7 @@ import id.matcv.OpenCvKit;
 import id.matcv.converters.NdBufferConverters;
 import id.matcv.types.FileMat;
 import id.matcv.types.KeyPoints3dTable;
-import id.matcv.types.camera.CameraIntrinsics;
+import id.matcv.types.camera.CameraInfo;
 import id.matcv.types.datatables.DataTable2;
 import id.matcv.types.pointcloud.PointCloud;
 import id.xfunction.Preconditions;
@@ -44,11 +44,17 @@ public class MarkerDetector3d {
     private Marker2dUtils markerUtils = new Marker2dUtils();
     private Marker3dUtils marker3dUtils = new Marker3dUtils();
     private OpenCvKit cvKit = new OpenCvKit();
-    private CameraIntrinsics intrinsics;
+    private CameraInfo cameraInfo;
     private boolean showDetectedMarkers;
+    private boolean isUndistortion;
 
-    public MarkerDetector3d(CameraIntrinsics intrinsics) {
-        this.intrinsics = intrinsics;
+    public MarkerDetector3d(CameraInfo cameraInfo) {
+        this.cameraInfo = cameraInfo;
+    }
+
+    public MarkerDetector3d withUndistortion() {
+        isUndistortion = true;
+        return this;
     }
 
     public MarkerDetector3d withShowDetectedMarkers(boolean enabled) {
@@ -76,8 +82,8 @@ public class MarkerDetector3d {
         List<MarkerDetector2d.Result> detectorResults2d =
                 runArucoMarkersDetector(inputTable.col1(), showDetectedMarkers);
         LOGGER.fine("detectorResults2d={0}", detectorResults2d);
-        var w = intrinsics.width();
-        var h = intrinsics.height();
+        var w = cameraInfo.cameraIntrinsics().width();
+        var h = cameraInfo.cameraIntrinsics().height();
         var col1 = new ArrayList<KeyPoints3dTable>();
         var col2 = new ArrayList<List<MarkerLocation3d>>();
         for (int i = 0; i < detectorResults2d.size(); i++) {
@@ -149,8 +155,10 @@ public class MarkerDetector3d {
     private List<MarkerDetector2d.Result> runArucoMarkersDetector(
             List<? extends Mat> rgbImages, boolean showDetectedMarkers) {
         List<MarkerDetector2d.Result> results = new ArrayList<MarkerDetector2d.Result>();
+        var detector = new MarkerDetector2d();
+        if (isUndistortion) detector = detector.withUndistortion(cameraInfo);
         for (var img : rgbImages) {
-            var result = new MarkerDetector2d().detect(img);
+            var result = detector.detect(img);
             results.add(result);
             if (showDetectedMarkers) {
                 result.markersSortedByType().forEach(ml -> markerUtils.drawMarker(img, ml));

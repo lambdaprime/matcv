@@ -20,7 +20,7 @@ package id.matcv.sensors.realsense;
 import id.matcv.markers.Marker;
 import id.matcv.markers.MarkerDetector3d;
 import id.matcv.markers.MarkerLocation3d;
-import id.matcv.types.camera.CameraIntrinsics;
+import id.matcv.types.camera.CameraInfo;
 import id.matcv.types.datatables.DataTable2;
 import id.matcv.types.pointcloud.PointCloudFromMemorySegmentAccessor;
 import java.lang.foreign.MemorySegment;
@@ -33,13 +33,19 @@ import java.util.function.Consumer;
  * @author lambdaprime intid@protonmail.com
  */
 public class RgbdToMarker3dTransformer implements Consumer<RgbdImage> {
-    private CameraIntrinsics intrinsics;
+    private CameraInfo cameraInfo;
     private Consumer<List<MarkerLocation3d>> consumer;
+    private boolean isUndistortion;
 
     public RgbdToMarker3dTransformer(
-            CameraIntrinsics intrinsics, Consumer<List<MarkerLocation3d>> consumer) {
-        this.intrinsics = intrinsics;
+            CameraInfo cameraInfo, Consumer<List<MarkerLocation3d>> consumer) {
+        this.cameraInfo = cameraInfo;
         this.consumer = consumer;
+    }
+
+    public RgbdToMarker3dTransformer withUndistortion() {
+        isUndistortion = true;
+        return this;
     }
 
     @Override
@@ -48,10 +54,13 @@ public class RgbdToMarker3dTransformer implements Consumer<RgbdImage> {
         var segment =
                 MemorySegment.ofAddress(depthMat.dataAddr())
                         .reinterpret(depthMat.total() * Short.BYTES);
-        var pc = new PointCloudFromMemorySegmentAccessor(segment, intrinsics, 1000.);
+        var pc =
+                new PointCloudFromMemorySegmentAccessor(
+                        segment, cameraInfo.cameraIntrinsics(), 1000.);
+        var detector = new MarkerDetector3d(cameraInfo);
+        if (isUndistortion) detector = detector.withUndistortion();
         var markers =
-                new MarkerDetector3d(intrinsics)
-                        .detect(new DataTable2<>(List.of(rgbd.colorMat()), List.of(pc)))
+                detector.detect(new DataTable2<>(List.of(rgbd.colorMat()), List.of(pc)))
                         .col2()
                         .get(0);
         if (markers.isEmpty()) return;

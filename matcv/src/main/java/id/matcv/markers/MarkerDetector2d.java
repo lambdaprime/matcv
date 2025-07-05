@@ -17,7 +17,10 @@
  */
 package id.matcv.markers;
 
+import id.matcv.MatUtils;
+import id.matcv.converters.MatConverters;
 import id.matcv.types.FileMat;
+import id.matcv.types.camera.CameraInfo;
 import id.xfunction.XJsonStringBuilder;
 import id.xfunction.logging.XLogger;
 import java.nio.file.Path;
@@ -30,6 +33,8 @@ import java.util.Optional;
 import org.opencv.aruco.Aruco;
 import org.opencv.aruco.Dictionary;
 import org.opencv.core.Mat;
+import org.opencv.core.MatOfDouble;
+import org.opencv.core.MatOfPoint2f;
 
 /**
  * Detect marked in 2d images
@@ -38,6 +43,8 @@ import org.opencv.core.Mat;
  */
 public class MarkerDetector2d {
     private static final XLogger LOGGER = XLogger.getLogger(MarkerDetector2d.class);
+    private static final MatUtils matUtils = new MatUtils();
+    private static final MatConverters converters = new MatConverters();
 
     public record Result(
             Mat img,
@@ -51,6 +58,17 @@ public class MarkerDetector2d {
             builder.append("origin", origin);
             return builder.toString();
         }
+    }
+
+    private record DistortionParams(Mat cameraMat, MatOfDouble distortionMat) {}
+
+    private Optional<DistortionParams> distortionParams = Optional.empty();
+
+    public MarkerDetector2d withUndistortion(CameraInfo cameraInfo) {
+        var cameraMat = converters.toMat64F(cameraInfo.cameraIntrinsics().cameraMatrix());
+        var distortionMat = converters.toMatOfDouble(cameraInfo.distortionCoefficients());
+        distortionParams = Optional.of(new DistortionParams(cameraMat, distortionMat));
+        return this;
     }
 
     /** Detect all {@link MarkerType} markers */
@@ -88,7 +106,18 @@ public class MarkerDetector2d {
                 continue;
             }
             if (!types.contains(type.get())) continue;
-            var mloc = MarkerLocation2d.create(new Marker(type.get()), detectedMarkers.get(i));
+            var marker = new Marker(type.get());
+            var corners = detectedMarkers.get(i);
+            distortionParams.ifPresent(
+                    params -> {
+                        var points2d = new MatOfPoint2f(corners.reshape(2, 4));
+                        matUtils.undistort(
+                                points2d,
+                                marker.create3dModel(),
+                                params.cameraMat,
+                                params.distortionMat);
+                    });
+            var mloc = MarkerLocation2d.create(marker, corners);
             markers.add(mloc);
             if (mloc.marker().isOrigin()) origin = Optional.of(markers.getLast());
         }
