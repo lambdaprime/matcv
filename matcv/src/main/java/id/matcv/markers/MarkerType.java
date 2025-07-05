@@ -22,6 +22,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import org.opencv.aruco.Aruco;
+import org.opencv.aruco.Dictionary;
 
 /**
  * All these markers are from the dictionary of 50 unique markers with 7x7 square bits on each. See
@@ -65,6 +66,11 @@ public enum MarkerType {
 
     public static int getDict() {
         return Aruco.DICT_7X7_50;
+    }
+
+    public static float getMarkerLengthInCm() {
+        Dictionary dictionary = Aruco.getPredefinedDictionary(MarkerType.getDict());
+        return dictionary.get_markerSize() / 100.F;
     }
 
     static {

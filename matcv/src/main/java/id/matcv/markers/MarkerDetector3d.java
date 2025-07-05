@@ -124,7 +124,7 @@ public class MarkerDetector3d {
                     LOGGER.fine("Marker {0} has hole in point p4 and will be ignored", mlt);
                     continue;
                 }
-                var loc = new MarkerLocation3d(ml.marker(), center, p1, p2, p3, p4);
+                var loc = new MarkerLocation3d(ml.marker(), center, p1, p2, p3, p4, ml.corners());
                 if (marker3dUtils.hasVaildPoints(loc)) locations.add(loc);
                 else LOGGER.fine("Marker has invalid points and will be ignored: {0}", loc);
             }

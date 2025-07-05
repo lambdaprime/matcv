@@ -19,37 +19,42 @@ package id.matcv.markers;
 
 import id.ndbuffers.matrix.MatrixN3d;
 import id.ndbuffers.matrix.Vector3d;
+import id.xfunction.Preconditions;
 import id.xfunction.XJsonStringBuilder;
+import java.nio.file.Path;
 import java.util.List;
+import java.util.Optional;
+import org.opencv.core.MatOfPoint2f;
 
 /**
  * Points p1, ..., p4 are given in the same order as they present in {@link MarkerLocation2d}
  *
  * @author lambdaprime intid@protonmail.com
  */
-public class MarkerLocation3d {
+public class MarkerLocation3d extends AbstractMarkerLocation {
     public static final int NUM_OF_POINTS = 5;
 
-    private Marker marker;
     private MatrixN3d data;
 
-    public MarkerLocation3d(Marker marker, MatrixN3d data) {
-        this.marker = marker;
+    public MarkerLocation3d(
+            Marker marker,
+            MatrixN3d data,
+            Optional<MatOfPoint2f> corners,
+            Optional<Path> imageFile) {
+        super(marker, corners, imageFile);
+        Preconditions.equals(5, data.shape().dims()[0]);
         this.data = data;
     }
 
     public MarkerLocation3d(
-            Marker marker, Vector3d center, Vector3d p1, Vector3d p2, Vector3d p3, Vector3d p4) {
-        this.marker = marker;
-        this.data = new MatrixN3d(center, p1, p2, p3, p4);
-    }
-
-    public MarkerLocation3d(Marker marker, List<Vector3d> points) {
-        this(marker, points.get(0), points.get(1), points.get(2), points.get(3), points.get(4));
-    }
-
-    public Marker marker() {
-        return marker;
+            Marker marker,
+            Vector3d center,
+            Vector3d p1,
+            Vector3d p2,
+            Vector3d p3,
+            Vector3d p4,
+            Optional<MatOfPoint2f> corners) {
+        this(marker, new MatrixN3d(center, p1, p2, p3, p4), corners, Optional.empty());
     }
 
     public Vector3d center() {
@@ -82,14 +87,11 @@ public class MarkerLocation3d {
     }
 
     @Override
-    public String toString() {
-        XJsonStringBuilder builder = new XJsonStringBuilder(this);
-        builder.append("marker", marker);
+    protected void toString(XJsonStringBuilder builder) {
         builder.append("center", center());
         builder.append("p1", p1());
         builder.append("p2", p2());
         builder.append("p3", p3());
         builder.append("p4", p4());
-        return builder.toString();
     }
 }

@@ -32,6 +32,7 @@ import java.util.Optional;
 import org.opencv.aruco.Aruco;
 import org.opencv.aruco.Dictionary;
 import org.opencv.core.Mat;
+import org.opencv.core.MatOfPoint2f;
 
 /**
  * Detect marked in 2d images
@@ -80,39 +81,36 @@ public class MarkerDetector2d {
         var origin = Optional.<MarkerLocation2d>empty();
         var markers = new LinkedList<MarkerLocation2d>();
         Dictionary dictionary = Aruco.getPredefinedDictionary(MarkerType.getDict());
-        List<Mat> corners = new ArrayList<>();
+        List<Mat> detectedMarkers = new ArrayList<>();
         Mat ids = new Mat();
-        Aruco.detectMarkers(img, dictionary, corners, ids);
-        for (int i = 0; i < corners.size(); i++) {
+        Aruco.detectMarkers(img, dictionary, detectedMarkers, ids);
+        for (int i = 0; i < detectedMarkers.size(); i++) {
             Optional<MarkerType> type = MarkerType.findType((int) ids.get(i, 0)[0]);
             if (type.isEmpty()) {
                 LOGGER.warning("Unknown marker type - ignoring");
                 continue;
             }
             if (!types.contains(type.get())) continue;
-            var m = corners.get(i);
+            var singleMarkerCorners = detectedMarkers.get(i);
             double[] buf;
-            buf = m.get(0, 0);
+            buf = singleMarkerCorners.get(0, 0);
             var p1 = new Vector2d(buf[0], buf[1]);
-            buf = m.get(0, 1);
+            buf = singleMarkerCorners.get(0, 1);
             var p2 = new Vector2d(buf[0], buf[1]);
-            buf = m.get(0, 2);
+            buf = singleMarkerCorners.get(0, 2);
             var p3 = new Vector2d(buf[0], buf[1]);
-            buf = m.get(0, 3);
+            buf = singleMarkerCorners.get(0, 3);
             var p4 = new Vector2d(buf[0], buf[1]);
             var center = LineUtils.midPoint(LineUtils.midPoint(p1, p2), LineUtils.midPoint(p3, p4));
             var mloc =
-                    new MarkerLocation2d(
+                    MarkerLocation2d.create(
+                            new Marker(type.get()),
                             center,
                             p1,
                             p2,
                             p3,
                             p4,
-                            p1.distance(p2),
-                            p2.distance(p3),
-                            m,
-                            LineUtils.createVector(center, LineUtils.midPoint(p1, p2)),
-                            new Marker(type.get()));
+                            Optional.of(new MatOfPoint2f(singleMarkerCorners.reshape(2, 4))));
             markers.add(mloc);
             if (mloc.marker().isOrigin()) origin = Optional.of(markers.getLast());
         }

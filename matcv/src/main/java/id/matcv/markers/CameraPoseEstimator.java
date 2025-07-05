@@ -59,7 +59,7 @@ public class CameraPoseEstimator {
             var markerLocation = markers.get(i);
             var marker = markerLocation.marker();
             var points3d = marker.create3dModel();
-            var points2d = markerLocation.corners();
+            var points2d = markerLocation.corners().orElseThrow();
             matUtils.debugMat("points3d", points3d);
             matUtils.debugMat("points2d", points2d);
             Calib3d.solvePnP(

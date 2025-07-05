@@ -40,17 +40,6 @@ public class Marker3dUtils {
         return markerLocations.stream().filter(loc -> loc.marker().getType() == type).findFirst();
     }
 
-    /** Transpose input matrix and transfer its data to output matrix */
-    void transfer(MatrixN3d mx, DMatrixRMaj outMx) {
-        var ejmlMx = new DMatrixRMaj();
-        ejmlMx.setData(mx.duplicate().array());
-        ejmlMx.reshape(mx.getRows(), 3);
-        // CommonOps_DDRM.transpose modifies shape of the output matrix
-        // so we use wrapper matrix as an output matrix and not the original
-        outMx = DMatrixRMaj.wrap(outMx.numRows, outMx.numCols, outMx.data);
-        CommonOps_DDRM.transpose(ejmlMx, outMx);
-    }
-
     /** Apply transformation matrix to all marker coordinates */
     public List<MarkerLocation3d> transformAll(
             List<MarkerLocation3d> markerLocations, Matrix4d tx) {
@@ -108,7 +97,8 @@ public class Marker3dUtils {
                             new Vector3d(
                                     outPointsMx.get(0, colStart + 4),
                                     outPointsMx.get(1, colStart + 4),
-                                    outPointsMx.get(2, colStart + 4))));
+                                    outPointsMx.get(2, colStart + 4)),
+                            loc.corners()));
         }
         return out;
     }
@@ -154,5 +144,16 @@ public class Marker3dUtils {
         var d = marker.p4().distance(marker.p1());
         var mse = (a + b + c + d) / 4.;
         return mse < 0.09;
+    }
+
+    /** Transpose input matrix and transfer its data to output matrix */
+    private void transfer(MatrixN3d mx, DMatrixRMaj outMx) {
+        var ejmlMx = new DMatrixRMaj();
+        ejmlMx.setData(mx.duplicate().array());
+        ejmlMx.reshape(mx.getRows(), 3);
+        // CommonOps_DDRM.transpose modifies shape of the output matrix
+        // so we use wrapper matrix as an output matrix and not the original
+        outMx = DMatrixRMaj.wrap(outMx.numRows, outMx.numCols, outMx.data);
+        CommonOps_DDRM.transpose(ejmlMx, outMx);
     }
 }
