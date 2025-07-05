@@ -19,17 +19,22 @@ package id.mathcat.tests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import id.mathcat.LineUtils;
+import id.mathcat.NdBuffersMath;
 import id.ndbuffers.matrix.Vector2d;
 import org.junit.jupiter.api.Test;
 
-public class LineUtilsTest {
+/**
+ * @author lambdaprime intid@protonmail.com
+ */
+public class NdBuffersMathTest {
 
     @Test
     public void test() {
         assertEquals(
                 """
                 { "x": 2, "y": -2 }""",
-                LineUtils.createVector(new Vector2d(3, 5), new Vector2d(5, 3)).toString());
+                new NdBuffersMath()
+                        .createVector(new Vector2d(3, 5), new Vector2d(5, 3))
+                        .toString());
     }
 }

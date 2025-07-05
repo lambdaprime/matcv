@@ -19,9 +19,12 @@ package id.mathcat;
 
 import id.ndbuffers.matrix.Vector2d;
 
-public class LineUtils {
+/**
+ * @author lambdaprime intid@protonmail.com
+ */
+public class NdBuffersMath {
 
-    public static Vector2d midPoint(Vector2d p1, Vector2d p2) {
+    public Vector2d midPoint(Vector2d p1, Vector2d p2) {
         return new Vector2d((p1.getX() + p2.getX()) / 2, (p1.getY() + p2.getY()) / 2);
     }
 
@@ -29,7 +32,7 @@ public class LineUtils {
      * Creates a vector with the direction and magnitude of the difference between toPoint and
      * fromPoint
      */
-    public static Vector2d createVector(Vector2d fromPoint, Vector2d toPoint) {
+    public Vector2d createVector(Vector2d fromPoint, Vector2d toPoint) {
         return toPoint.subtract(fromPoint);
     }
 }

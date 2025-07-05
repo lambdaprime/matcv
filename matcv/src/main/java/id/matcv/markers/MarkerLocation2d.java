@@ -18,7 +18,7 @@
 package id.matcv.markers;
 
 import id.matcv.converters.ConvertersToOpenCv;
-import id.mathcat.LineUtils;
+import id.mathcat.NdBuffersMath;
 import id.ndbuffers.matrix.MatrixN2d;
 import id.ndbuffers.matrix.Vector2d;
 import id.xfunction.Preconditions;
@@ -37,6 +37,7 @@ import org.opencv.core.MatOfPoint2f;
  */
 public class MarkerLocation2d extends AbstractMarkerLocation {
     private static final ConvertersToOpenCv converters = new ConvertersToOpenCv();
+    private static final NdBuffersMath ndMath = new NdBuffersMath();
     private MatrixN2d data;
     private double heightPixels;
     private double widthPixels;
@@ -69,12 +70,12 @@ public class MarkerLocation2d extends AbstractMarkerLocation {
         var p3 = new Vector2d(buf[0], buf[1]);
         buf = corners.get(0, 3);
         var p4 = new Vector2d(buf[0], buf[1]);
-        var center = LineUtils.midPoint(LineUtils.midPoint(p1, p2), LineUtils.midPoint(p3, p4));
+        var center = ndMath.midPoint(ndMath.midPoint(p1, p2), ndMath.midPoint(p3, p4));
         return new MarkerLocation2d(
                 marker,
                 p1.distance(p2),
                 p2.distance(p3),
-                LineUtils.createVector(center, LineUtils.midPoint(p1, p2)),
+                ndMath.createVector(center, ndMath.midPoint(p1, p2)),
                 new MatrixN2d(center, p1, p2, p3, p4),
                 Optional.of(new MatOfPoint2f(corners.reshape(2, 4))),
                 Optional.empty());
@@ -94,7 +95,7 @@ public class MarkerLocation2d extends AbstractMarkerLocation {
                 marker,
                 p1.distance(p2),
                 p2.distance(p3),
-                LineUtils.createVector(center, LineUtils.midPoint(p1, p2)),
+                ndMath.createVector(center, ndMath.midPoint(p1, p2)),
                 data,
                 corners,
                 imageFile);
