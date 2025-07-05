@@ -18,8 +18,6 @@
 package id.matcv.markers;
 
 import id.matcv.types.FileMat;
-import id.mathcat.LineUtils;
-import id.ndbuffers.matrix.Vector2d;
 import id.xfunction.XJsonStringBuilder;
 import id.xfunction.logging.XLogger;
 import java.nio.file.Path;
@@ -32,7 +30,6 @@ import java.util.Optional;
 import org.opencv.aruco.Aruco;
 import org.opencv.aruco.Dictionary;
 import org.opencv.core.Mat;
-import org.opencv.core.MatOfPoint2f;
 
 /**
  * Detect marked in 2d images
@@ -91,26 +88,7 @@ public class MarkerDetector2d {
                 continue;
             }
             if (!types.contains(type.get())) continue;
-            var singleMarkerCorners = detectedMarkers.get(i);
-            double[] buf;
-            buf = singleMarkerCorners.get(0, 0);
-            var p1 = new Vector2d(buf[0], buf[1]);
-            buf = singleMarkerCorners.get(0, 1);
-            var p2 = new Vector2d(buf[0], buf[1]);
-            buf = singleMarkerCorners.get(0, 2);
-            var p3 = new Vector2d(buf[0], buf[1]);
-            buf = singleMarkerCorners.get(0, 3);
-            var p4 = new Vector2d(buf[0], buf[1]);
-            var center = LineUtils.midPoint(LineUtils.midPoint(p1, p2), LineUtils.midPoint(p3, p4));
-            var mloc =
-                    MarkerLocation2d.create(
-                            new Marker(type.get()),
-                            center,
-                            p1,
-                            p2,
-                            p3,
-                            p4,
-                            Optional.of(new MatOfPoint2f(singleMarkerCorners.reshape(2, 4))));
+            var mloc = MarkerLocation2d.create(new Marker(type.get()), detectedMarkers.get(i));
             markers.add(mloc);
             if (mloc.marker().isOrigin()) origin = Optional.of(markers.getLast());
         }

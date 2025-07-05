@@ -27,6 +27,7 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
 import org.opencv.core.Core;
+import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint2f;
 
 /**
@@ -57,21 +58,25 @@ public class MarkerLocation2d extends AbstractMarkerLocation {
         this.vector = vector;
     }
 
-    public static MarkerLocation2d create(
-            Marker marker,
-            Vector2d center,
-            Vector2d p1,
-            Vector2d p2,
-            Vector2d p3,
-            Vector2d p4,
-            Optional<MatOfPoint2f> corners) {
+    public static MarkerLocation2d create(Marker marker, Mat corners) {
+        System.out.println(corners.toString());
+        double[] buf;
+        buf = corners.get(0, 0);
+        var p1 = new Vector2d(buf[0], buf[1]);
+        buf = corners.get(0, 1);
+        var p2 = new Vector2d(buf[0], buf[1]);
+        buf = corners.get(0, 2);
+        var p3 = new Vector2d(buf[0], buf[1]);
+        buf = corners.get(0, 3);
+        var p4 = new Vector2d(buf[0], buf[1]);
+        var center = LineUtils.midPoint(LineUtils.midPoint(p1, p2), LineUtils.midPoint(p3, p4));
         return new MarkerLocation2d(
                 marker,
                 p1.distance(p2),
                 p2.distance(p3),
                 LineUtils.createVector(center, LineUtils.midPoint(p1, p2)),
                 new MatrixN2d(center, p1, p2, p3, p4),
-                corners,
+                Optional.of(new MatOfPoint2f(corners.reshape(2, 4))),
                 Optional.empty());
     }
 

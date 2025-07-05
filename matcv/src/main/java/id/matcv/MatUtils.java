@@ -25,9 +25,13 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.logging.Level;
+import org.opencv.calib3d.Calib3d;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
+import org.opencv.core.MatOfDouble;
 import org.opencv.core.MatOfPoint;
+import org.opencv.core.MatOfPoint2f;
+import org.opencv.core.MatOfPoint3f;
 import org.opencv.core.Point;
 import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
@@ -181,5 +185,36 @@ public class MatUtils {
                                     s.height
                                 })));
         return tmp2;
+    }
+
+    /**
+     * Correct distortion of 2D points
+     *
+     * @param points2d 2D points of an object from the image. These points to be corrected.
+     * @param points3d well defined 3D model of an object
+     */
+    public void undistort(
+            MatOfPoint2f points2d,
+            MatOfPoint3f points3d,
+            Mat cameraMat,
+            MatOfDouble distortionMat) {
+        var rvec = new Mat();
+        var tvec = new Mat();
+        debugMat("points3d", points3d);
+        debugMat("points2d", points2d);
+        Calib3d.solvePnP(
+                points3d,
+                points2d,
+                cameraMat,
+                distortionMat,
+                rvec,
+                tvec,
+                false,
+                Calib3d.SOLVEPNP_IPPE_SQUARE);
+        debugMat("tvec ", tvec);
+        debugMat("rvec ", rvec);
+        Calib3d.projectPoints(points3d, rvec, tvec, cameraMat, distortionMat, points2d);
+        debugMat("points2d projected", points2d);
+        System.out.println("projected");
     }
 }

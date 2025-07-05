@@ -52,40 +52,6 @@ public class CameraPoseEstimator {
         distortionMat = converters.toMatOfDouble(cameraInfo.distortionCoefficients());
     }
 
-    public void estimate(Mat image, List<MarkerLocation2d> markers) {
-        matUtils.debugMat("cameraMat", cameraMat);
-        matUtils.debugMat("distortionMat", distortionMat);
-        Preconditions.equals(
-                MarkerType.getDict(),
-                Aruco.DICT_7X7_50,
-                "SOLVEPNP_IPPE_SQUARE requires square markers. Currently supported are"
-                        + " DICT_7X7_50.");
-        for (int i = 0; i < markers.size(); i++) {
-            var rvec = new Mat();
-            var tvec = new Mat();
-            var markerLocation = markers.get(i);
-            var marker = markerLocation.marker();
-            var points3d = marker.create3dModel();
-            var points2d = markerLocation.corners().orElseThrow();
-            matUtils.debugMat("points3d", points3d);
-            matUtils.debugMat("points2d", points2d);
-            Calib3d.solvePnP(
-                    points3d,
-                    points2d,
-                    cameraMat,
-                    distortionMat,
-                    rvec,
-                    tvec,
-                    false,
-                    Calib3d.SOLVEPNP_IPPE_SQUARE);
-            matUtils.debugMat("tvec " + marker, tvec);
-            matUtils.debugMat("rvec " + marker, rvec);
-
-            Calib3d.projectPoints(points3d, rvec, tvec, cameraMat, distortionMat, points2d);
-            matUtils.debugMat("points2d projected", points2d);
-        }
-    }
-
     public Optional<Matrix4d> estimate(MarkerLocation2d marker) {
         var markerLenInCm = MarkerType.getMarkerLengthInCm();
         var tvec = new Mat();
