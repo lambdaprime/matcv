@@ -75,6 +75,26 @@ public class MarkerLocation2d extends AbstractMarkerLocation {
                 Optional.empty());
     }
 
+    public static MarkerLocation2d create(
+            Marker marker,
+            MatrixN2d data,
+            Optional<MatOfPoint2f> corners,
+            Optional<Path> imageFile) {
+        Preconditions.equals(5, data.shape().dims()[0]);
+        var center = data.getVectorView(0);
+        var p1 = data.getVectorView(1);
+        var p2 = data.getVectorView(2);
+        var p3 = data.getVectorView(3);
+        return new MarkerLocation2d(
+                marker,
+                p1.distance(p2),
+                p2.distance(p3),
+                LineUtils.createVector(center, LineUtils.midPoint(p1, p2)),
+                data,
+                corners,
+                imageFile);
+    }
+
     public Vector2d vector() {
         return vector;
     }

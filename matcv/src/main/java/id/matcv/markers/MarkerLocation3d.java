@@ -17,6 +17,8 @@
  */
 package id.matcv.markers;
 
+import id.ndbuffers.NdBuffersFactory;
+import id.ndbuffers.Slice;
 import id.ndbuffers.matrix.MatrixN3d;
 import id.ndbuffers.matrix.Vector3d;
 import id.xfunction.Preconditions;
@@ -93,5 +95,11 @@ public class MarkerLocation3d extends AbstractMarkerLocation {
         builder.append("p2", p2());
         builder.append("p3", p3());
         builder.append("p4", p4());
+    }
+
+    public MarkerLocation2d toMarkerLocation2d() {
+        var newData =
+                new NdBuffersFactory().matrixN2d(new Slice(0, 5, 1), new Slice(0, 2, 1), data);
+        return MarkerLocation2d.create(marker(), newData, corners(), imageFile());
     }
 }
