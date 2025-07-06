@@ -136,6 +136,7 @@ public class Marker3dUtilsTransformationTest {
     public void test_transformAll(TestCase testCase) {
         var utils = new Marker3dUtils();
         var actual = utils.transformAll(List.of(testCase.from), testCase.tx);
+        System.out.println(actual);
         XAsserts.assertSimilar(
                 testCase.to.getData().duplicate().array(),
                 actual.get(0).getData().duplicate().array(),

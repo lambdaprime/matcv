@@ -18,22 +18,24 @@
 package id.matcv.markers;
 
 import id.matcv.impl.ejml.KabschAlgorithm;
+import id.mathcat.NdBuffersMath;
+import id.ndbuffers.NdBuffersFactory;
+import id.ndbuffers.Slice;
 import id.ndbuffers.matrix.Matrix4d;
-import id.ndbuffers.matrix.MatrixN3d;
-import id.ndbuffers.matrix.Vector3d;
 import id.xfunction.logging.XLogger;
 import java.nio.DoubleBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import org.ejml.data.DMatrixRMaj;
-import org.ejml.dense.row.CommonOps_DDRM;
 
 /**
  * @author lambdaprime intid@protonmail.com
  */
 public class Marker3dUtils {
     private static final XLogger LOGGER = XLogger.getLogger(Marker3dUtils.class);
+    private static final NdBuffersFactory ndFactory = new NdBuffersFactory();
+    private static final NdBuffersMath ndMath = new NdBuffersMath();
 
     public Optional<MarkerLocation3d> findMarkerLocation(
             MarkerType type, List<MarkerLocation3d> markerLocations) {
@@ -43,67 +45,33 @@ public class Marker3dUtils {
     /** Apply transformation matrix to all marker coordinates */
     public List<MarkerLocation3d> transformAll(
             List<MarkerLocation3d> markerLocations, Matrix4d tx) {
+        // read all points across all markers into single big matrix
         var inPoints =
                 DoubleBuffer.allocate(markerLocations.size() * MarkerLocation3d.NUM_OF_POINTS * 3);
-        // In order to mul Matrix4d with MatrixX3 we need to covert MatrixX3 to Matrix4X
-        // this would require to store points in column major order:
-        // p1.x p2.x ...
-        // p1.y p2.y ...
-        // p1.z p2.z ...
-        //    1    1 ...
         for (int i = 0; i < markerLocations.size(); i++) {
-            inPoints.put(markerLocations.get(i).getData().duplicate().duplicate());
+            inPoints.put(markerLocations.get(i).getData().duplicate());
         }
-        var inPointsMx =
-                new DMatrixRMaj(4, markerLocations.size() * MarkerLocation3d.NUM_OF_POINTS);
-        inPointsMx.fill(1);
-        transfer(new MatrixN3d(inPoints), inPointsMx);
-        var ejmlTx = new DMatrixRMaj();
-        ejmlTx.setData(tx.duplicate().array());
-        ejmlTx.reshape(4, 4);
-        var outPointsMx = new DMatrixRMaj();
-        CommonOps_DDRM.mult(
-                ejmlTx,
-                inPointsMx,
-                outPointsMx); // This does M * V where V is the stack of all points
+        var mx = ndMath.transform(ndFactory.matrixN3d(inPoints), tx);
         var out = new ArrayList<MarkerLocation3d>(markerLocations.size());
-        // the answer stored in column major order
-        // we need to restore it back to row major and drop last row:
-        // p1.x p1.y p1.z
-        // p2.x p2.y p2.z
-        // ...
         for (int i = 0; i < markerLocations.size(); i++) {
             var loc = markerLocations.get(i);
             var colStart = i * MarkerLocation3d.NUM_OF_POINTS;
-            out.add(
-                    new MarkerLocation3d(
-                            loc.marker(),
-                            new Vector3d(
-                                    outPointsMx.get(0, colStart + 0),
-                                    outPointsMx.get(1, colStart + 0),
-                                    outPointsMx.get(2, colStart + 0)),
-                            new Vector3d(
-                                    outPointsMx.get(0, colStart + 1),
-                                    outPointsMx.get(1, colStart + 1),
-                                    outPointsMx.get(2, colStart + 1)),
-                            new Vector3d(
-                                    outPointsMx.get(0, colStart + 2),
-                                    outPointsMx.get(1, colStart + 2),
-                                    outPointsMx.get(2, colStart + 2)),
-                            new Vector3d(
-                                    outPointsMx.get(0, colStart + 3),
-                                    outPointsMx.get(1, colStart + 3),
-                                    outPointsMx.get(2, colStart + 3)),
-                            new Vector3d(
-                                    outPointsMx.get(0, colStart + 4),
-                                    outPointsMx.get(1, colStart + 4),
-                                    outPointsMx.get(2, colStart + 4)),
-                            loc.corners()));
+            var data = ndFactory.matrixN3d(5);
+            ndFactory
+                    .matrixN3d(new Slice(colStart, 5, 1), new Slice(0, 3, 1), mx)
+                    .copyTo(data, 0, 0);
+            out.add(new MarkerLocation3d(loc.marker(), data, loc.corners(), Optional.empty()));
         }
         return out;
     }
 
-    /** Calculate 4x4 transformation matrix between the markers */
+    /**
+     * Calculate 4x4 transformation matrix between the markers
+     *
+     * <p>OpenCV has estimateRigidTransform for doing this but it is <a
+     * href="https://answers.opencv.org/question/203570/is-estimaterigidtransform-removed-from-latest-opencv/">not
+     * part of bindings</a>
+     */
     public Matrix4d calculateTransformationMatrix(MarkerLocation3d from, MarkerLocation3d to) {
         return new Matrix4d(
                 new KabschAlgorithm()
@@ -144,16 +112,5 @@ public class Marker3dUtils {
         var d = marker.p4().distance(marker.p1());
         var mse = (a + b + c + d) / 4.;
         return mse < 0.09;
-    }
-
-    /** Transpose input matrix and transfer its data to output matrix */
-    private void transfer(MatrixN3d mx, DMatrixRMaj outMx) {
-        var ejmlMx = new DMatrixRMaj();
-        ejmlMx.setData(mx.duplicate().array());
-        ejmlMx.reshape(mx.getRows(), 3);
-        // CommonOps_DDRM.transpose modifies shape of the output matrix
-        // so we use wrapper matrix as an output matrix and not the original
-        outMx = DMatrixRMaj.wrap(outMx.numRows, outMx.numCols, outMx.data);
-        CommonOps_DDRM.transpose(ejmlMx, outMx);
     }
 }
