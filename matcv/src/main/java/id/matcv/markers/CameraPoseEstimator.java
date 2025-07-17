@@ -52,13 +52,18 @@ public class CameraPoseEstimator {
         distortionMat = converters.toMatOfDouble(cameraInfo.distortionCoefficients());
     }
 
-    public Optional<Matrix4d> estimate(MarkerLocation2d marker) {
-        var markerLenInCm = MarkerType.getMarkerLengthInCm();
+    public Optional<Matrix4d> estimate(MarkerLocation2d loc) {
         var tvec = new Mat();
         var rvec = new Mat();
+        // see
+        // https://docs.opencv.org/3.4/d9/d6a/group__aruco.html#ga896ca24f0c1b4b277b6e59d5fe001dd5
+        // "markerLength - the length of the markers' side. The returning translation vectors will
+        // be in the same unit. Normally, unit is meters."
+        // Since we give marker size in millis, we expect the TX to describe transformation in
+        // millis too.
         Aruco.estimatePoseSingleMarkers(
-                List.of(marker.corners().orElseThrow()),
-                markerLenInCm,
+                List.of(loc.corners().orElseThrow()),
+                Marker.MARKERS_SIZE_IN_MM / 1000.F,
                 cameraMat,
                 distortionMat,
                 rvec,

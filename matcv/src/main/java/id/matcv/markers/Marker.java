@@ -19,7 +19,6 @@ package id.matcv.markers;
 
 import org.opencv.aruco.Aruco;
 import org.opencv.aruco.Dictionary;
-import org.opencv.calib3d.Calib3d;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfFloat;
 import org.opencv.core.MatOfPoint3f;
@@ -29,7 +28,7 @@ import org.opencv.core.MatOfPoint3f;
  */
 public record Marker(MarkerType type) implements Comparable<Marker> {
     /** Taken with respect of actual size of the printed markers. */
-    private static final int lengthMillimeters = 53;
+    public static final int MARKERS_SIZE_IN_MM = 53;
 
     public Mat createImage() {
         Mat img = new Mat();
@@ -42,12 +41,8 @@ public record Marker(MarkerType type) implements Comparable<Marker> {
         return type;
     }
 
-    public int getHeightMillimeters() {
-        return lengthMillimeters;
-    }
-
-    public int getWidthMillimeters() {
-        return lengthMillimeters;
+    public int getSizeInMm() {
+        return MARKERS_SIZE_IN_MM;
     }
 
     public boolean isOrigin() {
@@ -60,15 +55,17 @@ public record Marker(MarkerType type) implements Comparable<Marker> {
     }
 
     /**
-     * Returns marker 3D model points in order as required by {@link Calib3d#SOLVEPNP_IPPE_SQUARE}
+     * Returns marker 3D model points.
+     *
+     * <p>There are 4 points representing all corners in {@link MarkerType} order
      */
     public MatOfPoint3f create3dModel() {
         var ar =
                 new float[] {
-                    -lengthMillimeters / 2.f, lengthMillimeters / 2.f, 0,
-                    lengthMillimeters / 2.f, lengthMillimeters / 2.f, 0,
-                    lengthMillimeters / 2.f, -lengthMillimeters / 2.f, 0,
-                    -lengthMillimeters / 2.f, -lengthMillimeters / 2.f, 0
+                    -MARKERS_SIZE_IN_MM / 2.f, MARKERS_SIZE_IN_MM / 2.f, 0,
+                    MARKERS_SIZE_IN_MM / 2.f, MARKERS_SIZE_IN_MM / 2.f, 0,
+                    MARKERS_SIZE_IN_MM / 2.f, -MARKERS_SIZE_IN_MM / 2.f, 0,
+                    -MARKERS_SIZE_IN_MM / 2.f, -MARKERS_SIZE_IN_MM / 2.f, 0
                 };
         return new MatOfPoint3f(new MatOfFloat(ar).reshape(3, 4));
     }

@@ -64,13 +64,21 @@ public enum MarkerType {
         this.hashes = Set.of(centerHash, p1Hash, p2Hash, p3Hash, p4Hash);
     }
 
+    /** Dictionary {@link Aruco#DICT_7X7_50} */
     public static int getDict() {
         return Aruco.DICT_7X7_50;
     }
 
-    public static float getMarkerLengthInCm() {
+    /**
+     * Number of bits per each dimension of the marker (markerSize x markerSize bits).
+     *
+     * @see <a
+     *     href="https://docs.opencv.org/3.4/d9/d6a/group__aruco.html#gab0dd0832bceb1131946e4be9f26317ba">OpenCV
+     *     documentation</a>
+     */
+    public static float getMarkerSize() {
         Dictionary dictionary = Aruco.getPredefinedDictionary(MarkerType.getDict());
-        return dictionary.get_markerSize() / 100.F;
+        return dictionary.get_markerSize();
     }
 
     static {

@@ -18,6 +18,11 @@
 package id.matcv.types.camera;
 
 public enum CameraIntrinsicsPredefined {
+    /**
+     * RealSense camera D435i
+     *
+     * <p>Intrinsics value is taken from rs2_get_video_stream_intrinsics
+     */
     REALSENSE_D435i_1280_720(
             new DefaultCameraIntrinsics(
                     1280,
@@ -29,6 +34,11 @@ public enum CameraIntrinsicsPredefined {
                                 0.0, 0.0, 1.0
                             }))),
 
+    /**
+     * RealSense camera D435i
+     *
+     * <p>Intrinsics value is taken from rs2_get_video_stream_intrinsics
+     */
     REALSENSE_D435i_640_480(
             new DefaultCameraIntrinsics(
                     640,

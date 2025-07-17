@@ -34,6 +34,14 @@ import org.opencv.imgcodecs.Imgcodecs;
  */
 public class GenerateMarkerApp {
 
+    /**
+     * This size is an actual size of markers from <a href="doc-files/markers.odt">markers.odt</a>
+     * file.
+     *
+     * <p>It was measured after markers were printed.
+     */
+    public static final int MARKERS_ODT_SIZE_IN_MILLIM = Marker.MARKERS_SIZE_IN_MM;
+
     private static void usage() {
         System.out.println("Generates markers for pose estimation and stores them to OUTPUT_DIR");
         System.out.println("Arguments: <OUTPUT_DIR>");
