@@ -17,11 +17,11 @@
  */
 package id.matcv.markers;
 
+import id.ndbuffers.NdBuffersFactory;
+import id.ndbuffers.matrix.MatrixN3d;
 import org.opencv.aruco.Aruco;
 import org.opencv.aruco.Dictionary;
 import org.opencv.core.Mat;
-import org.opencv.core.MatOfFloat;
-import org.opencv.core.MatOfPoint3f;
 
 /**
  * @see MarkerType
@@ -29,6 +29,8 @@ import org.opencv.core.MatOfPoint3f;
 public record Marker(MarkerType type) implements Comparable<Marker> {
     /** Taken with respect of actual size of the printed markers. */
     public static final int MARKERS_SIZE_IN_MM = 53;
+
+    private static final NdBuffersFactory ndFactory = new NdBuffersFactory();
 
     public Mat createImage() {
         Mat img = new Mat();
@@ -58,16 +60,19 @@ public record Marker(MarkerType type) implements Comparable<Marker> {
      * Returns marker 3D model points.
      *
      * <p>There are 4 points representing all corners in {@link MarkerType} order
+     *
+     * @param scale scale factor to define unit of length. When equals 1 it returns default unit of
+     *     length which is millimeters
      */
-    public MatOfPoint3f create3dModel() {
-        var ar =
-                new float[] {
-                    -MARKERS_SIZE_IN_MM / 2.f, MARKERS_SIZE_IN_MM / 2.f, 0,
-                    MARKERS_SIZE_IN_MM / 2.f, MARKERS_SIZE_IN_MM / 2.f, 0,
-                    MARKERS_SIZE_IN_MM / 2.f, -MARKERS_SIZE_IN_MM / 2.f, 0,
-                    -MARKERS_SIZE_IN_MM / 2.f, -MARKERS_SIZE_IN_MM / 2.f, 0
-                };
-        return new MatOfPoint3f(new MatOfFloat(ar).reshape(3, 4));
+    public MatrixN3d create3dModel(double scale) {
+        var v = MARKERS_SIZE_IN_MM * scale / 2.f;
+        return ndFactory.matrixN3d(
+                new double[] {
+                    -v, v, 0,
+                    v, v, 0,
+                    v, -v, 0,
+                    -v, -v, 0
+                });
     }
 
     @Override

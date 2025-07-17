@@ -18,6 +18,7 @@
 package id.matcv.converters;
 
 import id.ndbuffers.matrix.Matrix3d;
+import id.ndbuffers.matrix.MatrixN3d;
 import id.ndbuffers.matrix.MatrixNd;
 import id.ndbuffers.matrix.Vector2d;
 import id.xfunction.Preconditions;
@@ -26,7 +27,9 @@ import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfDouble;
+import org.opencv.core.MatOfFloat;
 import org.opencv.core.MatOfPoint2f;
+import org.opencv.core.MatOfPoint3f;
 import org.opencv.core.Point;
 import org.opencv.utils.Converters;
 
@@ -51,6 +54,12 @@ public class ConvertersToOpenCv {
         var r = new Mat();
         new MatOfDouble(data).convertTo(r, CvType.CV_32F);
         return r.reshape(1, new int[] {rows, cols});
+    }
+
+    public Mat copyToMat32F(MatrixNd mx) {
+        var r = new Mat();
+        new MatOfDouble(mx.duplicate().array()).convertTo(r, CvType.CV_32F);
+        return r.reshape(mx.getCols(), new int[] {mx.getRows()});
     }
 
     public Mat copyToMat32F(Vector2d v) {
@@ -104,5 +113,14 @@ public class ConvertersToOpenCv {
         var buf = new int[matrix.channels() * matrix.size(0)];
         matrix.get(0, 0, buf);
         return buf;
+    }
+
+    public MatOfPoint3f copyToMatOfPoint32F(float[] data) {
+        Preconditions.equals(0, data.length % 3);
+        return new MatOfPoint3f(new MatOfFloat(data).reshape(3, data.length / 3));
+    }
+
+    public MatOfPoint3f copyToMatOfPoint32F(MatrixN3d mx) {
+        return new MatOfPoint3f(copyToMat32F(mx));
     }
 }

@@ -113,7 +113,7 @@ public class MarkerDetector2d {
                         var points2d = new MatOfPoint2f(corners.reshape(2, 4));
                         matUtils.undistort(
                                 points2d,
-                                marker.create3dModel(),
+                                converters.copyToMatOfPoint32F(marker.create3dModel(1)),
                                 params.cameraMat,
                                 params.distortionMat);
                     });

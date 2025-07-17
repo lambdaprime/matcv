@@ -92,7 +92,7 @@ public class Marker2dUtils {
         for (int i = 0; i < markers.size(); i++) {
             var markerLocation = markers.get(i);
             var marker = markerLocation.marker();
-            var points3d = marker.create3dModel();
+            var points3d = converters.copyToMatOfPoint32F(marker.create3dModel(1));
             var points2d = markerLocation.corners().orElseThrow();
             matUtils.undistort(points2d, points3d, cameraMat, distortionMat);
             out.add(MarkerLocation2d.create(marker, points2d.reshape(2, 1)));
