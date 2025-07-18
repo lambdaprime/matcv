@@ -32,12 +32,14 @@ import id.jrealsense.utils.FrameUtils;
 import id.matcv.types.camera.CameraInfoPredefined;
 import id.matcv.types.camera.CameraIntrinsics;
 import id.matcv.types.camera.CameraIntrinsicsPredefined;
+import id.xfunction.Preconditions;
 import id.xfunction.lang.XThread;
 import id.xfunction.logging.XLogger;
 import id.xfunction.util.IdempotentService;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -57,7 +59,8 @@ public class RealSenseCamera extends IdempotentService {
     /** Frames per second */
     private static final int FPS = 30;
 
-    private List<Consumer<RgbdImage>> frameConsumers = List.of();
+    private List<Consumer<RgbdImage>> rgbdFrameConsumers = List.of();
+    private List<Consumer<RgbImage>> rgbFrameConsumers = List.of();
     private CameraIntrinsics intrinsics =
             CameraIntrinsicsPredefined.REALSENSE_D435i_640_480.getCameraIntrinsics();
     private boolean isShowFramesEnabled;
@@ -71,8 +74,13 @@ public class RealSenseCamera extends IdempotentService {
         return this;
     }
 
-    public RealSenseCamera withFrameConsumers(List<Consumer<RgbdImage>> frameConsumers) {
-        this.frameConsumers = frameConsumers;
+    public RealSenseCamera withRgbdFrameConsumers(List<Consumer<RgbdImage>> frameConsumers) {
+        this.rgbdFrameConsumers = frameConsumers;
+        return this;
+    }
+
+    public RealSenseCamera withRgbFrameConsumers(List<Consumer<RgbImage>> frameConsumers) {
+        this.rgbFrameConsumers = frameConsumers;
         return this;
     }
 
@@ -111,22 +119,28 @@ public class RealSenseCamera extends IdempotentService {
                         dev.reset();
                         XThread.sleep(5000);
                         config.enableStream(
-                                StreamType.RS2_STREAM_DEPTH,
-                                0,
-                                intrinsics.width(),
-                                intrinsics.height(),
-                                FormatType.RS2_FORMAT_Z16,
-                                FPS);
-                        config.enableStream(
                                 StreamType.RS2_STREAM_COLOR,
                                 0,
                                 intrinsics.width(),
                                 intrinsics.height(),
                                 FormatType.RS2_FORMAT_BGR8,
                                 FPS);
+                        if (!rgbdFrameConsumers.isEmpty()) {
+                            config.enableStream(
+                                    StreamType.RS2_STREAM_DEPTH,
+                                    0,
+                                    intrinsics.width(),
+                                    intrinsics.height(),
+                                    FormatType.RS2_FORMAT_Z16,
+                                    FPS);
+                        }
                         pipeline.start(config);
                         var depthFilters = new ArrayList<Filter<DepthFrame, DepthFrame>>();
-                        if (isSpatialFilterEnabled) depthFilters.add(SpatialFilter.create());
+                        if (isSpatialFilterEnabled) {
+                            Preconditions.isTrue(
+                                    rgbdFrameConsumers.isEmpty(), "No RGBD consumers defined");
+                            depthFilters.add(SpatialFilter.create());
+                        }
                         loop(pipeline, depthFilters);
                         depthFilters.forEach(Filter::close);
                     }
@@ -145,10 +159,10 @@ public class RealSenseCamera extends IdempotentService {
         }
     }
 
-    private void proc(Frame<?> colorFrame, Frame<?> depthFrame) {
+    private void proc(Frame<?> colorFrame, Optional<Frame<?>> depthFrame) {
         LOGGER.fine(
                 "Processing pair of frames: color frame {0}, depth frame {1}",
-                colorFrame.getFrameNumber(), depthFrame.getFrameNumber());
+                colorFrame.getFrameNumber(), depthFrame.map(Frame::getFrameNumber));
         var colorMx =
                 new Mat(
                         intrinsics.height(),
@@ -159,14 +173,18 @@ public class RealSenseCamera extends IdempotentService {
             HighGui.imshow("", colorMx);
             HighGui.waitKey();
         }
-        var depthMx =
-                new Mat(
-                        intrinsics.height(),
-                        intrinsics.width(),
-                        CvType.CV_16UC1,
-                        depthFrame.getDataAsByteBuffer());
-        var frame = new RgbdImage(colorMx, depthMx);
-        frameConsumers.forEach(c -> c.accept(frame));
+        var rgbFrame = new RgbImage(colorMx);
+        rgbFrameConsumers.forEach(c -> c.accept(rgbFrame));
+        if (depthFrame.isPresent()) {
+            var depthMx =
+                    new Mat(
+                            intrinsics.height(),
+                            intrinsics.width(),
+                            CvType.CV_16UC1,
+                            depthFrame.get().getDataAsByteBuffer());
+            var rgbdFrame = new RgbdImage(colorMx, depthMx);
+            rgbdFrameConsumers.forEach(c -> c.accept(rgbdFrame));
+        }
     }
 
     /** Loop over the frames in the pipeline */
@@ -176,10 +194,12 @@ public class RealSenseCamera extends IdempotentService {
             if (frameSet.size() == 0) continue;
             frameSet = utils.alignToColorStream(frameSet);
             var colorFrameOpt = frameSet.getColorFrame(FormatType.RS2_FORMAT_BGR8);
-            var depthFrameOpt =
-                    frameSet.getDepthFrame().map(frame -> applyfilters(depthFilters, frame));
-            if (colorFrameOpt.isPresent() && depthFrameOpt.isPresent()) {
-                proc(colorFrameOpt.get(), depthFrameOpt.get());
+            var depthFrameOpt = Optional.<Frame<?>>empty();
+            if (!rgbdFrameConsumers.isEmpty())
+                depthFrameOpt =
+                        frameSet.getDepthFrame().map(frame -> applyfilters(depthFilters, frame));
+            if (colorFrameOpt.isPresent()) {
+                proc(colorFrameOpt.get(), depthFrameOpt);
             }
             frameSet.close();
         }
@@ -196,7 +216,7 @@ public class RealSenseCamera extends IdempotentService {
         XLogger.load("logging-matcv-debug.properties");
         var cameraInfo = CameraInfoPredefined.REALSENSE_D435i_640_480.getCameraInfo();
         try (var camera = new RealSenseCamera()) {
-            camera.withFrameConsumers(
+            camera.withRgbdFrameConsumers(
                             List.of(
                                     new RgbdToMarker3dTransformer(
                                             cameraInfo,

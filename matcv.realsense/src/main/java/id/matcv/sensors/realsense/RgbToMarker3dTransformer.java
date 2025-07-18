@@ -21,9 +21,6 @@ import id.matcv.markers.Marker;
 import id.matcv.markers.MarkerDetector3d;
 import id.matcv.markers.MarkerLocation3d;
 import id.matcv.types.camera.CameraInfo;
-import id.matcv.types.datatables.DataTable2;
-import id.matcv.types.pointcloud.PointCloudFromMemorySegmentAccessor;
-import java.lang.foreign.MemorySegment;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -32,37 +29,25 @@ import java.util.function.Consumer;
  *
  * @author lambdaprime intid@protonmail.com
  */
-public class RgbdToMarker3dTransformer implements Consumer<RgbdImage> {
-    private CameraInfo cameraInfo;
+public class RgbToMarker3dTransformer implements Consumer<RgbImage> {
     private Consumer<List<MarkerLocation3d>> consumer;
     private MarkerDetector3d detector;
 
-    public RgbdToMarker3dTransformer(
+    public RgbToMarker3dTransformer(
             CameraInfo cameraInfo, Consumer<List<MarkerLocation3d>> consumer) {
-        this.cameraInfo = cameraInfo;
         this.consumer = consumer;
         detector = new MarkerDetector3d(cameraInfo);
     }
 
-    public RgbdToMarker3dTransformer withUndistortion(boolean isEnabled) {
+    public RgbToMarker3dTransformer withUndistortion(boolean isEnabled) {
         if (isEnabled) detector = detector.withUndistortion();
         return this;
     }
 
     @Override
-    public void accept(RgbdImage rgbd) {
-        var depthMat = rgbd.depthMat();
-        var segment =
-                MemorySegment.ofAddress(depthMat.dataAddr())
-                        .reinterpret(depthMat.total() * Short.BYTES);
-        var pc =
-                new PointCloudFromMemorySegmentAccessor(
-                        segment, cameraInfo.cameraIntrinsics(), 1000.);
-        var markers =
-                detector.detectInPointCloud(new DataTable2<>(List.of(rgbd.colorMat()), List.of(pc)))
-                        .col2()
-                        .get(0);
+    public void accept(RgbImage rgb) {
+        var markers = detector.detect(List.of(rgb.colorMat()));
         if (markers.isEmpty()) return;
-        consumer.accept(markers);
+        consumer.accept(markers.get(0));
     }
 }
