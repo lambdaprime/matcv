@@ -24,6 +24,8 @@ import id.matcv.types.KeyPoints3dTable;
 import id.matcv.types.camera.CameraInfo;
 import id.matcv.types.datatables.DataTable2;
 import id.matcv.types.pointcloud.PointCloud;
+import id.mathcat.NdBuffersMath;
+import id.ndbuffers.NdBuffersFactory;
 import id.xfunction.Preconditions;
 import id.xfunction.logging.XLogger;
 import java.nio.file.Path;
@@ -32,6 +34,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.Optional;
 import org.opencv.core.Mat;
 import org.opencv.imgcodecs.Imgcodecs;
 
@@ -40,16 +43,20 @@ import org.opencv.imgcodecs.Imgcodecs;
  */
 public class MarkerDetector3d {
     private static final XLogger LOGGER = XLogger.getLogger(MarkerDetector3d.class);
+    private NdBuffersFactory ndFactory = new NdBuffersFactory();
     private ConvertersToNdBuffers converters = new ConvertersToNdBuffers();
     private Marker2dUtils markerUtils = new Marker2dUtils();
     private Marker3dUtils marker3dUtils = new Marker3dUtils();
     private OpenCvKit cvKit = new OpenCvKit();
+    private NdBuffersMath ndMath = new NdBuffersMath();
     private CameraInfo cameraInfo;
     private boolean showDetectedMarkers;
     private boolean isUndistortion;
+    private CameraPoseEstimator cameraPoseEstimator;
 
     public MarkerDetector3d(CameraInfo cameraInfo) {
         this.cameraInfo = cameraInfo;
+        this.cameraPoseEstimator = new CameraPoseEstimator(cameraInfo);
     }
 
     public MarkerDetector3d withUndistortion() {
@@ -69,7 +76,7 @@ public class MarkerDetector3d {
                 inputTable.col1().stream()
                         .map(imgPath -> new FileMat(Imgcodecs.imread(imgPath.toString()), imgPath))
                         .toList();
-        return detect(new DataTable2<>(imgs, inputTable.col2()));
+        return detectInPointCloud(new DataTable2<>(imgs, inputTable.col2()));
     }
 
     /**
@@ -77,7 +84,7 @@ public class MarkerDetector3d {
      *
      * @param inputTable RGB image, point cloud
      */
-    public DataTable2<KeyPoints3dTable, List<MarkerLocation3d>> detect(
+    public DataTable2<KeyPoints3dTable, List<MarkerLocation3d>> detectInPointCloud(
             DataTable2<? extends Mat, PointCloud> inputTable) {
         List<MarkerDetector2d.Result> detectorResults2d =
                 runArucoMarkersDetector(inputTable.col1(), showDetectedMarkers);
@@ -148,6 +155,37 @@ public class MarkerDetector3d {
             col2.add(locations);
         }
         var ret = new DataTable2<>(col1, col2);
+        LOGGER.fine("detectorResults3d={0}", ret);
+        return ret;
+    }
+
+    /**
+     * Detect all {@link MarkerType} markers
+     *
+     * @param input RGB image
+     */
+    public List<List<MarkerLocation3d>> detect(List<? extends Mat> input) {
+        List<MarkerDetector2d.Result> detectorResults2d =
+                runArucoMarkersDetector(input, showDetectedMarkers);
+        LOGGER.fine("detectorResults2d={0}", detectorResults2d);
+        var ret = new ArrayList<List<MarkerLocation3d>>();
+        for (int i = 0; i < detectorResults2d.size(); i++) {
+            var result = detectorResults2d.get(i);
+            var locations = new ArrayList<MarkerLocation3d>();
+            for (var ml : result.markersSortedByType()) {
+                var tx = cameraPoseEstimator.estimate(ml).get();
+                var points3d = ndFactory.matrixN3d(5);
+                // first point is center point at [0, 0]
+                ml.marker().create3dModel(0.001).copyTo(points3d, 1, 0);
+                points3d = ndMath.transform(points3d, tx);
+                var loc =
+                        new MarkerLocation3d(ml.marker(), points3d, ml.corners(), Optional.empty());
+                locations.add(loc);
+            }
+            if (result.img() instanceof FileMat fm)
+                LOGGER.fine("Found {0} markers on image {1}", ret.size(), fm.getFile());
+            ret.add(locations);
+        }
         LOGGER.fine("detectorResults3d={0}", ret);
         return ret;
     }

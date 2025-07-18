@@ -40,7 +40,7 @@ public class MarkerDetector3dTest extends OpenCvTest {
     private static final MatUtils utils = new MatUtils();
 
     @Test
-    public void test() {
+    public void test_detectInPointCloud() {
         Mat rgb =
                 Imgcodecs.imread(Paths.get("samples/00000000-rgb.png").toAbsolutePath().toString());
         utils.debugShape("rgb", rgb);
@@ -58,7 +58,7 @@ public class MarkerDetector3dTest extends OpenCvTest {
                         segment, cameraInfo.cameraIntrinsics(), 1000);
         var markers =
                 new MarkerDetector3d(cameraInfo)
-                        .detect(new DataTable2<>(List.of(rgb), List.of(pc)))
+                        .detectInPointCloud(new DataTable2<>(List.of(rgb), List.of(pc)))
                         .col2();
         Assertions.assertEquals(
                 """

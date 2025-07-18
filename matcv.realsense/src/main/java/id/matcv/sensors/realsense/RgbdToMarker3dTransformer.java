@@ -60,7 +60,7 @@ public class RgbdToMarker3dTransformer implements Consumer<RgbdImage> {
         var detector = new MarkerDetector3d(cameraInfo);
         if (isUndistortion) detector = detector.withUndistortion();
         var markers =
-                detector.detect(new DataTable2<>(List.of(rgbd.colorMat()), List.of(pc)))
+                detector.detectInPointCloud(new DataTable2<>(List.of(rgbd.colorMat()), List.of(pc)))
                         .col2()
                         .get(0);
         if (markers.isEmpty()) return;
