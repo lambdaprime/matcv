@@ -51,6 +51,7 @@ public class Marker3dUtils {
         for (int i = 0; i < markerLocations.size(); i++) {
             inPoints.put(markerLocations.get(i).getData().duplicate());
         }
+        inPoints.rewind();
         var mx = ndMath.transform(ndFactory.matrixN3d(inPoints), tx);
         var out = new ArrayList<MarkerLocation3d>(markerLocations.size());
         for (int i = 0; i < markerLocations.size(); i++) {
@@ -58,9 +59,9 @@ public class Marker3dUtils {
             var colStart = i * MarkerLocation3d.NUM_OF_POINTS;
             var data = ndFactory.matrixN3d(5);
             ndFactory
-                    .matrixN3d(new Slice(colStart, 5, 1), new Slice(0, 3, 1), mx)
+                    .matrixN3d(new Slice(colStart, colStart + 5, 1), new Slice(0, 3, 1), mx)
                     .copyTo(data, 0, 0);
-            out.add(new MarkerLocation3d(loc.marker(), data, loc.corners(), Optional.empty()));
+            out.add(new MarkerLocation3d(loc.marker(), data, loc.corners(), loc.imageFile()));
         }
         return out;
     }

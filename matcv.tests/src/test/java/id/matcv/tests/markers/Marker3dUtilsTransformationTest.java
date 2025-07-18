@@ -21,12 +21,15 @@ import id.matcv.markers.Marker;
 import id.matcv.markers.Marker3dUtils;
 import id.matcv.markers.MarkerLocation3d;
 import id.matcv.markers.MarkerType;
+import id.ndbuffers.NdBuffersJsonUtils;
 import id.ndbuffers.matrix.Matrix4d;
 import id.ndbuffers.matrix.Vector3d;
 import id.xfunctiontests.XAsserts;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
@@ -34,6 +37,8 @@ import org.junit.jupiter.params.provider.MethodSource;
  * @author lambdaprime intid@protonmail.com
  */
 public class Marker3dUtilsTransformationTest {
+
+    private static final NdBuffersJsonUtils jsonUtils = new NdBuffersJsonUtils();
 
     record TestCase(MarkerLocation3d from, MarkerLocation3d to, Matrix4d tx) {}
 
@@ -55,6 +60,27 @@ public class Marker3dUtilsTransformationTest {
                                 new Vector3d(4.9, -3.4, 0.7),
                                 new Vector3d(1.3, -3.4, 1.1),
                                 new Vector3d(1.3, 2, 1.1),
+                                Optional.empty()),
+                        new Matrix4d(
+                                new double[] {
+                                    0.9, 0, 0.1, 3.0, 0, 0.9, 0, -0.7, -0.1, 0, 0.9, 0, 0, 0, 0, 1
+                                })),
+                new TestCase(
+                        new MarkerLocation3d(
+                                new Marker(MarkerType.ONE),
+                                new Vector3d(-2, 3, 1),
+                                new Vector3d(0, 0, 0),
+                                new Vector3d(2, 3, 1),
+                                new Vector3d(2, -3, 1),
+                                new Vector3d(-2, -3, 1),
+                                Optional.empty()),
+                        new MarkerLocation3d(
+                                new Marker(MarkerType.ONE),
+                                new Vector3d(1.3, 2.0, 1.1),
+                                new Vector3d(3.0, -0.7, 0.0),
+                                new Vector3d(4.9, 2.0, 0.7),
+                                new Vector3d(4.9, -3.4000000000000004, 0.7),
+                                new Vector3d(1.3, -3.4000000000000004, 1.1),
                                 Optional.empty()),
                         new Matrix4d(
                                 new double[] {
@@ -133,7 +159,7 @@ public class Marker3dUtilsTransformationTest {
 
     @ParameterizedTest
     @MethodSource("dataProvider")
-    public void test_transformAll(TestCase testCase) {
+    public void test_transformAll_single_item(TestCase testCase) {
         var utils = new Marker3dUtils();
         var actual = utils.transformAll(List.of(testCase.from), testCase.tx);
         System.out.println(actual);
@@ -141,5 +167,54 @@ public class Marker3dUtilsTransformationTest {
                 testCase.to.getData().duplicate().array(),
                 actual.get(0).getData().duplicate().array(),
                 0.01);
+    }
+
+    @Test
+    public void test_transformAll_many_items() {
+        var utils = new Marker3dUtils();
+        var actual =
+                utils.transformAll(
+                        List.of(
+                                new MarkerLocation3d(
+                                        new Marker(MarkerType.ONE),
+                                        new Vector3d(0, 0, 0),
+                                        new Vector3d(2, 3, 1),
+                                        new Vector3d(2, -3, 1),
+                                        new Vector3d(-2, -3, 1),
+                                        new Vector3d(-2, 3, 1),
+                                        Optional.empty()),
+                                new MarkerLocation3d(
+                                        new Marker(MarkerType.ONE),
+                                        new Vector3d(-2, 3, 1),
+                                        new Vector3d(0, 0, 0),
+                                        new Vector3d(2, 3, 1),
+                                        new Vector3d(2, -3, 1),
+                                        new Vector3d(-2, -3, 1),
+                                        Optional.empty())),
+                        new Matrix4d(
+                                new double[] {
+                                    0.9, 0, 0.1, 3.0, 0, 0.9, 0, -0.7, -0.1, 0, 0.9, 0, 0, 0, 0, 1
+                                }));
+        System.out.println(actual);
+        Assertions.assertEquals(
+                """
+{ "data" : [
+ [3, -0.7, 0],
+ [4.9, 2, 0.7],
+ [4.9, -3.4, 0.7],
+ [1.3, -3.4, 1.1],
+ [1.3, 2, 1.1]
+] }""",
+                jsonUtils.dumpAsJson(actual.get(0).getData()));
+        Assertions.assertEquals(
+                """
+{ "data" : [
+ [1.3, 2, 1.1],
+ [3, -0.7, 0],
+ [4.9, 2, 0.7],
+ [4.9, -3.4, 0.7],
+ [1.3, -3.4, 1.1]
+] }""",
+                jsonUtils.dumpAsJson(actual.get(1).getData()));
     }
 }
