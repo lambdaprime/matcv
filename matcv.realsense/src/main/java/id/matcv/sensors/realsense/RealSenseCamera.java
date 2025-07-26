@@ -37,6 +37,8 @@ import id.xfunction.lang.XThread;
 import id.xfunction.logging.XLogger;
 import id.xfunction.util.IdempotentService;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -47,7 +49,9 @@ import java.util.function.Consumer;
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
+import org.opencv.core.MatOfInt;
 import org.opencv.highgui.HighGui;
+import org.opencv.imgcodecs.Imgcodecs;
 
 /**
  * @author lambdaprime intid@protonmail.com
@@ -67,6 +71,7 @@ public class RealSenseCamera extends IdempotentService {
     private ExecutorService executor = Executors.newSingleThreadExecutor();
     private boolean isExecutorPrivate = true;
     private boolean isSpatialFilterEnabled;
+    private Optional<Path> folder = Optional.empty();
 
     public RealSenseCamera withExecutor(ExecutorService executor) {
         this.executor = executor;
@@ -96,6 +101,16 @@ public class RealSenseCamera extends IdempotentService {
 
     public RealSenseCamera withSpatialFilter(boolean isEnabled) {
         this.isSpatialFilterEnabled = isEnabled;
+        return this;
+    }
+
+    public RealSenseCamera withOutputFolder(Path folder) {
+        try {
+            Files.createDirectories(folder);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        this.folder = Optional.of(folder);
         return this;
     }
 
@@ -173,6 +188,12 @@ public class RealSenseCamera extends IdempotentService {
             HighGui.imshow("", colorMx);
             HighGui.waitKey();
         }
+        folder.ifPresent(
+                output -> {
+                    Path p = output.resolve("frame" + System.currentTimeMillis() + ".png");
+                    Imgcodecs.imwrite(
+                            p.toString(), colorMx, new MatOfInt(Imgcodecs.IMWRITE_PNG_COMPRESSION));
+                });
         var rgbFrame = new RgbImage(colorMx);
         rgbFrameConsumers.forEach(c -> c.accept(rgbFrame));
         if (depthFrame.isPresent()) {
