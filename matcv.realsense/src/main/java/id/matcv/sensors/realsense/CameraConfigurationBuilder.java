@@ -40,6 +40,7 @@ public class CameraConfigurationBuilder {
     private boolean isSpatialFilterEnabled = false;
     private boolean isExecutorPrivate = true;
     private Optional<Path> outputFolder = Optional.empty();
+    private Optional<Path> inputFolder = Optional.empty();
 
     public CameraConfigurationBuilder withExecutor(ExecutorService executor) {
         this.executor = executor;
@@ -77,6 +78,11 @@ public class CameraConfigurationBuilder {
         return this;
     }
 
+    public CameraConfigurationBuilder withInputFolder(Path inputFolder) {
+        this.inputFolder = Optional.of(inputFolder);
+        return this;
+    }
+
     public CameraConfiguration build() {
         return new CameraConfiguration(
                 executor,
@@ -86,6 +92,7 @@ public class CameraConfigurationBuilder {
                 intrinsics,
                 isShowFramesEnabled,
                 isSpatialFilterEnabled,
-                outputFolder);
+                outputFolder,
+                inputFolder);
     }
 }

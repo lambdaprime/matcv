@@ -31,6 +31,7 @@ import java.util.function.Consumer;
  *     key
  * @param isSpatialFilterEnabled control RealSense spatial filter
  * @param outputFolder save all frames into a folder
+ * @param inputFolder read frames from the folder instead of camera
  * @author lambdaprime intid@protonmail.com
  */
 public record CameraConfiguration(
@@ -41,7 +42,8 @@ public record CameraConfiguration(
         CameraIntrinsics intrinsics,
         boolean isShowFramesEnabled,
         boolean isSpatialFilterEnabled,
-        Optional<Path> outputFolder) {
+        Optional<Path> outputFolder,
+        Optional<Path> inputFolder) {
 
     public CameraConfiguration {
         outputFolder.ifPresent(

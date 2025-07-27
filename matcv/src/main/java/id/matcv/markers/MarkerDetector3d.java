@@ -162,11 +162,11 @@ public class MarkerDetector3d {
     /**
      * Detect all {@link MarkerType} markers
      *
-     * @param input RGB image
+     * @param inputImages RGB image
      */
-    public List<List<MarkerLocation3d>> detect(List<? extends Mat> input) {
+    public List<List<MarkerLocation3d>> detect(List<? extends Mat> inputImages) {
         List<MarkerDetector2d.Result> detectorResults2d =
-                runArucoMarkersDetector(input, showDetectedMarkers);
+                runArucoMarkersDetector(inputImages, showDetectedMarkers);
         LOGGER.fine("detectorResults2d={0}", detectorResults2d);
         var ret = new ArrayList<List<MarkerLocation3d>>();
         for (int i = 0; i < detectorResults2d.size(); i++) {

@@ -29,18 +29,15 @@ import id.jrealsense.filters.SpatialFilter;
 import id.jrealsense.frames.DepthFrame;
 import id.jrealsense.frames.Frame;
 import id.jrealsense.utils.FrameUtils;
-import id.matcv.types.camera.CameraInfoPredefined;
 import id.xfunction.Preconditions;
 import id.xfunction.lang.XThread;
 import id.xfunction.logging.XLogger;
 import id.xfunction.util.IdempotentService;
-import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
-import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfInt;
@@ -50,7 +47,7 @@ import org.opencv.imgcodecs.Imgcodecs;
 /**
  * @author lambdaprime intid@protonmail.com
  */
-public class RealSenseCamera extends IdempotentService {
+public class RealSenseCamera extends IdempotentService implements Camera {
     private static final XLogger LOGGER = XLogger.getLogger(RealSenseCamera.class);
     private static final FrameUtils utils = new FrameUtils();
 
@@ -194,27 +191,5 @@ public class RealSenseCamera extends IdempotentService {
             List<Filter<DepthFrame, DepthFrame>> filters, DepthFrame frame) {
         for (var filter : filters) frame = filter.process(frame);
         return frame;
-    }
-
-    public static void main(String[] args) throws IOException {
-        System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-        XLogger.load("logging-matcv-debug.properties");
-        var cameraInfo = CameraInfoPredefined.REALSENSE_D435i_640_480.getCameraInfo();
-        try (var camera =
-                new RealSenseCamera(
-                        new CameraConfigurationBuilder()
-                                .addRgbdFrameConsumer(
-                                        new RgbdToMarker3dTransformer(
-                                                cameraInfo,
-                                                markers ->
-                                                        LOGGER.info(
-                                                                "Markers detected: {0}", markers)))
-                                .withIntrinsics(cameraInfo.cameraIntrinsics())
-                                .enableShowFrames(true)
-                                .build())) {
-            camera.start();
-            System.out.println("Press Enter to stop...");
-            System.in.read();
-        }
     }
 }

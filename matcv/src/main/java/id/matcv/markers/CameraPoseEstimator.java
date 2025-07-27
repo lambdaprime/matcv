@@ -61,8 +61,12 @@ public class CameraPoseEstimator {
         // be in the same unit. Normally, unit is meters."
         // Since we give marker size in millis, we expect the TX to describe transformation in
         // millis too.
+        // NOTE: estimatePoseSingleMarkers is similar to solvePnP except it is designed for Aruco
+        // markers
+        // NOTE: In latest versions of OpenCV estimatePoseSingleMarkers is replaced with solvePnP
         Aruco.estimatePoseSingleMarkers(
                 List.of(loc.corners().orElseThrow()),
+                // convert meters to millis
                 Marker.MARKERS_SIZE_IN_MM / 1000.F,
                 cameraMat,
                 distortionMat,
