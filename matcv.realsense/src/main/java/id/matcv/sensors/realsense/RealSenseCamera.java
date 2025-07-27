@@ -30,22 +30,16 @@ import id.jrealsense.frames.DepthFrame;
 import id.jrealsense.frames.Frame;
 import id.jrealsense.utils.FrameUtils;
 import id.matcv.types.camera.CameraInfoPredefined;
-import id.matcv.types.camera.CameraIntrinsics;
-import id.matcv.types.camera.CameraIntrinsicsPredefined;
 import id.xfunction.Preconditions;
 import id.xfunction.lang.XThread;
 import id.xfunction.logging.XLogger;
 import id.xfunction.util.IdempotentService;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Consumer;
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
@@ -63,108 +57,74 @@ public class RealSenseCamera extends IdempotentService {
     /** Frames per second */
     private static final int FPS = 30;
 
-    private List<Consumer<RgbdImage>> rgbdFrameConsumers = List.of();
-    private List<Consumer<RgbImage>> rgbFrameConsumers = List.of();
-    private CameraIntrinsics intrinsics =
-            CameraIntrinsicsPredefined.REALSENSE_D435i_640_480.getCameraIntrinsics();
-    private boolean isShowFramesEnabled;
-    private ExecutorService executor = Executors.newSingleThreadExecutor();
-    private boolean isExecutorPrivate = true;
-    private boolean isSpatialFilterEnabled;
-    private Optional<Path> folder = Optional.empty();
+    private CameraConfiguration cameraConfig;
 
-    public RealSenseCamera withExecutor(ExecutorService executor) {
-        this.executor = executor;
-        isExecutorPrivate = false;
-        return this;
+    public RealSenseCamera() {
+        this(new CameraConfigurationBuilder().build());
     }
 
-    public RealSenseCamera withRgbdFrameConsumers(List<Consumer<RgbdImage>> frameConsumers) {
-        this.rgbdFrameConsumers = frameConsumers;
-        return this;
-    }
-
-    public RealSenseCamera withRgbFrameConsumers(List<Consumer<RgbImage>> frameConsumers) {
-        this.rgbFrameConsumers = frameConsumers;
-        return this;
-    }
-
-    public RealSenseCamera withCameraIntrinsics(CameraIntrinsics intrinsics) {
-        this.intrinsics = intrinsics;
-        return this;
-    }
-
-    public RealSenseCamera withShowFrames(boolean isEnabled) {
-        this.isShowFramesEnabled = isEnabled;
-        return this;
-    }
-
-    public RealSenseCamera withSpatialFilter(boolean isEnabled) {
-        this.isSpatialFilterEnabled = isEnabled;
-        return this;
-    }
-
-    public RealSenseCamera withOutputFolder(Path folder) {
-        try {
-            Files.createDirectories(folder);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        this.folder = Optional.of(folder);
-        return this;
+    public RealSenseCamera(CameraConfiguration config) {
+        this.cameraConfig = config;
     }
 
     /** Setup resources and run the looper */
     @Override
     protected void onStart() {
-        executor.execute(
-                () -> {
-                    // using try-with-resources to properly release all librealsense resources
-                    try (var ctx = Context.create();
-                            var pipeline = Pipeline.create(ctx);
-                            var config = Config.create(ctx);
-                            var locator = DeviceLocator.create(ctx)) {
-                        if (locator.getAllDevices().isEmpty()) {
-                            System.err.println("No devices found");
-                            return;
-                        }
-                        var dev = locator.getDevice(0);
-                        LOGGER.info("Detected camera device: {0}", dev);
-                        LOGGER.info("Reset camera hardware...");
-                        dev.reset();
-                        XThread.sleep(5000);
-                        config.enableStream(
-                                StreamType.RS2_STREAM_COLOR,
-                                0,
-                                intrinsics.width(),
-                                intrinsics.height(),
-                                FormatType.RS2_FORMAT_BGR8,
-                                FPS);
-                        if (!rgbdFrameConsumers.isEmpty()) {
-                            config.enableStream(
-                                    StreamType.RS2_STREAM_DEPTH,
-                                    0,
-                                    intrinsics.width(),
-                                    intrinsics.height(),
-                                    FormatType.RS2_FORMAT_Z16,
-                                    FPS);
-                        }
-                        pipeline.start(config);
-                        var depthFilters = new ArrayList<Filter<DepthFrame, DepthFrame>>();
-                        if (isSpatialFilterEnabled) {
-                            Preconditions.isTrue(
-                                    rgbdFrameConsumers.isEmpty(), "No RGBD consumers defined");
-                            depthFilters.add(SpatialFilter.create());
-                        }
-                        loop(pipeline, depthFilters);
-                        depthFilters.forEach(Filter::close);
-                    }
-                });
+        cameraConfig
+                .executor()
+                .execute(
+                        () -> {
+                            // using try-with-resources to properly release all librealsense
+                            // resources
+                            try (var ctx = Context.create();
+                                    var pipeline = Pipeline.create(ctx);
+                                    var config = Config.create(ctx);
+                                    var locator = DeviceLocator.create(ctx)) {
+                                if (locator.getAllDevices().isEmpty()) {
+                                    System.err.println("No devices found");
+                                    return;
+                                }
+                                var dev = locator.getDevice(0);
+                                LOGGER.info("Detected camera device: {0}", dev);
+                                LOGGER.info("Reset camera hardware...");
+                                dev.reset();
+                                XThread.sleep(5000);
+                                var intrinsics = cameraConfig.intrinsics();
+                                config.enableStream(
+                                        StreamType.RS2_STREAM_COLOR,
+                                        0,
+                                        intrinsics.width(),
+                                        intrinsics.height(),
+                                        FormatType.RS2_FORMAT_BGR8,
+                                        FPS);
+                                var rgbdFrameConsumers = cameraConfig.rgbdFrameConsumers();
+                                if (!rgbdFrameConsumers.isEmpty()) {
+                                    config.enableStream(
+                                            StreamType.RS2_STREAM_DEPTH,
+                                            0,
+                                            intrinsics.width(),
+                                            intrinsics.height(),
+                                            FormatType.RS2_FORMAT_Z16,
+                                            FPS);
+                                }
+                                pipeline.start(config);
+                                var depthFilters = new ArrayList<Filter<DepthFrame, DepthFrame>>();
+                                if (cameraConfig.isSpatialFilterEnabled()) {
+                                    Preconditions.isTrue(
+                                            rgbdFrameConsumers.isEmpty(),
+                                            "No RGBD consumers defined");
+                                    depthFilters.add(SpatialFilter.create());
+                                }
+                                loop(pipeline, depthFilters);
+                                depthFilters.forEach(Filter::close);
+                            }
+                        });
     }
 
     @Override
     protected void onClose() {
-        if (isExecutorPrivate) {
+        if (cameraConfig.isExecutorPrivate()) {
+            var executor = cameraConfig.executor();
             executor.shutdown();
             try {
                 executor.awaitTermination(Long.MAX_VALUE, TimeUnit.DAYS);
@@ -180,43 +140,47 @@ public class RealSenseCamera extends IdempotentService {
                 colorFrame.getFrameNumber(), depthFrame.map(Frame::getFrameNumber));
         var colorMx =
                 new Mat(
-                        intrinsics.height(),
-                        intrinsics.width(),
+                        cameraConfig.intrinsics().height(),
+                        cameraConfig.intrinsics().width(),
                         CvType.CV_8UC3,
                         colorFrame.getDataAsByteBuffer());
-        if (isShowFramesEnabled) {
+        if (cameraConfig.isShowFramesEnabled()) {
             HighGui.imshow("", colorMx);
             HighGui.waitKey();
         }
-        folder.ifPresent(
-                output -> {
-                    Path p = output.resolve("frame" + System.currentTimeMillis() + ".png");
-                    Imgcodecs.imwrite(
-                            p.toString(), colorMx, new MatOfInt(Imgcodecs.IMWRITE_PNG_COMPRESSION));
-                });
+        cameraConfig
+                .outputFolder()
+                .ifPresent(
+                        output -> {
+                            Path p = output.resolve("frame" + System.currentTimeMillis() + ".png");
+                            Imgcodecs.imwrite(
+                                    p.toString(),
+                                    colorMx,
+                                    new MatOfInt(Imgcodecs.IMWRITE_PNG_COMPRESSION));
+                        });
         var rgbFrame = new RgbImage(colorMx);
-        rgbFrameConsumers.forEach(c -> c.accept(rgbFrame));
+        cameraConfig.rgbFrameConsumers().forEach(c -> c.accept(rgbFrame));
         if (depthFrame.isPresent()) {
             var depthMx =
                     new Mat(
-                            intrinsics.height(),
-                            intrinsics.width(),
+                            cameraConfig.intrinsics().height(),
+                            cameraConfig.intrinsics().width(),
                             CvType.CV_16UC1,
                             depthFrame.get().getDataAsByteBuffer());
             var rgbdFrame = new RgbdImage(colorMx, depthMx);
-            rgbdFrameConsumers.forEach(c -> c.accept(rgbdFrame));
+            cameraConfig.rgbdFrameConsumers().forEach(c -> c.accept(rgbdFrame));
         }
     }
 
     /** Loop over the frames in the pipeline */
     private void loop(Pipeline pipeline, List<Filter<DepthFrame, DepthFrame>> depthFilters) {
-        while (getServiceStatus() == Status.STARTED && !executor.isShutdown()) {
+        while (getServiceStatus() == Status.STARTED && !cameraConfig.executor().isShutdown()) {
             FrameSet frameSet = pipeline.waitForFrames();
             if (frameSet.size() == 0) continue;
             frameSet = utils.alignToColorStream(frameSet);
             var colorFrameOpt = frameSet.getColorFrame(FormatType.RS2_FORMAT_BGR8);
             var depthFrameOpt = Optional.<Frame<?>>empty();
-            if (!rgbdFrameConsumers.isEmpty())
+            if (!cameraConfig.rgbdFrameConsumers().isEmpty())
                 depthFrameOpt =
                         frameSet.getDepthFrame().map(frame -> applyfilters(depthFilters, frame));
             if (colorFrameOpt.isPresent()) {
@@ -236,16 +200,19 @@ public class RealSenseCamera extends IdempotentService {
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
         XLogger.load("logging-matcv-debug.properties");
         var cameraInfo = CameraInfoPredefined.REALSENSE_D435i_640_480.getCameraInfo();
-        try (var camera = new RealSenseCamera()) {
-            camera.withRgbdFrameConsumers(
-                            List.of(
-                                    new RgbdToMarker3dTransformer(
-                                            cameraInfo,
-                                            markers ->
-                                                    LOGGER.info("Markers detected: {0}", markers))))
-                    .withCameraIntrinsics(cameraInfo.cameraIntrinsics())
-                    .withShowFrames(true)
-                    .start();
+        try (var camera =
+                new RealSenseCamera(
+                        new CameraConfigurationBuilder()
+                                .addRgbdFrameConsumer(
+                                        new RgbdToMarker3dTransformer(
+                                                cameraInfo,
+                                                markers ->
+                                                        LOGGER.info(
+                                                                "Markers detected: {0}", markers)))
+                                .withIntrinsics(cameraInfo.cameraIntrinsics())
+                                .enableShowFrames(true)
+                                .build())) {
+            camera.start();
             System.out.println("Press Enter to stop...");
             System.in.read();
         }
