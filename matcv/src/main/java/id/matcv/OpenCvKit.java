@@ -31,7 +31,6 @@ import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
 import org.opencv.core.Scalar;
-import org.opencv.highgui.HighGui;
 import org.opencv.imgproc.Imgproc;
 
 /**
@@ -188,7 +187,8 @@ public class OpenCvKit {
                             case FileMat fmat -> fmat.getFile().getFileName().toString();
                             default -> "";
                         };
-        HighGui.imshow(titleExtractor.apply(img), img);
-        if (waitKey) HighGui.waitKey();
+        var window = new MatWindow(titleExtractor.apply(img), img.rows(), img.cols());
+        window.update(img);
+        if (waitKey) window.waitKey();
     }
 }

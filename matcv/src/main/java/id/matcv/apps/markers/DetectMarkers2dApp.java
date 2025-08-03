@@ -17,6 +17,7 @@
  */
 package id.matcv.apps.markers;
 
+import id.matcv.MatWindow;
 import id.matcv.markers.Marker2dUtils;
 import id.matcv.markers.MarkerDetector2d;
 import id.matcv.types.camera.CameraInfo;
@@ -81,7 +82,7 @@ CAMERA_INFO - one of %s. Default is BLENDER_DEFAULT.
         var markerUtils = new Marker2dUtils();
         markers = markerUtils.undistort(img, markers, getCameraInfo());
 
-        HighGui.imshow(imageFile.toString(), img);
+        new MatWindow(imageFile.toString(), img.rows(), img.cols()).update(img);
         HighGui.waitKey();
     }
 

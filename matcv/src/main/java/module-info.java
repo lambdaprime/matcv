@@ -65,6 +65,7 @@ module matcv {
     requires ejml.ddense;
     requires ejml.core;
     requires transitive ndbuffers;
+    requires java.desktop;
 
     exports id.matcv;
     exports id.matcv.accessors;
