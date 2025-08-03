@@ -64,6 +64,11 @@ public class MarkerDetector3d {
         return this;
     }
 
+    public MarkerDetector3d withPoseEstimationAlgorithm(CameraPoseEstimationAlgorithm algorithm) {
+        cameraPoseEstimator.withAlgorithm(algorithm);
+        return this;
+    }
+
     public MarkerDetector3d withShowDetectedMarkers(boolean enabled) {
         this.showDetectedMarkers = enabled;
         return this;

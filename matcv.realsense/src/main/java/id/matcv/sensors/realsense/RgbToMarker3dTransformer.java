@@ -17,6 +17,7 @@
  */
 package id.matcv.sensors.realsense;
 
+import id.matcv.markers.CameraPoseEstimationAlgorithm;
 import id.matcv.markers.Marker;
 import id.matcv.markers.MarkerDetector3d;
 import id.matcv.markers.MarkerLocation3d;
@@ -41,6 +42,12 @@ public class RgbToMarker3dTransformer implements Consumer<RgbImage> {
 
     public RgbToMarker3dTransformer withUndistortion(boolean isEnabled) {
         if (isEnabled) detector = detector.withUndistortion();
+        return this;
+    }
+
+    public RgbToMarker3dTransformer withPoseEstimationAlgorithm(
+            CameraPoseEstimationAlgorithm algorithm) {
+        detector.withPoseEstimationAlgorithm(algorithm);
         return this;
     }
 

@@ -42,14 +42,20 @@ public class CameraPoseEstimator {
 
     private NdBuffersFactory ndFactory = new NdBuffersFactory();
     private MatUtils matUtils = new MatUtils();
-    private ConvertersToOpenCv converters = new ConvertersToOpenCv();
+    private ConvertersToOpenCv openCvConverters = new ConvertersToOpenCv();
     private ConvertersToNdBuffers ndConverters = new ConvertersToNdBuffers();
     private Mat cameraMat;
     private MatOfDouble distortionMat;
+    private CameraPoseEstimationAlgorithm algorithm;
 
     public CameraPoseEstimator(CameraInfo cameraInfo) {
-        cameraMat = converters.toMat64F(cameraInfo.cameraIntrinsics().cameraMatrix());
-        distortionMat = converters.toMatOfDouble(cameraInfo.distortionCoefficients());
+        cameraMat = openCvConverters.toMat64F(cameraInfo.cameraIntrinsics().cameraMatrix());
+        distortionMat = openCvConverters.toMatOfDouble(cameraInfo.distortionCoefficients());
+    }
+
+    public CameraPoseEstimator withAlgorithm(CameraPoseEstimationAlgorithm algorithm) {
+        this.algorithm = algorithm;
+        return this;
     }
 
     public Optional<Matrix4d> estimate(MarkerLocation2d loc) {
@@ -61,17 +67,27 @@ public class CameraPoseEstimator {
         // be in the same unit. Normally, unit is meters."
         // Since we give marker size in millis, we expect the TX to describe transformation in
         // millis too.
-        // NOTE: estimatePoseSingleMarkers is similar to solvePnP except it is designed for Aruco
-        // markers
-        // NOTE: In latest versions of OpenCV estimatePoseSingleMarkers is replaced with solvePnP
-        Aruco.estimatePoseSingleMarkers(
-                List.of(loc.corners().orElseThrow()),
-                // convert meters to millis
-                Marker.MARKERS_SIZE_IN_MM / 1000.F,
-                cameraMat,
-                distortionMat,
-                rvec,
-                tvec);
+        if (algorithm == CameraPoseEstimationAlgorithm.SOLVE_PNP_P3P) {
+            // convert meters to millis
+            Calib3d.solvePnP(
+                    openCvConverters.copyToMatOfPoint32F(loc.marker().create3dModel(0.001)),
+                    loc.corners().orElseThrow(),
+                    cameraMat,
+                    distortionMat,
+                    rvec,
+                    tvec,
+                    false,
+                    Calib3d.SOLVEPNP_P3P);
+        } else {
+            Aruco.estimatePoseSingleMarkers(
+                    List.of(loc.corners().orElseThrow()),
+                    // convert meters to millis
+                    Marker.MARKERS_SIZE_IN_MM / 1000.F,
+                    cameraMat,
+                    distortionMat,
+                    rvec,
+                    tvec);
+        }
         var rmx = new Mat();
         Calib3d.Rodrigues(rvec, rmx);
         Preconditions.equals(new Size(3, 3), rmx.size());
