@@ -29,9 +29,11 @@ import org.opencv.core.Mat;
 import org.opencv.highgui.HighGui;
 
 /**
+ * Graphical User Interface Window to render OpenCV {@link Mat} objects
+ *
  * @author lambdaprime intid@protonmail.com
  */
-public class MatWindow {
+public class MatGuiWindow {
 
     private JLabel lbl;
     private volatile CountDownLatch keyPressed = new CountDownLatch(1);
@@ -39,7 +41,7 @@ public class MatWindow {
     private int rows;
     private int cols;
 
-    public MatWindow(String title, int rows, int cols) {
+    public MatGuiWindow(String title, int rows, int cols) {
         this.title = title;
         this.rows = rows;
         this.cols = cols;

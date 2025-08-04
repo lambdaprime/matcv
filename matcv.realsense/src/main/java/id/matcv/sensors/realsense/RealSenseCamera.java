@@ -29,7 +29,7 @@ import id.jrealsense.filters.SpatialFilter;
 import id.jrealsense.frames.DepthFrame;
 import id.jrealsense.frames.Frame;
 import id.jrealsense.utils.FrameUtils;
-import id.matcv.MatWindow;
+import id.matcv.MatGuiWindow;
 import id.xfunction.Preconditions;
 import id.xfunction.lang.XThread;
 import id.xfunction.logging.XLogger;
@@ -55,7 +55,7 @@ public class RealSenseCamera extends IdempotentService implements Camera {
     private static final int FPS = 30;
 
     private CameraConfiguration cameraConfig;
-    private MatWindow matWindow;
+    private MatGuiWindow matWindow;
     private int height;
     private int width;
 
@@ -72,7 +72,7 @@ public class RealSenseCamera extends IdempotentService implements Camera {
     /** Setup resources and run the looper */
     @Override
     protected void onStart() {
-        matWindow = new MatWindow("matcv" + System.currentTimeMillis(), height, width);
+        matWindow = new MatGuiWindow("matcv" + System.currentTimeMillis(), height, width);
         cameraConfig
                 .executor()
                 .execute(

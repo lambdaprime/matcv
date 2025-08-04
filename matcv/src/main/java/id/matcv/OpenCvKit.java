@@ -187,7 +187,7 @@ public class OpenCvKit {
                             case FileMat fmat -> fmat.getFile().getFileName().toString();
                             default -> "";
                         };
-        var window = new MatWindow(titleExtractor.apply(img), img.rows(), img.cols());
+        var window = new MatGuiWindow(titleExtractor.apply(img), img.rows(), img.cols());
         window.update(img);
         if (waitKey) window.waitKey();
     }
