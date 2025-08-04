@@ -143,7 +143,7 @@ public class RealSenseCamera extends IdempotentService implements Camera {
         var colorMx = new Mat(height, width, CvType.CV_8UC3, colorFrame.getDataAsByteBuffer());
         if (cameraConfig.isShowFramesEnabled()) {
             matWindow.update(colorMx);
-            matWindow.waitKey();
+            if (cameraConfig.isWaitKeyPress()) matWindow.waitKey();
         }
         cameraConfig
                 .outputFolder()

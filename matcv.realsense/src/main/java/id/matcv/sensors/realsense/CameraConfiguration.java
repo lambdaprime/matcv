@@ -29,6 +29,8 @@ import java.util.function.Consumer;
 /**
  * @param isShowFramesEnabled display every new frame on the screen and wait until user press any
  *     key
+ * @param isWaitKeyPress if {@link #isShowFramesEnabled} then wait user to press any key before
+ *     showing next frame
  * @param isSpatialFilterEnabled control RealSense spatial filter
  * @param outputFolder save all frames into a folder
  * @param inputFolder read frames from the folder instead of camera
@@ -41,6 +43,7 @@ public record CameraConfiguration(
         List<Consumer<RgbImage>> rgbFrameConsumers,
         CameraIntrinsics intrinsics,
         boolean isShowFramesEnabled,
+        boolean isWaitKeyPress,
         boolean isSpatialFilterEnabled,
         Optional<Path> outputFolder,
         Optional<Path> inputFolder) {

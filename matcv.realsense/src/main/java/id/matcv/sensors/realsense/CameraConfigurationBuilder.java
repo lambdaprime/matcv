@@ -37,6 +37,7 @@ public class CameraConfigurationBuilder {
     private CameraIntrinsics intrinsics =
             CameraIntrinsicsPredefined.REALSENSE_D435i_640_480.getCameraIntrinsics();
     private boolean isShowFramesEnabled = false;
+    private boolean isWaitKeyPress = false;
     private boolean isSpatialFilterEnabled = false;
     private boolean isExecutorPrivate = true;
     private Optional<Path> outputFolder = Optional.empty();
@@ -68,6 +69,11 @@ public class CameraConfigurationBuilder {
         return this;
     }
 
+    public CameraConfigurationBuilder enableWaitKeyPress(boolean isEnabled) {
+        isWaitKeyPress = isEnabled;
+        return this;
+    }
+
     public CameraConfigurationBuilder enableSpatialFilter(boolean isEnabled) {
         isSpatialFilterEnabled = isEnabled;
         return this;
@@ -91,6 +97,7 @@ public class CameraConfigurationBuilder {
                 rgbFrameConsumers,
                 intrinsics,
                 isShowFramesEnabled,
+                isWaitKeyPress,
                 isSpatialFilterEnabled,
                 outputFolder,
                 inputFolder);
