@@ -17,7 +17,6 @@
  */
 package id.matcv.markers;
 
-import id.matcv.OpenCvKit;
 import id.matcv.converters.ConvertersToNdBuffers;
 import id.matcv.types.FileMat;
 import id.matcv.types.KeyPoints3dTable;
@@ -45,12 +44,10 @@ public class MarkerDetector3d {
     private static final XLogger LOGGER = XLogger.getLogger(MarkerDetector3d.class);
     private NdBuffersFactory ndFactory = new NdBuffersFactory();
     private ConvertersToNdBuffers converters = new ConvertersToNdBuffers();
-    private Marker2dUtils markerUtils = new Marker2dUtils();
     private Marker3dUtils marker3dUtils = new Marker3dUtils();
-    private OpenCvKit cvKit = new OpenCvKit();
     private NdBuffersMath ndMath = new NdBuffersMath();
     private CameraInfo cameraInfo;
-    private boolean showDetectedMarkers;
+    private boolean isDrawDetectedMarkers;
     private boolean isUndistortion;
     private CameraPoseEstimator cameraPoseEstimator;
 
@@ -59,8 +56,8 @@ public class MarkerDetector3d {
         this.cameraPoseEstimator = new CameraPoseEstimator(cameraInfo);
     }
 
-    public MarkerDetector3d withUndistortion() {
-        isUndistortion = true;
+    public MarkerDetector3d withUndistortion(boolean isEnabled) {
+        isUndistortion = isEnabled;
         return this;
     }
 
@@ -69,8 +66,8 @@ public class MarkerDetector3d {
         return this;
     }
 
-    public MarkerDetector3d withShowDetectedMarkers(boolean enabled) {
-        this.showDetectedMarkers = enabled;
+    public MarkerDetector3d withDrawDetectedMarkers(boolean isEnabled) {
+        isDrawDetectedMarkers = isEnabled;
         return this;
     }
 
@@ -92,7 +89,7 @@ public class MarkerDetector3d {
     public DataTable2<KeyPoints3dTable, List<MarkerLocation3d>> detectInPointCloud(
             DataTable2<? extends Mat, PointCloud> inputTable) {
         List<MarkerDetector2d.Result> detectorResults2d =
-                runArucoMarkersDetector(inputTable.col1(), showDetectedMarkers);
+                runArucoMarkersDetector(inputTable.col1());
         LOGGER.fine("detectorResults2d={0}", detectorResults2d);
         var w = cameraInfo.cameraIntrinsics().width();
         var h = cameraInfo.cameraIntrinsics().height();
@@ -170,8 +167,7 @@ public class MarkerDetector3d {
      * @param inputImages RGB image
      */
     public List<List<MarkerLocation3d>> detect(List<? extends Mat> inputImages) {
-        List<MarkerDetector2d.Result> detectorResults2d =
-                runArucoMarkersDetector(inputImages, showDetectedMarkers);
+        List<MarkerDetector2d.Result> detectorResults2d = runArucoMarkersDetector(inputImages);
         LOGGER.fine("detectorResults2d={0}", detectorResults2d);
         var ret = new ArrayList<List<MarkerLocation3d>>();
         for (int i = 0; i < detectorResults2d.size(); i++) {
@@ -195,18 +191,13 @@ public class MarkerDetector3d {
         return ret;
     }
 
-    private List<MarkerDetector2d.Result> runArucoMarkersDetector(
-            List<? extends Mat> rgbImages, boolean showDetectedMarkers) {
+    private List<MarkerDetector2d.Result> runArucoMarkersDetector(List<? extends Mat> rgbImages) {
         List<MarkerDetector2d.Result> results = new ArrayList<MarkerDetector2d.Result>();
-        var detector = new MarkerDetector2d();
+        var detector = new MarkerDetector2d().withDrawDetectedMarkers(isDrawDetectedMarkers);
         if (isUndistortion) detector = detector.withUndistortion(cameraInfo);
         for (var img : rgbImages) {
             var result = detector.detect(img);
             results.add(result);
-            if (showDetectedMarkers) {
-                result.markersSortedByType().forEach(ml -> markerUtils.drawMarker(img, ml));
-                cvKit.show(img, true);
-            }
         }
         return results;
     }

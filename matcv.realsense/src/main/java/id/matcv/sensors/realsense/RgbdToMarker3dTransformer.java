@@ -45,7 +45,7 @@ public class RgbdToMarker3dTransformer implements Consumer<RgbdImage> {
     }
 
     public RgbdToMarker3dTransformer withUndistortion(boolean isEnabled) {
-        if (isEnabled) detector = detector.withUndistortion();
+        detector = detector.withUndistortion(isEnabled);
         return this;
     }
 

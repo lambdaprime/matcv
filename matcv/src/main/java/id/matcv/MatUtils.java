@@ -215,6 +215,5 @@ public class MatUtils {
         debugMat("rvec ", rvec);
         Calib3d.projectPoints(points3d, rvec, tvec, cameraMat, distortionMat, points2d);
         debugMat("points2d projected", points2d);
-        System.out.println("projected");
     }
 }

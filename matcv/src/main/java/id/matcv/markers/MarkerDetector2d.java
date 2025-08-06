@@ -63,11 +63,18 @@ public class MarkerDetector2d {
     private record DistortionParams(Mat cameraMat, MatOfDouble distortionMat) {}
 
     private Optional<DistortionParams> distortionParams = Optional.empty();
+    private Marker2dUtils markerUtils = new Marker2dUtils();
+    private boolean isDrawDetectedMarkers;
 
     public MarkerDetector2d withUndistortion(CameraInfo cameraInfo) {
         var cameraMat = converters.toMat64F(cameraInfo.cameraIntrinsics().cameraMatrix());
         var distortionMat = converters.toMatOfDouble(cameraInfo.distortionCoefficients());
         distortionParams = Optional.of(new DistortionParams(cameraMat, distortionMat));
+        return this;
+    }
+
+    public MarkerDetector2d withDrawDetectedMarkers(boolean isEnabled) {
+        isDrawDetectedMarkers = isEnabled;
         return this;
     }
 
@@ -122,6 +129,9 @@ public class MarkerDetector2d {
             if (mloc.marker().isOrigin()) origin = Optional.of(markers.getLast());
         }
         markers.sort(Comparator.<MarkerLocation2d, Marker>comparing(ml -> ml.marker()));
+        if (isDrawDetectedMarkers) {
+            markers.forEach(ml -> markerUtils.drawMarker(img, ml));
+        }
 
         LOGGER.fine("Number of markers detected: {0}", markers.size());
         return new Result(img, markers, origin);

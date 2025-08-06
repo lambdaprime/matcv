@@ -60,7 +60,6 @@ public class MarkerLocation2d extends AbstractMarkerLocation {
     }
 
     public static MarkerLocation2d create(Marker marker, Mat corners) {
-        System.out.println(corners.toString());
         double[] buf;
         buf = corners.get(0, 0);
         var p1 = new Vector2d(buf[0], buf[1]);

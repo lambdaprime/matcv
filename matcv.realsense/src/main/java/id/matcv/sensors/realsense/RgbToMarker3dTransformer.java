@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 /**
- * Accept {@link RgbdImage} and find all {@link Marker}
+ * Accept {@link RgbImage} and find all {@link Marker}
  *
  * @author lambdaprime intid@protonmail.com
  */
@@ -41,7 +41,7 @@ public class RgbToMarker3dTransformer implements Consumer<RgbImage> {
     }
 
     public RgbToMarker3dTransformer withUndistortion(boolean isEnabled) {
-        if (isEnabled) detector = detector.withUndistortion();
+        detector = detector.withUndistortion(isEnabled);
         return this;
     }
 
@@ -51,10 +51,17 @@ public class RgbToMarker3dTransformer implements Consumer<RgbImage> {
         return this;
     }
 
+    /** Draw all detected markers on the input {@link RgbImage} */
+    public RgbToMarker3dTransformer withDrawDetectedMarkers(boolean isEnabled) {
+        detector.withDrawDetectedMarkers(isEnabled);
+        return this;
+    }
+
     @Override
     public void accept(RgbImage rgb) {
-        var markers = detector.detect(List.of(rgb.colorMat()));
-        if (markers.isEmpty()) return;
-        consumer.accept(markers.get(0));
+        var batch = detector.detect(List.of(rgb.colorMat()));
+        if (batch.isEmpty()) return;
+        var markers = batch.get(0);
+        consumer.accept(markers);
     }
 }

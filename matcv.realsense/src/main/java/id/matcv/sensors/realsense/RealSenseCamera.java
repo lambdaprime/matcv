@@ -141,6 +141,8 @@ public class RealSenseCamera extends IdempotentService implements Camera {
                 "Processing pair of frames: color frame {0}, depth frame {1}",
                 colorFrame.getFrameNumber(), depthFrame.map(Frame::getFrameNumber));
         var colorMx = new Mat(height, width, CvType.CV_8UC3, colorFrame.getDataAsByteBuffer());
+        var rgbFrame = new RgbImage(colorMx);
+        cameraConfig.rgbFrameConsumers().forEach(c -> c.accept(rgbFrame));
         if (cameraConfig.isShowFramesEnabled()) {
             matWindow.update(colorMx);
             if (cameraConfig.isWaitKeyPress()) matWindow.waitKey();
@@ -155,8 +157,6 @@ public class RealSenseCamera extends IdempotentService implements Camera {
                                     colorMx,
                                     new MatOfInt(Imgcodecs.IMWRITE_PNG_COMPRESSION));
                         });
-        var rgbFrame = new RgbImage(colorMx);
-        cameraConfig.rgbFrameConsumers().forEach(c -> c.accept(rgbFrame));
         if (depthFrame.isPresent()) {
             var depthMx =
                     new Mat(height, width, CvType.CV_16UC1, depthFrame.get().getDataAsByteBuffer());
