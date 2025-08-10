@@ -16,7 +16,7 @@
  *
  * <ul>
  *   <li>toXXX, copyToXXX - create a full copy. Example {@link
- *       id.matcv.converters.ConvertersToOpenCv#copyToMat(byte...)}
+ *       id.matcv.converters.ConvertersToOpenCv#copyToMat8UC1(byte...)}
  *   <li>mapToXXX - create a view to the underlying data, no data is copied. Example {@link
  *       id.matcv.converters.ConvertersToOpenCv#mapToListOfMat(java.util.List)}
  * </ul>

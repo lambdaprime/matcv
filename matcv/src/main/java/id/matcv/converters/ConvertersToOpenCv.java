@@ -39,26 +39,26 @@ import org.opencv.utils.Converters;
  * @author lambdaprime intid@protonmail.com
  */
 public class ConvertersToOpenCv {
-    /** Create new CV_8U matrix */
-    public Mat copyToMat(byte... values) {
-        var mat = new Mat(1, values.length, CvType.CV_8U);
+    /** Create new CV_8UC1 matrix */
+    public Mat copyToMat8UC1(byte... values) {
+        var mat = new Mat(1, values.length, CvType.CV_8UC1);
         mat.put(0, 0, values);
         return mat;
     }
 
-    public Mat copyToMat64F(double[] data, int cols, int rows) {
+    public Mat copyToMat64FC1(double[] data, int cols, int rows) {
         return new MatOfDouble(data).reshape(1, new int[] {rows, cols});
     }
 
-    public Mat copyToMat32F(double[] data, int cols, int rows) {
+    public Mat copyToMat32FC1(double[] data, int cols, int rows) {
         var r = new Mat();
-        new MatOfDouble(data).convertTo(r, CvType.CV_32F);
+        new MatOfDouble(data).convertTo(r, CvType.CV_32FC1);
         return r.reshape(1, new int[] {rows, cols});
     }
 
-    public Mat copyToMat32F(MatrixNd mx) {
+    public Mat copyToMat32FC1(MatrixNd mx) {
         var r = new Mat();
-        new MatOfDouble(mx.duplicate().array()).convertTo(r, CvType.CV_32F);
+        new MatOfDouble(mx.duplicate().array()).convertTo(r, CvType.CV_32FC1);
         return r.reshape(mx.getCols(), new int[] {mx.getRows()});
     }
 
@@ -77,11 +77,11 @@ public class ConvertersToOpenCv {
     }
 
     public Mat toMat64F(Matrix3d mx) {
-        return copyToMat64F(mx.duplicate().array(), 3, 3);
+        return copyToMat64FC1(mx.duplicate().array(), 3, 3);
     }
 
     public Mat toMat32F(Matrix3d mx) {
-        return copyToMat32F(mx.duplicate().array(), 3, 3);
+        return copyToMat32FC1(mx.duplicate().array(), 3, 3);
     }
 
     /**
@@ -121,6 +121,6 @@ public class ConvertersToOpenCv {
     }
 
     public MatOfPoint3f copyToMatOfPoint32F(MatrixN3d mx) {
-        return new MatOfPoint3f(copyToMat32F(mx));
+        return new MatOfPoint3f(copyToMat32FC1(mx));
     }
 }

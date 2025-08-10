@@ -33,7 +33,7 @@ public class MatConvertersTest extends OpenCvTest {
 
     @Test
     public void test_asMat() {
-        var out = converters.copyToMat(XByte.copyAsByteLiterals(1, 2, 3));
+        var out = converters.copyToMat8UC1(XByte.copyAsByteLiterals(1, 2, 3));
         Assertions.assertEquals("[  1,   2,   3]", out.dump());
     }
 
@@ -51,6 +51,6 @@ public class MatConvertersTest extends OpenCvTest {
                 [1, 2;
                  3, 4;
                  5, 6]""",
-                converters.copyToMat32F(new double[] {1, 2, 3, 4, 5, 6}, 2, 3).dump());
+                converters.copyToMat32FC1(new double[] {1, 2, 3, 4, 5, 6}, 2, 3).dump());
     }
 }
