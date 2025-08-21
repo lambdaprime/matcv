@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.logging.Level;
 import org.opencv.calib3d.Calib3d;
 import org.opencv.core.Core;
+import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfDouble;
 import org.opencv.core.MatOfPoint;
@@ -215,5 +216,17 @@ public class MatUtils {
         debugMat("rvec ", rvec);
         Calib3d.projectPoints(points3d, rvec, tvec, cameraMat, distortionMat, points2d);
         debugMat("points2d projected", points2d);
+    }
+
+    /** Given two 1*1*CV_64FC3 matrices, concatenate them into new matrix 6*1*CV_32FC1. */
+    public Mat concat(Mat a, Mat b) {
+        Preconditions.equals(3, a.channels());
+        Preconditions.equals(3, b.channels());
+        Preconditions.equals(CvType.CV_64FC3, a.type());
+        var mx = Mat.zeros(new Size(1, 2), CvType.CV_64FC3);
+        a.copyTo(mx.row(0));
+        b.copyTo(mx.row(1));
+        mx.convertTo(mx, CvType.CV_32FC1);
+        return mx.reshape(1, 6);
     }
 }

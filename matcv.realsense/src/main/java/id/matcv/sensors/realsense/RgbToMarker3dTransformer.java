@@ -51,6 +51,11 @@ public class RgbToMarker3dTransformer implements Consumer<RgbImage> {
         return this;
     }
 
+    public RgbToMarker3dTransformer withKalmanFilter(boolean isEnabled) {
+        detector = detector.withKalmanFilter(isEnabled);
+        return this;
+    }
+
     /** Draw all detected markers on the input {@link RgbImage} */
     public RgbToMarker3dTransformer withDrawDetectedMarkers(boolean isEnabled) {
         detector.withDrawDetectedMarkers(isEnabled);

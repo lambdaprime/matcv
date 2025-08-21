@@ -28,9 +28,12 @@ import java.util.List;
 import java.util.Optional;
 import org.opencv.aruco.Aruco;
 import org.opencv.calib3d.Calib3d;
+import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfDouble;
+import org.opencv.core.Scalar;
 import org.opencv.core.Size;
+import org.opencv.video.KalmanFilter;
 
 /**
  * Calculates translation and rotation vectors which can later be used to build matrix to transform
@@ -40,6 +43,9 @@ import org.opencv.core.Size;
  */
 public class CameraPoseEstimator {
 
+    /** sizeof(rvec) + sizeof(tvec) = 3 + 3 = 6 */
+    private static final int KALMAN_STATE_SIZE = 6;
+
     private NdBuffersFactory ndFactory = new NdBuffersFactory();
     private MatUtils matUtils = new MatUtils();
     private ConvertersToOpenCv openCvConverters = new ConvertersToOpenCv();
@@ -47,6 +53,7 @@ public class CameraPoseEstimator {
     private Mat cameraMat;
     private MatOfDouble distortionMat;
     private CameraPoseEstimationAlgorithm algorithm;
+    private Optional<KalmanFilter> kalmanFilter = Optional.empty();
 
     public CameraPoseEstimator(CameraInfo cameraInfo) {
         cameraMat = openCvConverters.toMat64F(cameraInfo.cameraIntrinsics().cameraMatrix());
@@ -58,9 +65,46 @@ public class CameraPoseEstimator {
         return this;
     }
 
+    public CameraPoseEstimator withKalmanFilter(boolean isEnabled) {
+        if (isEnabled) {
+            var kf = new KalmanFilter(KALMAN_STATE_SIZE, 6);
+            kf.set_transitionMatrix(
+                    openCvConverters.copyToMat32FC1(
+                            new double[] {
+                                1, 0, 0, 0, 0, 0,
+                                0, 1, 0, 0, 0, 0,
+                                0, 0, 1, 0, 0, 0,
+                                0, 0, 0, 1, 0, 0,
+                                0, 0, 0, 0, 1, 0,
+                                0, 0, 0, 0, 0, 1
+                            },
+                            6,
+                            6));
+            matUtils.debugMat("get_transitionMatrix", kf.get_transitionMatrix());
+            kf.set_measurementMatrix(
+                    openCvConverters.copyToMat32FC1(
+                            new double[] {
+                                1, 0, 0, 0, 0, 0,
+                                0, 1, 0, 0, 0, 0,
+                                0, 0, 1, 0, 0, 0,
+                                0, 0, 0, 1, 0, 0,
+                                0, 0, 0, 0, 1, 0,
+                                0, 0, 0, 0, 0, 1
+                            },
+                            6,
+                            6));
+            matUtils.debugMat("get_measurementMatrix", kf.get_measurementMatrix());
+            kalmanFilter = Optional.of(kf);
+        } else {
+            kalmanFilter = Optional.empty();
+        }
+        return this;
+    }
+
     public Optional<Matrix4d> estimate(MarkerLocation2d loc) {
-        var tvec = new Mat();
-        var rvec = new Mat();
+        var tvec = new Mat(1, 1, CvType.CV_64FC3);
+        var rvec = new Mat(1, 1, CvType.CV_64FC3);
+        var corners = loc.corners().orElseThrow();
         // see
         // https://docs.opencv.org/3.4/d9/d6a/group__aruco.html#ga896ca24f0c1b4b277b6e59d5fe001dd5
         // "markerLength - the length of the markers' side. The returning translation vectors will
@@ -71,7 +115,7 @@ public class CameraPoseEstimator {
             // convert meters to millis
             Calib3d.solvePnP(
                     openCvConverters.copyToMatOfPoint32F(loc.marker().create3dModel(0.001)),
-                    loc.corners().orElseThrow(),
+                    corners,
                     cameraMat,
                     distortionMat,
                     rvec,
@@ -80,7 +124,7 @@ public class CameraPoseEstimator {
                     Calib3d.SOLVEPNP_P3P);
         } else {
             Aruco.estimatePoseSingleMarkers(
-                    List.of(loc.corners().orElseThrow()),
+                    List.of(corners),
                     // convert meters to millis
                     Marker.MARKERS_SIZE_IN_MM / 1000.F,
                     cameraMat,
@@ -88,9 +132,15 @@ public class CameraPoseEstimator {
                     rvec,
                     tvec);
         }
+        matUtils.debugMat("rvec", rvec);
+        matUtils.debugMat("tvec", tvec);
+
+        kalmanFilter.ifPresent(kf -> runKalmanFilter(kf, rvec, tvec));
+
         var rmx = new Mat();
         Calib3d.Rodrigues(rvec, rmx);
         Preconditions.equals(new Size(3, 3), rmx.size());
+        matUtils.debugMat("rmx", rmx);
         var tx =
                 ndFactory.matrix4d(
                         new double[] {
@@ -99,10 +149,28 @@ public class CameraPoseEstimator {
                             0, 0, 0, 0,
                             0, 0, 0, 1,
                         });
-        matUtils.debugMat("rmx", rmx);
         ndConverters.mapToMatrix3d(rmx).copyTo(tx, 0, 0);
-        matUtils.debugMat("tvec", tvec);
         ndConverters.mapToNdBuffer(tvec, 3, 1).copyTo(tx, 0, 3);
         return Optional.of(tx);
+    }
+
+    private void runKalmanFilter(KalmanFilter kalmanFilter, Mat rvec, Mat tvec) {
+        if (rvec.type() != CvType.CV_64FC3) {
+            rvec = rvec.reshape(3);
+        }
+        if (tvec.type() != CvType.CV_64FC3) {
+            tvec = tvec.reshape(3);
+        }
+        var mx = matUtils.concat(rvec, tvec);
+        matUtils.debugMat("mx", mx);
+        kalmanFilter.correct(mx);
+        mx = kalmanFilter.predict();
+        matUtils.debugMat("kalman(mx)", mx);
+
+        rvec.setTo(new Scalar(mx.get(0, 0)[0], mx.get(1, 0)[0], mx.get(2, 0)[0]));
+        matUtils.debugMat("kalman(rvec)", rvec);
+
+        tvec.setTo(new Scalar(mx.get(3, 0)[0], mx.get(4, 0)[0], mx.get(5, 0)[0]));
+        matUtils.debugMat("kalman(tvec)", tvec);
     }
 }
