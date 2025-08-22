@@ -20,6 +20,8 @@ package id.matcv.markers;
 import id.matcv.MatUtils;
 import id.matcv.converters.ConvertersToNdBuffers;
 import id.matcv.converters.ConvertersToOpenCv;
+import id.matcv.markers.CameraPoseEstimationAlgorithm.SolvePnpP3P;
+import id.matcv.markers.CameraPoseEstimationAlgorithm.SolvePnpRefineVvs;
 import id.matcv.types.camera.CameraInfo;
 import id.ndbuffers.NdBuffersFactory;
 import id.ndbuffers.matrix.Matrix4d;
@@ -33,6 +35,7 @@ import org.opencv.core.Mat;
 import org.opencv.core.MatOfDouble;
 import org.opencv.core.Scalar;
 import org.opencv.core.Size;
+import org.opencv.core.TermCriteria;
 import org.opencv.video.KalmanFilter;
 
 /**
@@ -50,10 +53,13 @@ public class CameraPoseEstimator {
     private MatUtils matUtils = new MatUtils();
     private ConvertersToOpenCv openCvConverters = new ConvertersToOpenCv();
     private ConvertersToNdBuffers ndConverters = new ConvertersToNdBuffers();
-    private Mat cameraMat;
-    private MatOfDouble distortionMat;
-    private CameraPoseEstimationAlgorithm algorithm;
+    private CameraPoseEstimationAlgorithm algorithm =
+            new CameraPoseEstimationAlgorithm.EstimatePoseSingleMarker();
     private Optional<KalmanFilter> kalmanFilter = Optional.empty();
+    private Mat cameraMat;
+    private Mat tvec;
+    private Mat rvec;
+    private MatOfDouble distortionMat;
 
     public CameraPoseEstimator(CameraInfo cameraInfo) {
         cameraMat = openCvConverters.toMat64F(cameraInfo.cameraIntrinsics().cameraMatrix());
@@ -102,36 +108,7 @@ public class CameraPoseEstimator {
     }
 
     public Optional<Matrix4d> estimate(MarkerLocation2d loc) {
-        var tvec = new Mat(1, 1, CvType.CV_64FC3);
-        var rvec = new Mat(1, 1, CvType.CV_64FC3);
-        var corners = loc.corners().orElseThrow();
-        // see
-        // https://docs.opencv.org/3.4/d9/d6a/group__aruco.html#ga896ca24f0c1b4b277b6e59d5fe001dd5
-        // "markerLength - the length of the markers' side. The returning translation vectors will
-        // be in the same unit. Normally, unit is meters."
-        // Since we give marker size in millis, we expect the TX to describe transformation in
-        // millis too.
-        if (algorithm == CameraPoseEstimationAlgorithm.SOLVE_PNP_P3P) {
-            // convert meters to millis
-            Calib3d.solvePnP(
-                    openCvConverters.copyToMatOfPoint32F(loc.marker().create3dModel(0.001)),
-                    corners,
-                    cameraMat,
-                    distortionMat,
-                    rvec,
-                    tvec,
-                    false,
-                    Calib3d.SOLVEPNP_P3P);
-        } else {
-            Aruco.estimatePoseSingleMarkers(
-                    List.of(corners),
-                    // convert meters to millis
-                    Marker.MARKERS_SIZE_IN_MM / 1000.F,
-                    cameraMat,
-                    distortionMat,
-                    rvec,
-                    tvec);
-        }
+        estimate(loc, algorithm);
         matUtils.debugMat("rvec", rvec);
         matUtils.debugMat("tvec", tvec);
 
@@ -152,6 +129,70 @@ public class CameraPoseEstimator {
         ndConverters.mapToMatrix3d(rmx).copyTo(tx, 0, 0);
         ndConverters.mapToNdBuffer(tvec, 3, 1).copyTo(tx, 0, 3);
         return Optional.of(tx);
+    }
+
+    private void estimate(MarkerLocation2d loc, CameraPoseEstimationAlgorithm algorithm) {
+        var corners = loc.corners().orElseThrow();
+        // see
+        // https://docs.opencv.org/3.4/d9/d6a/group__aruco.html#ga896ca24f0c1b4b277b6e59d5fe001dd5
+        // "markerLength - the length of the markers' side. The returning translation vectors will
+        // be in the same unit. Normally, unit is meters."
+        // Since we give marker size in millis, we expect the TX to describe transformation in
+        // millis too.
+        switch (algorithm) {
+            case SolvePnpP3P alg:
+                {
+                    rvec = new Mat();
+                    tvec = new Mat();
+                    // convert meters to millis
+                    Calib3d.solvePnP(
+                            openCvConverters.copyToMatOfPoint32F(loc.marker().create3dModel(0.001)),
+                            corners,
+                            cameraMat,
+                            distortionMat,
+                            rvec,
+                            tvec,
+                            false,
+                            Calib3d.SOLVEPNP_P3P);
+                    break;
+                }
+            case SolvePnpRefineVvs alg:
+                {
+                    if (rvec == null || tvec == null) {
+                        rvec = Mat.zeros(3, 1, CvType.CV_64FC1);
+                        tvec = Mat.zeros(3, 1, CvType.CV_64FC1);
+                        estimate(loc, new CameraPoseEstimationAlgorithm.SolvePnpP3P());
+                    }
+                    // convert meters to millis
+                    Calib3d.solvePnPRefineVVS(
+                            openCvConverters.copyToMatOfPoint32F(loc.marker().create3dModel(0.001)),
+                            corners,
+                            cameraMat,
+                            distortionMat,
+                            rvec,
+                            tvec,
+                            new TermCriteria(
+                                    TermCriteria.EPS + TermCriteria.COUNT,
+                                    alg.iterations(),
+                                    alg.epsilon()));
+
+                    break;
+                }
+            default:
+                {
+                    tvec = new Mat();
+                    rvec = new Mat();
+                    Aruco.estimatePoseSingleMarkers(
+                            List.of(corners),
+                            // convert meters to millis
+                            Marker.MARKERS_SIZE_IN_MM / 1000.F,
+                            cameraMat,
+                            distortionMat,
+                            rvec,
+                            tvec);
+                    break;
+                }
+        }
     }
 
     private void runKalmanFilter(KalmanFilter kalmanFilter, Mat rvec, Mat tvec) {

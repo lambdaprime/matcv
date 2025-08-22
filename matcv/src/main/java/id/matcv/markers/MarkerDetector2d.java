@@ -45,6 +45,8 @@ public class MarkerDetector2d {
     private static final XLogger LOGGER = XLogger.getLogger(MarkerDetector2d.class);
     private static final MatUtils matUtils = new MatUtils();
     private static final ConvertersToOpenCv converters = new ConvertersToOpenCv();
+    private static final Dictionary dictionary =
+            Aruco.getPredefinedDictionary(MarkerType.getDict());
 
     public record Result(
             Mat img,
@@ -102,7 +104,6 @@ public class MarkerDetector2d {
     public Result detect(Mat img, Optional<Path> file, EnumSet<MarkerType> types) {
         var origin = Optional.<MarkerLocation2d>empty();
         var markers = new LinkedList<MarkerLocation2d>();
-        Dictionary dictionary = Aruco.getPredefinedDictionary(MarkerType.getDict());
         List<Mat> detectedMarkers = new ArrayList<>();
         Mat ids = new Mat();
         Aruco.detectMarkers(img, dictionary, detectedMarkers, ids);

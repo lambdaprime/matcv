@@ -47,7 +47,7 @@ public class CameraPoseEstimatorTest extends OpenCvTest {
     static Stream<TestCase> dataProvider() {
         return Stream.of(
                 new TestCase(
-                        CameraPoseEstimationAlgorithm.ESTIMATE_POSE_SINGLE_MARKER,
+                        new CameraPoseEstimationAlgorithm.EstimatePoseSingleMarker(),
                         false,
                         1,
                         """
@@ -58,7 +58,18 @@ public class CameraPoseEstimatorTest extends OpenCvTest {
                          [0, 0, 0, 1]
                         ] }"""),
                 new TestCase(
-                        CameraPoseEstimationAlgorithm.SOLVE_PNP_P3P,
+                        new CameraPoseEstimationAlgorithm.SolvePnpRefineVvs(1, 0.0000000001),
+                        false,
+                        1,
+                        """
+                        { "data" : [
+                         [0.88749, -0.01146, 0.46068, 0.03665],
+                         [-0.08406, -0.98695, 0.13737, 0.03895],
+                         [0.45309, -0.16064, -0.87687, 0.50958],
+                         [0, 0, 0, 1]
+                        ] }"""),
+                new TestCase(
+                        new CameraPoseEstimationAlgorithm.SolvePnpP3P(),
                         true,
                         18,
                         """
@@ -69,7 +80,7 @@ public class CameraPoseEstimatorTest extends OpenCvTest {
                          [0, 0, 0, 1]
                         ] }"""),
                 new TestCase(
-                        CameraPoseEstimationAlgorithm.ESTIMATE_POSE_SINGLE_MARKER,
+                        new CameraPoseEstimationAlgorithm.EstimatePoseSingleMarker(),
                         true,
                         18,
                         """

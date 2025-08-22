@@ -20,7 +20,7 @@ package id.matcv.markers;
 import org.opencv.aruco.Aruco;
 import org.opencv.calib3d.Calib3d;
 
-public enum CameraPoseEstimationAlgorithm {
+public interface CameraPoseEstimationAlgorithm {
 
     /**
      * Use {@link Aruco#estimatePoseSingleMarkers(java.util.List, float, org.opencv.core.Mat, org.opencv.core.Mat, org.opencv.core.Mat, org.opencv.core.Mat)
@@ -29,11 +29,19 @@ public enum CameraPoseEstimationAlgorithm {
      *
      * <p>NOTE: In latest versions of OpenCV estimatePoseSingleMarkers is replaced with solvePnP
      */
-    ESTIMATE_POSE_SINGLE_MARKER,
+    record EstimatePoseSingleMarker() implements CameraPoseEstimationAlgorithm {}
 
     /**
      * Use {@link Calib3d#solvePnP(org.opencv.core.MatOfPoint3f, org.opencv.core.MatOfPoint2f,
      * org.opencv.core.Mat, org.opencv.core.MatOfDouble, org.opencv.core.Mat, org.opencv.core.Mat)}
      */
-    SOLVE_PNP_P3P
+    record SolvePnpP3P() implements CameraPoseEstimationAlgorithm {}
+
+    /**
+     * Use {@link Calib3d#solvePnPRefineVVS(org.opencv.core.Mat, org.opencv.core.Mat,
+     * org.opencv.core.Mat, org.opencv.core.Mat, org.opencv.core.Mat, org.opencv.core.Mat,
+     * org.opencv.core.TermCriteria)}
+     */
+    record SolvePnpRefineVvs(int iterations, double epsilon)
+            implements CameraPoseEstimationAlgorithm {}
 }
